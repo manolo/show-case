@@ -1,5 +1,7 @@
 package com.example.application.views;
 
+import org.vaadin.lineawesome.LineAwesomeIcon;
+
 import com.example.application.views.about.AboutView;
 import com.example.application.views.addressform.AddressFormView;
 import com.example.application.views.chat.ChatView;
@@ -13,6 +15,7 @@ import com.example.application.views.gridwithfilters.GridwithFiltersView;
 import com.example.application.views.hello.HelloView;
 import com.example.application.views.imagegallery.ImageGalleryView;
 import com.example.application.views.map.MapView;
+import com.example.application.views.mastercrud.MasterCrud;
 import com.example.application.views.masterdetail.MasterDetailView;
 import com.example.application.views.pageeditor.PageEditorView;
 import com.example.application.views.personform.PersonFormView;
@@ -28,7 +31,6 @@ import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import org.vaadin.lineawesome.LineAwesomeIcon;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -74,6 +76,7 @@ public class MainLayout extends AppLayout {
         nav.addItem(new SideNavItem("Forum", ForumView.class, LineAwesomeIcon.LIST_SOLID.create()));
         nav.addItem(new SideNavItem("Data", DataView.class, LineAwesomeIcon.TH_SOLID.create()));
         nav.addItem(new SideNavItem("Master-Detail", MasterDetailView.class, LineAwesomeIcon.COLUMNS_SOLID.create()));
+        nav.addItem(new SideNavItem("Master-Crud", MasterCrud.class, LineAwesomeIcon.COLUMNS_SOLID.create()));
         nav.addItem(new SideNavItem("Person Form", PersonFormView.class, LineAwesomeIcon.USER.create()));
         nav.addItem(new SideNavItem("Address Form", AddressFormView.class, LineAwesomeIcon.MAP_MARKER_SOLID.create()));
         nav.addItem(
