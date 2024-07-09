@@ -27,6 +27,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 public class CustomLayoutView extends Composite<VerticalLayout> {
 
     public CustomLayoutView() {
+        addClassNames("custom-layout-view");
         HorizontalLayout layoutRow = new HorizontalLayout();
         VerticalLayout layoutColumn2 = new VerticalLayout();
         FormLayout formLayout3Col = new FormLayout();
@@ -52,6 +53,7 @@ public class CustomLayoutView extends Composite<VerticalLayout> {
         layoutRow.getStyle().set("flex-grow", "1");
         layoutColumn2.setWidth("100%");
         layoutColumn2.getStyle().set("flex-grow", "1");
+        layoutColumn2.setSizeFull();
         formLayout3Col.setWidth("100%");
         formLayout3Col.setResponsiveSteps(new ResponsiveStep("0", 1), new ResponsiveStep("250px", 2),
                 new ResponsiveStep("500px", 3));
@@ -71,6 +73,7 @@ public class CustomLayoutView extends Composite<VerticalLayout> {
         richTextEditor.setWidth("100%");
         richTextEditor.getStyle().set("flex-grow", "1");
         layoutColumn3.getStyle().set("flex-grow", "1");
+        layoutColumn3.setWidth("auto");
         link.setText("Google");
         link.setHref("#");
         link.setWidth("min-content");
@@ -80,7 +83,7 @@ public class CustomLayoutView extends Composite<VerticalLayout> {
         link3.setText("Github");
         link3.setHref("#");
         link3.setWidth("min-content");
-        layoutColumn4.setWidthFull();
+
         layoutColumn3.setFlexGrow(1.0, layoutColumn4);
         layoutColumn4.setWidth("100%");
         layoutColumn4.getStyle().set("flex-grow", "1");
@@ -88,7 +91,6 @@ public class CustomLayoutView extends Composite<VerticalLayout> {
         layoutColumn4.setAlignItems(Alignment.CENTER);
         routerLink.setText("Hello");
         routerLink.setRoute(CustomLayoutView.class);
-        routerLink.setWidth("min-content");
         layoutRow2.addClassName(Gap.MEDIUM);
         layoutRow2.setWidth("100%");
         layoutRow2.setHeight("min-content");
@@ -110,5 +112,8 @@ public class CustomLayoutView extends Composite<VerticalLayout> {
         layoutColumn3.add(layoutColumn4);
         layoutColumn4.add(routerLink);
         getContent().add(layoutRow2);
+//        getContent().setSizeFull();
+
+
     }
 }

@@ -164,3 +164,7 @@
   min-width: 64px;
   min-height: 32px;
 }
+
+.custom-layout-view vaadin-horizontal-layout {
+  height: 100%;
+}
