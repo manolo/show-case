@@ -1,0 +1,59 @@
+.master-detail-responsive-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.fab-button {
+  position: absolute;
+  bottom: var(--lumo-size-m);
+  right: var(--lumo-size-xs);
+  border-radius: 50%;
+  min-width: 0px;
+}
+
+@media only screen and (max-width: 600px) {
+  .master-detail-responsive-view .editor-layout {
+    min-width: 100%;
+  }
+  .fab-button {
+    bottom: var(--lumo-size-xl);
+  }
+  
+}
+
+.master-detail-responsive-view vaadin-grid {
+  height: 100%;
+}
+
+.master-detail-responsive-view .editor-layout {
+  display: flex;
+  flex-direction: column;
+  min-width: 450px;
+}
+
+.master-detail-responsive-view .editor {
+  flex-grow: 1;
+  padding: var(--lumo-space-l);
+}
+
+.master-detail-responsive-view .editor vaadin-checkbox {
+  padding-top: var(--lumo-space-m);
+}
+
+.master-detail-responsive-view .button-layout {
+  display: flex;
+  background-color: var(--lumo-contrast-5pct);
+  padding-bottom: var(--lumo-space-s);
+  padding-top: var(--lumo-space-s);
+  padding-left: var(--lumo-space-l);
+  padding-right: var(--lumo-space-l);
+  gap: var(--lumo-space-m);
+}
+.master-detail-responsive-view [theme~="primary"] {
+  margin-left: auto;
+}
+
+.master-detail-responsive-view .grid-wrapper {
+  width: 100%;
+}
