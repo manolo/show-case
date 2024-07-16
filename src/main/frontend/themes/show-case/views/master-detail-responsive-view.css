@@ -12,16 +12,6 @@
   min-width: 0px;
 }
 
-@media only screen and (max-width: 600px) {
-  .master-detail-responsive-view .editor-layout {
-    min-width: 100%;
-  }
-  .fab-button {
-    bottom: var(--lumo-size-xl);
-  }
-  
-}
-
 .master-detail-responsive-view vaadin-grid {
   height: 100%;
 }
@@ -29,7 +19,8 @@
 .master-detail-responsive-view .editor-layout {
   display: flex;
   flex-direction: column;
-  min-width: 450px;
+  min-width: 300px;
+  max-width: 40%;
 }
 
 .master-detail-responsive-view .editor {
@@ -57,3 +48,14 @@
 .master-detail-responsive-view .grid-wrapper {
   width: 100%;
 }
+
+@media (max-width: 600px) {
+  .master-detail-responsive-view .editor-layout {
+    min-width: 100%;
+	max-width: 100%;
+  }
+  .fab-button {
+    bottom: var(--lumo-size-xl);
+  }
+}
+
