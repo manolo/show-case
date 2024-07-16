@@ -1,11 +1,17 @@
 package com.example.application.views.about;
 
+import java.util.Locale;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.i18n.I18NProvider;
+import com.vaadin.flow.internal.LocaleUtil;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinService;
@@ -27,9 +33,16 @@ public class AboutView extends VerticalLayout {
         header.addClassNames(Margin.Top.XLARGE, Margin.Bottom.MEDIUM);
         add(header);
         add(new Paragraph("It’s a place where you can grow your own UI 🤗"));
-        add(new Div("Version: " + Version.getFullVersion() + ", Locale: " + getLocale() + ", Accept-Language: "
-                + VaadinService.getCurrentRequest().getHeader("Accept-Language") + ", System-Language: "
-                + System.getProperty("user.language")));
+
+        String localeDefault = Locale.getDefault().toLanguageTag();
+        String localeHeaders = VaadinService.getCurrentRequest().getHeader("Accept-Language").replaceFirst(",.*$", "");
+        String localeSystem = System.getProperty("user.language");
+        String uiLocale = getLocale().toLanguageTag();
+        I18NProvider prov = LocaleUtil.getI18NProvider().orElse(null);
+        String providedLocales = prov == null ? null : prov
+                .getProvidedLocales().stream().map(Locale::toLanguageTag).collect(Collectors.joining(", "));
+        add(new Div("Version: " + Version.getFullVersion()));
+        add(new Div(String.format("localeDefault: %s, localeHeaders: %s, localeSystem: %s, uiLocale: %s, providedLocales: %s", localeDefault, localeHeaders, localeSystem, uiLocale, providedLocales)));
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.CENTER);
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
