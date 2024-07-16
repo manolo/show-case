@@ -1,0 +1,5 @@
+.grid-edit-view vaadin-text-field,
+.grid-edit-view vaadin-email-field,
+.grid-edit-view vaadin-date-picker {
+	width: 95%;
+}
