@@ -45,7 +45,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 // CssImport will bundle the css with the js bundle in compile time
 //@CssImport("ama.css")
 // StyleSheet will request the css to the vaadin app in runtime time
-//@StyleSheet("/frontend/ama.css")
+@StyleSheet("frontend/ama.css")
 
 // This is a better option the ama.css is hosted in a CDN
 // All apps are updated automatically without having to compile
