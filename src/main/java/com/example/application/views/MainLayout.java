@@ -24,6 +24,8 @@ import com.example.application.views.personform.PersonFormView;
 import com.example.application.views.spreadsheet.SpreadsheetView;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.dependency.StyleSheet;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Header;
@@ -37,6 +39,17 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 /**
  * The main view is a top-level placeholder for other views.
  */
+
+// Use these if ama.css comes from a customized artifact.jar in the
+// folder src//main/resources/META-INF/resources/frontend/ama.css
+// CssImport will bundle the css with the js bundle in compile time
+//@CssImport("ama.css")
+// StyleSheet will request the css to the vaadin app in runtime time
+//@StyleSheet("/frontend/ama.css")
+
+// This is a better option the ama.css is hosted in a CDN
+// All apps are updated automatically without having to compile
+//@StyleSheet("https://ama.es/assets/ama.css")
 public class MainLayout extends AppLayout {
 
     private H1 viewTitle;
