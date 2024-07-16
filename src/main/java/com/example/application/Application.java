@@ -7,14 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.sql.init.SqlDataSourceScriptDatabaseInitializer;
 import org.springframework.boot.autoconfigure.sql.init.SqlInitializationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
 
 import com.example.application.data.SamplePersonRepository;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.component.page.Push;
-import com.vaadin.flow.server.ServiceInitEvent;
-import com.vaadin.flow.server.VaadinService;
-import com.vaadin.flow.server.VaadinServiceInitListener;
 import com.vaadin.flow.theme.Theme;
 
 /**
@@ -31,17 +27,6 @@ public class Application implements AppShellConfigurator {
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
-    }
-
-    @Component
-    public static class ServiceInitListener implements VaadinServiceInitListener {
-        @Override
-        public void serviceInit(ServiceInitEvent e) {
-            // Sets the locale based on browser request instead of server system setting
-            e.getSource().addUIInitListener(uiInitEvent -> {
-                uiInitEvent.getUI().setLocale(VaadinService.getCurrentRequest().getLocale());
-            });
-        }
     }
 
     @Bean
