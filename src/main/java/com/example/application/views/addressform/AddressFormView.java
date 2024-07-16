@@ -13,6 +13,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @PageTitle("Address Form")
 @Route(value = "address-form", layout = MainLayout.class)
+@PreserveOnRefresh
 public class AddressFormView extends Composite<VerticalLayout> {
 
     public AddressFormView() {

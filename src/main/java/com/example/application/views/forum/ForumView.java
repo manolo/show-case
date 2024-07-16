@@ -13,12 +13,14 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import java.util.Arrays;
 import java.util.List;
 
 @PageTitle("Forum")
 @Route(value = "feed", layout = MainLayout.class)
+@PreserveOnRefresh
 public class ForumView extends Div implements AfterNavigationObserver {
 
     Grid<Person> grid = new Grid<>();

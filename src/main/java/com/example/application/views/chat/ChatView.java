@@ -18,6 +18,7 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.Tabs.Orientation;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.Background;
@@ -34,6 +35,7 @@ import java.util.UUID;
 
 @PageTitle("Chat")
 @Route(value = "chat", layout = MainLayout.class)
+@PreserveOnRefresh
 public class ChatView extends HorizontalLayout {
 
     public static class ChatTab extends Tab {

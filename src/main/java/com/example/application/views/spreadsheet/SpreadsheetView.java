@@ -26,6 +26,7 @@ import com.vaadin.flow.component.spreadsheet.SpreadsheetTable;
 import com.vaadin.flow.component.upload.Receiver;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamRegistration;
 import com.vaadin.flow.server.StreamResource;
@@ -64,6 +65,7 @@ import org.slf4j.LoggerFactory;
 
 @PageTitle("Spreadsheet")
 @Route(value = "spreadsheet", layout = MainLayout.class)
+@PreserveOnRefresh
 public class SpreadsheetView extends VerticalLayout implements Receiver {
 
     private File uploadedFile;

@@ -14,10 +14,12 @@ import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 
 @PageTitle("Credit Card Form")
 @Route(value = "credit-card-form", layout = MainLayout.class)
+@PreserveOnRefresh
 public class CreditCardFormView extends Div {
 
     private TextField cardNumber;

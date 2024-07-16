@@ -8,6 +8,7 @@ import com.vaadin.flow.component.richtexteditor.RichTextEditor;
 import com.vaadin.flow.component.richtexteditor.RichTextEditorVariant;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Accessibility;
 import com.vaadin.flow.theme.lumo.LumoUtility.Background;
@@ -28,6 +29,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 
 @PageTitle("Page Editor")
 @Route(value = "page-editor", layout = MainLayout.class)
+@PreserveOnRefresh
 public class PageEditorView extends Main {
 
     public PageEditorView() {

@@ -18,6 +18,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.BoxSizing;
@@ -39,6 +40,7 @@ import java.util.stream.Stream;
 
 @PageTitle("Map")
 @Route(value = "map", layout = MainLayout.class)
+@PreserveOnRefresh
 public class MapView extends HorizontalLayout {
 
     public static class Location {
