@@ -11,12 +11,11 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.datepicker.DatePicker;
-import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.editor.Editor;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
@@ -50,12 +49,13 @@ public class GridEditView extends HorizontalLayout {
     private final Button cancel = new Button(VaadinIcon.CLOSE.create(), e -> cancel());
     private final Button save = new Button(VaadinIcon.CHECK.create(), e -> save());
     private final HorizontalLayout buttons = new HorizontalLayout(save, cancel);
+    private ConfirmDialog dialog;
 
     public GridEditView(SamplePersonService samplePersonService) {
         add(grid);
 
         // Some styles
-        addClassNames("master-grid-view");
+        addClassNames("grid-edit-view");
         setSizeFull();
         grid.setSizeFull();
         save.getElement().getThemeList().add("badge success");
@@ -67,10 +67,7 @@ public class GridEditView extends HorizontalLayout {
         // Configure Columns
         // edit column
         grid.addComponentColumn(person -> {
-            Button edit = new Button(VaadinIcon.PENCIL.create(), e -> {
-                editor.cancel();
-                editor.editItem(person);
-            });
+            Button edit = new Button(VaadinIcon.PENCIL.create(), e -> edit(person));
             edit.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
             return edit;
         }).setWidth("60px").setFrozen(true).setEditorComponent(buttons);
@@ -109,15 +106,38 @@ public class GridEditView extends HorizontalLayout {
         grid.getColumnByKey("occupation").setEditorComponent(occupation);
         grid.getColumnByKey("role").setEditorComponent(role);
         grid.getColumnByKey("important").setEditorComponent(important);
+
+        // Configure dialog to discard unsaved changes
+        dialog = new ConfirmDialog("Discard changes", "There are unsaved changes?", "Discard", e -> close(), "Cancel",
+                e -> {});
+    }
+
+    private void edit(SamplePerson person) {
+        if (!binder.hasChanges()) {
+            editor.cancel();
+          editor.editItem(person);
+        }
     }
 
     private void save() {
         editor.save();
-        editor.closeEditor();
+        close();
         grid.getDataProvider().refreshAll();
     }
+
     private void cancel() {
+        if (binder.hasChanges()) {
+            dialog.open();
+        } else {
+            close();
+        }
+    }
+
+    private void close() {
         editor.cancel();
+        // workaround because cancel should clear binder
+        binder.refreshFields();
         editor.closeEditor();
     }
+
 }
