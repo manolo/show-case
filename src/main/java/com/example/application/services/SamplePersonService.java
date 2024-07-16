@@ -1,12 +1,16 @@
 package com.example.application.services;
 
-import com.example.application.data.SamplePerson;
-import com.example.application.data.SamplePersonRepository;
+import java.util.List;
 import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
+
+import com.example.application.data.SamplePerson;
+import com.example.application.data.SamplePersonRepository;
 
 @Service
 public class SamplePersonService {
@@ -41,4 +45,7 @@ public class SamplePersonService {
         return (int) repository.count();
     }
 
+    public List<String> findDistinctOccupationValues() {
+        return repository.findDistinctOccupationValues();
+    }
 }
