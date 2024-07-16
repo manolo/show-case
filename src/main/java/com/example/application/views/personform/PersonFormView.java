@@ -1,5 +1,6 @@
 package com.example.application.views.personform;
 
+import com.example.application.components.datepicker.LocalDatePicker;
 import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -27,7 +28,7 @@ public class PersonFormView extends Composite<VerticalLayout> {
         FormLayout formLayout2Col = new FormLayout();
         TextField textField = new TextField();
         TextField textField2 = new TextField();
-        DatePicker datePicker = new DatePicker();
+        DatePicker datePicker = new LocalDatePicker();
         TextField textField3 = new TextField();
         EmailField emailField = new EmailField();
         TextField textField4 = new TextField();

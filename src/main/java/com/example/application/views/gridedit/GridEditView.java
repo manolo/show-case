@@ -2,6 +2,7 @@ package com.example.application.views.gridedit;
 
 import org.springframework.data.domain.PageRequest;
 
+import com.example.application.components.datepicker.LocalDatePicker;
 import com.example.application.data.SamplePerson;
 import com.example.application.services.SamplePersonService;
 import com.example.application.views.MainLayout;
@@ -21,17 +22,18 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 
 @PageTitle("Editable Grid")
 @Route(value = "grid-edit", layout = MainLayout.class)
-@Uses(Icon.class)
+@PreserveOnRefresh
 public class GridEditView extends HorizontalLayout {
 
-    private final SamplePersonService samplePersonService;
 
     private final Grid<SamplePerson> grid = new Grid<>(SamplePerson.class, false);
     private final Editor<SamplePerson> editor = grid.getEditor();
@@ -40,7 +42,7 @@ public class GridEditView extends HorizontalLayout {
     private final TextField lastName = new TextField();
     private final EmailField email = new EmailField();
     private final TextField phone = new TextField();
-    private final DatePicker dateOfBirth = new DatePicker();
+    private final DatePicker dateOfBirth = new LocalDatePicker();
     private final TextField occupation = new TextField();
     private final TextField role = new TextField();
     private final Checkbox important = new Checkbox();
@@ -50,7 +52,6 @@ public class GridEditView extends HorizontalLayout {
     private final HorizontalLayout buttons = new HorizontalLayout(save, cancel);
 
     public GridEditView(SamplePersonService samplePersonService) {
-        this.samplePersonService = samplePersonService;
         add(grid);
 
         // Some styles
@@ -76,6 +77,10 @@ public class GridEditView extends HorizontalLayout {
 
         // entity columns
         grid.addColumns("firstName", "lastName", "email", "phone", "dateOfBirth", "occupation", "role", "important");
+
+        // change renderer to match DatePicker format
+        grid.getColumnByKey("dateOfBirth").setRenderer(
+                new LocalDateRenderer<>(SamplePerson::getDateOfBirth, dateOfBirth.getI18n().getDateFormats().get(0)));
         // change renderer for the boolean column
         grid.getColumnByKey("important").setRenderer(new TextRenderer<>(p -> p.isImportant() ? "✔" : "᠆"));
 
@@ -83,6 +88,8 @@ public class GridEditView extends HorizontalLayout {
         grid.setItems(query -> samplePersonService.list(
                 PageRequest.of(query.getPage(), query.getPageSize(), VaadinSpringDataHelpers.toSpringDataSort(query)))
                 .stream());
+
+        grid.setSelectionMode(Grid.SelectionMode.NONE);
 
         // Close editor on escape
         UI.getCurrent().addShortcutListener(cancel::click, Key.ESCAPE);

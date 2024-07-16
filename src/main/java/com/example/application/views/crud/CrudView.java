@@ -1,10 +1,12 @@
 package com.example.application.views.crud;
 
-import static com.example.application.views.crud.CrudView.*;
+import static com.example.application.views.crud.CrudView.ROUTE_EDIT;
+import static com.example.application.views.crud.CrudView.ROUTE_NEW;
 
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import com.example.application.components.datepicker.LocalDatePicker;
 import com.example.application.data.SamplePerson;
 import com.example.application.services.SamplePersonService;
 import com.example.application.views.MainLayout;
@@ -21,10 +23,12 @@ import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.provider.AbstractBackEndDataProvider;
 import com.vaadin.flow.data.provider.Query;
+import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
@@ -36,7 +40,6 @@ import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 @PageTitle("Crud")
 @Route(value = ROUTE_EDIT, layout = MainLayout.class)
 @RouteAlias(value = ROUTE_NEW, layout = MainLayout.class)
-@Uses(Icon.class)
 @PreserveOnRefresh
 public class CrudView extends Div implements BeforeEnterObserver {
 
@@ -46,18 +49,18 @@ public class CrudView extends Div implements BeforeEnterObserver {
     final static String ROUTE_EDIT_TPL = ROUTE + "/%s/edit";
     final static String ROUTE_NEW = ROUTE + "/:new(new)";
 
-
     private Crud<SamplePerson> crud;
-    FormLayout formLayout;
 
-    private TextField firstName;
-    private TextField lastName;
-    private TextField email;
-    private TextField phone;
-    private DatePicker dateOfBirth;
-    private TextField occupation;
-    private TextField role;
-    private Checkbox important;
+    private TextField firstName = new TextField("First Name");
+    private TextField lastName = new TextField("Last Name");
+    private EmailField email = new EmailField("Email");
+    private TextField phone = new TextField("Phone");
+    private DatePicker dateOfBirth = new LocalDatePicker("Date Of Birth");
+    private TextField occupation = new TextField("Occupation");
+    private TextField role = new TextField("Role");
+    private Checkbox important = new Checkbox("Important");
+    private FormLayout formLayout = new FormLayout(firstName, lastName, email, phone, dateOfBirth, occupation, role,
+            important);
 
     private final BeanValidationBinder<SamplePerson> binder;
 
@@ -67,14 +70,13 @@ public class CrudView extends Div implements BeforeEnterObserver {
         this.samplePersonService = samplePersonService;
         addClassNames("crud-view");
 
-        createEditorLayout();
-
         binder = new BeanValidationBinder<>(SamplePerson.class);
 
         // Bind fields. This is where you'd define e.g. validation rules
         binder.bindInstanceFields(this);
 
-        crud = new Crud<>(SamplePerson.class, new CrudGrid<>(SamplePerson.class, false), new BinderCrudEditor<>(binder, formLayout));
+        crud = new Crud<>(SamplePerson.class, new CrudGrid<>(SamplePerson.class, false),
+                new BinderCrudEditor<>(binder, formLayout));
 
         crud.setDataProvider(new AbstractBackEndDataProvider<SamplePerson, CrudFilter>() {
             protected Stream<SamplePerson> fetchFromBackEnd(Query<SamplePerson, CrudFilter> query) {
@@ -86,6 +88,8 @@ public class CrudView extends Div implements BeforeEnterObserver {
             }
         });
 
+        crud.getGrid().getColumnByKey("dateOfBirth").setRenderer(
+                new LocalDateRenderer<>(SamplePerson::getDateOfBirth, dateOfBirth.getI18n().getDateFormats().get(0)));
 
         crud.setEditorPosition(CrudEditorPosition.ASIDE);
 
@@ -129,16 +133,4 @@ public class CrudView extends Div implements BeforeEnterObserver {
         }
     }
 
-    private void createEditorLayout() {
-        formLayout = new FormLayout();
-        firstName = new TextField("First Name");
-        lastName = new TextField("Last Name");
-        email = new TextField("Email");
-        phone = new TextField("Phone");
-        dateOfBirth = new DatePicker("Date Of Birth");
-        occupation = new TextField("Occupation");
-        role = new TextField("Role");
-        important = new Checkbox("Important");
-        formLayout.add(firstName, lastName, email, phone, dateOfBirth, occupation, role, important);
-    }
 }

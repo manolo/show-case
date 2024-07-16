@@ -1,5 +1,11 @@
 package com.example.application.views.masterdetail;
 
+import java.util.Optional;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+
+import com.example.application.components.datepicker.LocalDatePicker;
 import com.example.application.data.SamplePerson;
 import com.example.application.services.SamplePersonService;
 import com.example.application.views.MainLayout;
@@ -29,13 +35,9 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
-import java.util.Optional;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 @PageTitle("Master-Detail")
 @Route(value = "master-detail/:samplePersonID?/:action?(edit)", layout = MainLayout.class)
-@Uses(Icon.class)
 @PreserveOnRefresh
 public class MasterDetailView extends Div implements BeforeEnterObserver {
 
@@ -172,7 +174,7 @@ public class MasterDetailView extends Div implements BeforeEnterObserver {
         lastName = new TextField("Last Name");
         email = new TextField("Email");
         phone = new TextField("Phone");
-        dateOfBirth = new DatePicker("Date Of Birth");
+        dateOfBirth = new LocalDatePicker("Date Of Birth");
         occupation = new TextField("Occupation");
         role = new TextField("Role");
         important = new Checkbox("Important");

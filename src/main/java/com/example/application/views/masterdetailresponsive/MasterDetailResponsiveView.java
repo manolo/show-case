@@ -1,12 +1,14 @@
 package com.example.application.views.masterdetailresponsive;
 
-import static com.example.application.views.masterdetailresponsive.MasterDetailResponsiveView.*;
+import static com.example.application.views.masterdetailresponsive.MasterDetailResponsiveView.ROUTE_EDIT;
+import static com.example.application.views.masterdetailresponsive.MasterDetailResponsiveView.ROUTE_NEW;
 
 import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
+import com.example.application.components.datepicker.LocalDatePicker;
 import com.example.application.data.SamplePerson;
 import com.example.application.services.SamplePersonService;
 import com.example.application.views.MainLayout;
@@ -27,9 +29,11 @@ import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
+import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
@@ -48,7 +52,7 @@ import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 @PreserveOnRefresh
 public class MasterDetailResponsiveView extends Div implements BeforeEnterObserver, BeforeLeaveObserver {
 
-	final static String ROUTE = "master-detail-responsive";
+    final static String ROUTE = "master-detail-responsive";
     final static String ROUTE_ID = "samplePersonID";
     final static String ROUTE_EDIT = ROUTE + "/:" + ROUTE_ID + "?/:action?(edit)";
     final static String ROUTE_EDIT_TPL = ROUTE + "/%s/edit";
@@ -56,14 +60,15 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
 
     private final Grid<SamplePerson> grid = new Grid<>(SamplePerson.class, false);
 
-    private TextField firstName;
-    private TextField lastName;
-    private TextField email;
-    private TextField phone;
-    private DatePicker dateOfBirth;
-    private TextField occupation;
-    private TextField role;
-    private Checkbox important;
+    private TextField firstName = new TextField("First Name");
+    private TextField lastName = new TextField("Last Name");
+    private EmailField email = new EmailField("Email");
+    private TextField phone = new TextField("Phone");
+    private DatePicker dateOfBirth = new LocalDatePicker("Date Of Birth");
+    private TextField occupation = new TextField("Occupation");
+    private TextField role = new TextField("Role");
+    private Checkbox important = new Checkbox("Important");
+
     private Div editorLayoutDiv;
     private ConfirmDialog dialog;
 
@@ -77,7 +82,7 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
     private SamplePerson samplePerson;
 
     private final SamplePersonService item;
-    
+
     private ContinueNavigationAction postponed;
 
     public MasterDetailResponsiveView(SamplePersonService samplePersonService) {
@@ -92,12 +97,15 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
         createEditorLayout(horizontalLayout);
         showDetail(false);
         add(horizontalLayout);
-        
+
         // Configure Grid
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         grid.addColumns("firstName", "lastName", "email", "phone", "dateOfBirth", "occupation", "role");
         grid.addColumn("important").setRenderer(new TextRenderer<>(p -> p.isImportant() ? "✔" : "—"));
         grid.getColumns().forEach(c -> c.setAutoWidth(true));
+
+        grid.getColumnByKey("dateOfBirth").setRenderer(
+                new LocalDateRenderer<>(SamplePerson::getDateOfBirth, dateOfBirth.getI18n().getDateFormats().get(0)));
 
         grid.setItems(query -> samplePersonService.list(
                 PageRequest.of(query.getPage(), query.getPageSize(), VaadinSpringDataHelpers.toSpringDataSort(query)))
@@ -118,7 +126,7 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
 
         // Bind fields. This is where you'd define e.g. validation rules
         binder.bindInstanceFields(this);
-        
+
         // Add actions to the buttons
         plus.addClickListener(e -> UI.getCurrent().navigate(ROUTE + "/new"));
         cancel.addClickListener(e -> cancel());
@@ -126,20 +134,20 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
         delete.addClickListener(e -> this.delete());
 
         // Close editor on escape
-        UI.getCurrent().addShortcutListener(cancel::click, Key.ESCAPE);        
-        
+        UI.getCurrent().addShortcutListener(cancel::click, Key.ESCAPE);
+
         // Configure dialog to discard unsaved changes
-		dialog = new ConfirmDialog("Discard changes", "There are unsaved changes?", "Discard", e -> {
-			clearForm();
-			if (postponed != null) {
-				postponed.proceed();
-				postponed = null;
-			}
-		}, "Cancel", e -> {
-			postponed.cancel();
-			grid.select(this.samplePerson);
-			postponed = null;
-		});
+        dialog = new ConfirmDialog("Discard changes", "There are unsaved changes?", "Discard", e -> {
+            clearForm();
+            if (postponed != null) {
+                postponed.proceed();
+                postponed = null;
+            }
+        }, "Cancel", e -> {
+            postponed.cancel();
+            grid.select(this.samplePerson);
+            postponed = null;
+        });
     }
 
     @Override
@@ -150,7 +158,7 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
         if (event.getRouteParameters().get("new").isPresent()) {
             populateForm(null);
             return;
-        }    	
+        }
         Optional<Long> samplePersonId = event.getRouteParameters().get(ROUTE_ID).map(Long::parseLong);
         if (samplePersonId.isPresent()) {
             Optional<SamplePerson> samplePersonFromBackend = item.get(samplePersonId.get());
@@ -163,11 +171,11 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
                 event.forwardTo(MasterDetailResponsiveView.class);
             }
         } else {
-        	this.samplePerson = null;
-        	showDetail(false);
+            this.samplePerson = null;
+            showDetail(false);
         }
     }
-    
+
     @Override
     public void beforeLeave(BeforeLeaveEvent event) {
         if (postponed == null && binder.hasChanges()) {
@@ -175,7 +183,7 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
             postponed = event.postpone();
         }
     }
-    
+
     private void createEditorLayout(HasComponents layout) {
         editorLayoutDiv = new Div();
         editorLayoutDiv.addClassNames("editor-layout bg-contrast-5 detail");
@@ -186,14 +194,6 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
         editorLayoutDiv.add(editorDiv);
 
         FormLayout formLayout = new FormLayout();
-        firstName = new TextField("First Name");
-        lastName = new TextField("Last Name");
-        email = new TextField("Email");
-        phone = new TextField("Phone");
-        dateOfBirth = new DatePicker("Date Of Birth");
-        occupation = new TextField("Occupation");
-        role = new TextField("Role");
-        important = new Checkbox("Important");
         formLayout.add(firstName, lastName, email, phone, dateOfBirth, occupation, role, important);
 
         editorDiv.add(formLayout);
@@ -221,23 +221,23 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
         wrapper.add(grid);
         wrapper.add(plus);
     }
-    
+
     private void cancel() {
-    	UI.getCurrent().navigate(MasterDetailResponsiveView.class);
+        UI.getCurrent().navigate(MasterDetailResponsiveView.class);
     }
-    
+
     private void delete() {
         if (this.samplePerson != null && this.samplePerson.getId() != null) {
-    		new ConfirmDialog("Delete", "Do you want to delete the Item?", "Delete", e -> {
+            new ConfirmDialog("Delete", "Do you want to delete the Item?", "Delete", e -> {
                 item.delete(this.samplePerson.getId());
                 Notification.show("Data updated");
                 UI.getCurrent().navigate(this.getClass());
                 refreshGrid();
-    		}, "Cancel", e -> {
-    		}).open();
+            }, "Cancel", e -> {
+            }).open();
         }
     };
-    
+
     private void save() {
         try {
             if (this.samplePerson == null) {
@@ -258,7 +258,7 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
             Notification.show("Failed to update the data. Check again that all values are valid");
         }
     }
-    
+
     private void refreshGrid() {
         grid.select(null);
         grid.getDataProvider().refreshAll();
@@ -275,9 +275,9 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
         binder.readBean(this.samplePerson);
         showDetail(true);
     }
-    
+
     private void showDetail(boolean show) {
         editorLayoutDiv.setVisible(show);
         plus.setVisible(!show);
-    }    
+    }
 }

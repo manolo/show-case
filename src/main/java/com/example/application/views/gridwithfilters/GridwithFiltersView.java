@@ -1,5 +1,6 @@
 package com.example.application.views.gridwithfilters;
 
+import com.example.application.components.datepicker.LocalDatePicker;
 import com.example.application.data.SamplePerson;
 import com.example.application.services.SamplePersonService;
 import com.example.application.views.MainLayout;
@@ -22,6 +23,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import com.vaadin.flow.theme.lumo.LumoUtility;
@@ -37,7 +39,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 @PageTitle("Grid with Filters")
 @Route(value = "grid-with-filters", layout = MainLayout.class)
-@Uses(Icon.class)
+@PreserveOnRefresh
 public class GridwithFiltersView extends Div {
 
     private Grid<SamplePerson> grid;
@@ -86,8 +88,8 @@ public class GridwithFiltersView extends Div {
 
         private final TextField name = new TextField("Name");
         private final TextField phone = new TextField("Phone");
-        private final DatePicker startDate = new DatePicker("Date of Birth");
-        private final DatePicker endDate = new DatePicker();
+        private final DatePicker startDate = new LocalDatePicker("Date of Birth");
+        private final DatePicker endDate = new LocalDatePicker();
         private final MultiSelectComboBox<String> occupations = new MultiSelectComboBox<>("Occupation");
         private final CheckboxGroup<String> roles = new CheckboxGroup<>("Role");
 
