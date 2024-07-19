@@ -14,7 +14,6 @@ import com.example.application.views.dashboard.DashboardView;
 import com.example.application.views.data.DataView;
 import com.example.application.views.forum.ForumView;
 import com.example.application.views.gridedit.GridEditView;
-import com.example.application.views.grideditpaginated.GridEditPaginatedView;
 import com.example.application.views.gridwithfilters.GridwithFiltersView;
 import com.example.application.views.hello.HelloView;
 import com.example.application.views.imagegallery.ImageGalleryView;
