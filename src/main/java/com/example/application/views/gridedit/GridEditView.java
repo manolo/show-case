@@ -7,6 +7,7 @@ import com.example.application.data.SamplePerson;
 import com.example.application.services.SamplePersonService;
 import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.Shortcuts;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -57,7 +58,7 @@ public class GridEditView extends HorizontalLayout {
         // Some styles
         addClassNames("grid-edit-view");
         setSizeFull();
-        grid.setSizeFull();
+        grid.setHeightFull();
         save.getElement().getThemeList().add("badge success");
         cancel.getElement().getThemeList().add("badge error");
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
@@ -89,7 +90,7 @@ public class GridEditView extends HorizontalLayout {
         grid.setSelectionMode(Grid.SelectionMode.NONE);
 
         // Close editor on escape
-        UI.getCurrent().addShortcutListener(cancel::click, Key.ESCAPE);
+        Shortcuts.addShortcutListener(this, cancel::click, Key.ESCAPE).listenOn(this);
 
         // Configure binder and editor
         binder.bindInstanceFields(this);
