@@ -22,7 +22,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 @Route(value = "empty", layout = MainLayout.class)
 public class AboutView extends VerticalLayout {
 
-    public AboutView() {
+    public AboutView() throws InterruptedException {
         setSpacing(false);
 
         Image img = new Image("images/empty-plant.png", "placeholder plant");
@@ -47,5 +47,7 @@ public class AboutView extends VerticalLayout {
         setJustifyContentMode(JustifyContentMode.CENTER);
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         getStyle().set("text-align", "center");
+
+        Thread.sleep(1300);
     }
 }
