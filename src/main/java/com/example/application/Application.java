@@ -2,6 +2,7 @@ package com.example.application;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.sql.init.SqlDataSourceScriptDatabaseInitializer;
@@ -11,6 +12,8 @@ import org.springframework.context.annotation.Bean;
 import com.example.application.data.SamplePersonRepository;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.component.page.Push;
+import com.vaadin.flow.server.ServiceInitEvent;
+import com.vaadin.flow.server.VaadinServiceInitListener;
 import com.vaadin.flow.theme.Theme;
 
 /**
@@ -23,10 +26,22 @@ import com.vaadin.flow.theme.Theme;
 @SpringBootApplication
 @Theme("show-case")
 @Push
-public class Application implements AppShellConfigurator {
+public class Application implements AppShellConfigurator, VaadinServiceInitListener {
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
+    }
+
+    @Value("${ama.css.url}")
+    String amaCssUrl;
+
+    @Override
+    public void serviceInit(ServiceInitEvent initEvent) {
+        initEvent.getSource()
+				.addUIInitListener(e -> {
+					e.getUI().getLoadingIndicatorConfiguration().setApplyDefaultTheme(false);
+					e.getUI().getPage().addStyleSheet(amaCssUrl);
+				});
     }
 
     @Bean

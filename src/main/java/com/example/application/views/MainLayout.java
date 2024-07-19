@@ -1,5 +1,6 @@
 package com.example.application.views;
 
+
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 import com.example.application.views.about.AboutView;
@@ -13,6 +14,7 @@ import com.example.application.views.dashboard.DashboardView;
 import com.example.application.views.data.DataView;
 import com.example.application.views.forum.ForumView;
 import com.example.application.views.gridedit.GridEditView;
+import com.example.application.views.grideditpaginated.GridEditPaginatedView;
 import com.example.application.views.gridwithfilters.GridwithFiltersView;
 import com.example.application.views.hello.HelloView;
 import com.example.application.views.imagegallery.ImageGalleryView;
@@ -22,15 +24,17 @@ import com.example.application.views.masterdetailresponsive.MasterDetailResponsi
 import com.example.application.views.pageeditor.PageEditorView;
 import com.example.application.views.personform.PersonFormView;
 import com.example.application.views.spreadsheet.SpreadsheetView;
+import com.vaadin.flow.component.Html;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.dependency.StyleSheet;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.Scroller;
+import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.PageTitle;
@@ -45,7 +49,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 // CssImport will bundle the css with the js bundle in compile time
 //@CssImport("ama.css")
 // StyleSheet will request the css to the vaadin app in runtime time
-@StyleSheet("frontend/ama.css")
+//@StyleSheet("frontend/ama.css")
 
 // This is a better option the ama.css is hosted in a CDN
 // All apps are updated automatically without having to compile
@@ -82,7 +86,6 @@ public class MainLayout extends AppLayout {
 
     private SideNav createNavigation() {
         SideNav nav = new SideNav();
-
         nav.addItem(new SideNavItem("About", AboutView.class, LineAwesomeIcon.FILE.create()));
         nav.addItem(
                 new SideNavItem("Custom Layout", CustomLayoutView.class, LineAwesomeIcon.PENCIL_RULER_SOLID.create()));
