@@ -14,6 +14,7 @@ import com.example.application.services.SamplePersonService;
 import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.Shortcuts;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -134,7 +135,7 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
         delete.addClickListener(e -> this.delete());
 
         // Close editor on escape
-        UI.getCurrent().addShortcutListener(cancel::click, Key.ESCAPE);
+        Shortcuts.addShortcutListener(this, cancel::click, Key.ESCAPE).listenOn(this);
 
         // Configure dialog to discard unsaved changes
         dialog = new ConfirmDialog("Discard changes", "There are unsaved changes?", "Discard", e -> {
