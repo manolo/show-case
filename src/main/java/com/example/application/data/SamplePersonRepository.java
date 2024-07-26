@@ -12,4 +12,7 @@ public interface SamplePersonRepository
     @Query(value = "SELECT DISTINCT occupation FROM sample_person", nativeQuery = true)
     List<String> findDistinctOccupationValues();
 
+    @Query(value = "SELECT DISTINCT role FROM sample_person", nativeQuery = true)
+    List<String> findDistinctRoleValues();
+
 }

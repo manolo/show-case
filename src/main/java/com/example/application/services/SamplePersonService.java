@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import com.example.application.data.SamplePerson;
@@ -42,10 +41,18 @@ public class SamplePersonService {
     }
 
     public int count() {
-        return (int) repository.count();
+        return (int)repository.count();
+    }
+
+    public int count(Specification<SamplePerson> filter) {
+        return (int)repository.count(filter);
     }
 
     public List<String> findDistinctOccupationValues() {
         return repository.findDistinctOccupationValues();
+    }
+
+    public List<String> findDistinctRoleValues() {
+        return repository.findDistinctRoleValues();
     }
 }
