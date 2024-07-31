@@ -18,7 +18,7 @@ import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
-public class SamplePersonFilter extends Div {
+public class SamplePersonFilter extends Div implements HasFilterParameters{
 
     private final TextField name = new TextField("Name");
     private final TextField phone = new TextField("Phone");
@@ -51,7 +51,7 @@ public class SamplePersonFilter extends Div {
             roles.clear();
             onSearch.run();
         });
-        Button searchBtn = new Button("Search");
+        Button searchBtn = new Button("Filter");
         searchBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         searchBtn.addClickListener(e -> onSearch.run());
 
@@ -78,6 +78,7 @@ public class SamplePersonFilter extends Div {
         return dateRangeComponent;
     }
 
+    @Override
     public HashMap<String, List<String>> getFilterParameters() {
         HashMap<String, List<String>> map = new HashMap<>();
         if (!name.isEmpty()) {
