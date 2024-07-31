@@ -15,6 +15,7 @@ import com.example.application.views.data.DataView;
 import com.example.application.views.forum.ForumView;
 import com.example.application.views.gridedit.GridEditView;
 import com.example.application.views.grideditfilterpaginated.GridEditPaginatedView;
+import com.example.application.views.grideditfilterpaginatedfilter.GridEditPaginatedFilterView;
 import com.example.application.views.gridwithfilters.GridwithFiltersView;
 import com.example.application.views.gridwithfiltersrest.GridwithFiltersRestView;
 import com.example.application.views.hello.HelloView;
@@ -94,6 +95,7 @@ public class MainLayout extends AppLayout {
         nav.addItem(new SideNavItem("Edit - Crud", CrudView.class, LineAwesomeIcon.COLUMNS_SOLID.create()));
         nav.addItem(new SideNavItem("Edit - Grid", GridEditView.class, LineAwesomeIcon.COLUMNS_SOLID.create()));
         nav.addItem(new SideNavItem("Edit - Grid Paginated", GridEditPaginatedView.class, LineAwesomeIcon.COLUMNS_SOLID.create()));
+        nav.addItem(new SideNavItem("Edit - Grid Filter Paginated", GridEditPaginatedFilterView.class, LineAwesomeIcon.COLUMNS_SOLID.create()));
         nav.addItem(new SideNavItem("Edit - Responsive", MasterDetailResponsiveView.class, LineAwesomeIcon.COLUMNS_SOLID.create()));
         nav.addItem(new SideNavItem("Person Form", PersonFormView.class, LineAwesomeIcon.USER.create()));
         nav.addItem(new SideNavItem("Address Form", AddressFormView.class, LineAwesomeIcon.MAP_MARKER_SOLID.create()));

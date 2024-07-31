@@ -1,6 +1,8 @@
 .grid-edit-view vaadin-grid vaadin-text-field,
 .grid-edit-view vaadin-grid vaadin-email-field,
-.grid-edit-view vaadin-grid vaadin-date-picker {
+.grid-edit-view vaadin-grid vaadin-date-picker,
+.grid-edit-view vaadin-grid vaadin-multi-select-combo-box
+ {
     width: 95%;
     --vaadin-input-field-height: 1.5em;
 }
