@@ -62,7 +62,7 @@ public class PageEditorView extends Main {
         dl.add(createItem("Owner", "My Name"), createItem("Created", "2021-08-14 14:48"),
                 createItem("Last modified", "2021-08-14 14:50"), createBadgeItem("Status", "Draft"));
 
-        Select select = new Select();
+        Select<String> select = new Select<>();
         select.setLabel("Project");
         select.setItems("My Project", "Your Project", "Their Project");
         select.setValue("My Project");

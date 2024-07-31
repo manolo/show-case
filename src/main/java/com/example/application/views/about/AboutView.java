@@ -1,7 +1,6 @@
 package com.example.application.views.about;
 
 import java.util.Locale;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.example.application.views.MainLayout;

@@ -80,7 +80,7 @@ public class DashboardView extends Main {
 
     private Component createViewEvents() {
         // Header
-        Select year = new Select();
+        Select<String> year = new Select<>();
         year.setItems("2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021");
         year.setValue("2021");
         year.setWidth("100px");
@@ -123,7 +123,7 @@ public class DashboardView extends Main {
         HorizontalLayout header = createHeader("Service health", "Input / output");
 
         // Grid
-        Grid<ServiceHealth> grid = new Grid();
+        Grid<ServiceHealth> grid = new Grid<>();
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         grid.setAllRowsVisible(true);
 

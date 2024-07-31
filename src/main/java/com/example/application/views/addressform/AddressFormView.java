@@ -31,8 +31,8 @@ public class AddressFormView extends Composite<VerticalLayout> {
         FormLayout formLayout2Col = new FormLayout();
         TextField textField2 = new TextField();
         TextField textField3 = new TextField();
-        Select select = new Select();
-        Select select2 = new Select();
+        Select<SampleItem> select = new Select<>();
+        Select<SampleItem> select2 = new Select<>();
         HorizontalLayout layoutRow = new HorizontalLayout();
         Button buttonPrimary = new Button();
         Button buttonSecondary = new Button();
@@ -86,7 +86,7 @@ public class AddressFormView extends Composite<VerticalLayout> {
     record SampleItem(String value, String label, Boolean disabled) {
     }
 
-    private void setSelectSampleData(Select select) {
+    private void setSelectSampleData(Select<SampleItem> select) {
         List<SampleItem> sampleItems = new ArrayList<>();
         sampleItems.add(new SampleItem("state1", "State 1", null));
         sampleItems.add(new SampleItem("state2", "State 2", null));

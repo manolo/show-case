@@ -40,10 +40,12 @@ public class SamplePersonServiceRest {
         return restTemplate.getForObject(BASE_uri + "/list?" + queryString, SamplePersonContent.class).content;
     }
 
-    public List<String> findDistinctOccupationValues() {
+    @SuppressWarnings("unchecked")
+	public List<String> findDistinctOccupationValues() {
         return restTemplate.getForObject(BASE_uri + "/distinct-occupations", List.class);
     }
 
+    @SuppressWarnings("unchecked")
     public List<String> findDistinctRoleValues() {
         return restTemplate.getForObject(BASE_uri + "/distinct-roles", List.class);
     }

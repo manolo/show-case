@@ -5,7 +5,6 @@ import java.util.List;
 import com.example.application.components.datepicker.LocalDatePicker;
 import com.example.application.components.filter.SamplePersonFilter;
 import com.example.application.data.SamplePerson;
-import com.example.application.services.SamplePersonService;
 import com.example.application.services.SamplePersonServiceRest;
 import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.grid.Grid;

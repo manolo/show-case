@@ -13,8 +13,6 @@ public class ServiceHealth {
 
     private int output;
 
-    private String theme;
-
     enum Status {
         EXCELLENT, OK, FAILING;
     }
