@@ -15,6 +15,7 @@ import com.example.application.views.data.DataView;
 import com.example.application.views.forum.ForumView;
 import com.example.application.views.gridedit.GridEditView;
 import com.example.application.views.gridwithfilters.GridwithFiltersView;
+import com.example.application.views.gridwithfiltersrest.GridwithFiltersRestView;
 import com.example.application.views.hello.HelloView;
 import com.example.application.views.imagegallery.ImageGalleryView;
 import com.example.application.views.map.MapView;
@@ -108,6 +109,8 @@ public class MainLayout extends AppLayout {
         nav.addItem(new SideNavItem("Checkout Form", CheckoutFormView.class, LineAwesomeIcon.CREDIT_CARD.create()));
         nav.addItem(
                 new SideNavItem("Grid with Filters", GridwithFiltersView.class, LineAwesomeIcon.FILTER_SOLID.create()));
+        nav.addItem(
+                new SideNavItem("Grid with Filters Rest", GridwithFiltersRestView.class, LineAwesomeIcon.FILTER_SOLID.create()));
 
         return nav;
     }
