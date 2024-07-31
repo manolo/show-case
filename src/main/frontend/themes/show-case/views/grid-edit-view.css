@@ -1,15 +1,15 @@
-.grid-edit-view vaadin-text-field,
-.grid-edit-view vaadin-email-field,
-.grid-edit-view vaadin-date-picker {
+.grid-edit-view vaadin-grid vaadin-text-field,
+.grid-edit-view vaadin-grid vaadin-email-field,
+.grid-edit-view vaadin-grid vaadin-date-picker {
     width: 95%;
     --vaadin-input-field-height: 1.5em;
 }
 
-.grid-edit-view vaadin-button {
+.grid-edit-view vaadin-grid vaadin-button {
     --lumo-button-size: 1em;
     height: 1.5em;
 }
-.grid-edit-buttons {
+.grid-edit-view vaadin-grid .grid-edit-buttons {
     padding: 0px;
     gap: 2px;
 }
