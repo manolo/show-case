@@ -59,6 +59,8 @@ public class SamplePersonServerApi {
     @GetMapping("/count")
     public int count(
             @RequestParam(required = false) String name,
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
             @RequestParam(required = false) @Email String email,
             @RequestParam(required = false) String phone,
             @RequestParam(required = false) LocalDate startDate,
@@ -66,7 +68,7 @@ public class SamplePersonServerApi {
             @RequestParam(required = false) List<String> occupation,
             @RequestParam(required = false) List<String> role,
             @RequestParam(required = false) Boolean important) {
-        Specification<SamplePerson> spec = toSpec(name, email, phone, startDate, endDate, occupation, role, important);
+        Specification<SamplePerson> spec = toSpec(name, firstName, lastName, email, phone, startDate, endDate, occupation, role, important);
         return service.count(spec);
     }
 
@@ -78,6 +80,8 @@ public class SamplePersonServerApi {
                 @SortDefault(sort = "firstName")
             }) Pageable pageable,
             @RequestParam(required = false) String name,
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
             @RequestParam(required = false) @Email String email,
             @RequestParam(required = false) String phone,
             @RequestParam(required = false) LocalDate startDate,
@@ -85,11 +89,11 @@ public class SamplePersonServerApi {
             @RequestParam(required = false) List<String> occupation,
             @RequestParam(required = false) List<String> role,
             @RequestParam(required = false) Boolean important) {
-        Specification<SamplePerson> spec = toSpec(name, email, phone, startDate, endDate, occupation, role, important);
+        Specification<SamplePerson> spec = toSpec(name, firstName, lastName, email, phone, startDate, endDate, occupation, role, important);
         return service.list(pageable, spec);
     }
 
-    private Specification<SamplePerson> toSpec(String name, String email, String phone, LocalDate startDate,
+    private Specification<SamplePerson> toSpec(String name, String firstName, String lastName, String email, String phone, LocalDate startDate,
             LocalDate endDate, List<String> occupation, List<String> role, Boolean important) {
         Specification<SamplePerson> spec = Specification.where(null);
 
@@ -101,17 +105,29 @@ public class SamplePersonServerApi {
                     builder.like(builder.lower(root.get("lastName")), namePattern)
                 )
             );
+        } else {
+            if (firstName != null && !firstName.isEmpty()) {
+                spec = spec.and((root, query, builder) ->
+                    builder.like(builder.lower(root.get("firstName")), "%" + firstName.toLowerCase() + "%")
+                );
+            }
+            if (lastName != null && !lastName.isEmpty()) {
+                spec = spec.and((root, query, builder) ->
+                    builder.like(builder.lower(root.get("lastName")), "%" + lastName.toLowerCase() + "%")
+                );
+            }
+
         }
 
         if (email != null && !email.isEmpty()) {
             spec = spec.and((root, query, builder) ->
-                builder.equal(root.get("email"), email)
+                builder.like(root.get("email"), email)
             );
         }
 
         if (phone != null && !phone.isEmpty()) {
             spec = spec.and((root, query, builder) ->
-                builder.equal(root.get("phone"), phone)
+                builder.like(root.get("phone"), phone)
             );
         }
 

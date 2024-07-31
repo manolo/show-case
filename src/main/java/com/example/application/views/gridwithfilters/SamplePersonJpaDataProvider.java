@@ -74,9 +74,20 @@ public class SamplePersonJpaDataProvider extends AbstractBackEndDataProvider<Sam
             spec = spec.and((root, query, builder) -> builder.or(
                     builder.like(builder.lower(root.get("firstName")), namePattern),
                     builder.like(builder.lower(root.get("lastName")), namePattern)));
+        }  else {
+            if (map.get("firstName") != null) {
+                spec = spec.and((root, query, builder) ->
+                    builder.like(builder.lower(root.get("firstName")), "%" + map.get("firstName")  + "%")
+                );
+            }
+            if (map.get("lastName") != null) {
+                spec = spec.and((root, query, builder) ->
+                    builder.like(builder.lower(root.get("lastName")), "%" + map.get("lastName")  + "%")
+                );
+            }
         }
         if (map.get("email") != null) {
-            spec = spec.and((root, query, builder) -> builder.equal(root.get("email"), map.get("email").get(0)));
+            spec = spec.and((root, query, builder) -> builder.like(root.get("email"), map.get("email").get(0)));
         }
         if (map.get("phone") != null) {
             spec = spec.and((root, query, builder) -> builder.like(root.get("phone"), map.get("phone").get(0)));
