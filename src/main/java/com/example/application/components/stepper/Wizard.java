@@ -13,6 +13,8 @@ import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Main;
 import com.vaadin.flow.component.icon.SvgIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
@@ -27,10 +29,12 @@ import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.BoxSizing;
 import com.vaadin.flow.theme.lumo.LumoUtility.Display;
+import com.vaadin.flow.theme.lumo.LumoUtility.Flex;
 import com.vaadin.flow.theme.lumo.LumoUtility.FlexDirection;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import com.vaadin.flow.theme.lumo.LumoUtility.Height;
 import com.vaadin.flow.theme.lumo.LumoUtility.IconSize;
+import com.vaadin.flow.theme.lumo.LumoUtility.JustifyContent;
 import com.vaadin.flow.theme.lumo.LumoUtility.MaxWidth;
 import com.vaadin.flow.theme.lumo.LumoUtility.Overflow;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
@@ -45,10 +49,12 @@ public abstract class Wizard extends Main
 	private RouterLink next;
 	private String currentPath;
 	private Step[] steps;
-	
+
 	private ContinueNavigationAction action;
-	private ConfirmDialog confirmDialog = new ConfirmDialog("",
-			super.getTranslation("wizard.validation.errors"), super.getTranslation("OK"), __ -> action.cancel());
+	private ConfirmDialog confirmDialog = createConfirmDialog();
+	private Notification notification = createNotification();
+
+	private boolean modal = false;
 
 	public Wizard(Step... steps) {
 		this.steps = steps;
@@ -61,13 +67,17 @@ public abstract class Wizard extends Main
 		this(steps);
 		setOrientiation(orientiation);
 	}
-	
+
 	public void setOrientiation(Orientation orientiation) {
-		removeClassName(orientiation == Orientation.HORIZONTAL ? FlexDirection.ROW: FlexDirection.COLUMN);
-		addClassName(orientiation == Orientation.HORIZONTAL ? FlexDirection.COLUMN: FlexDirection.ROW);
+		removeClassName(orientiation == Orientation.HORIZONTAL ? FlexDirection.ROW : FlexDirection.COLUMN);
+		addClassName(orientiation == Orientation.HORIZONTAL ? FlexDirection.COLUMN : FlexDirection.ROW);
 		stepper.setOrientation(orientiation);
 	}
-	
+
+	public void setErrorModal(boolean modal) {
+		this.modal = modal;
+	}
+
 	private Stepper createStepper() {
 		this.stepper.addClassNames(BoxSizing.BORDER, MaxWidth.SCREEN_SMALL, Padding.MEDIUM);
 		this.stepper.setOrientation(Stepper.Orientation.HORIZONTAL);
@@ -94,7 +104,9 @@ public abstract class Wizard extends Main
 		this.next.addClassNames(AlignItems.CENTER, Display.FLEX, Gap.SMALL);
 
 		this.footer = new Div(this.previous, this.next);
-		this.footer.addClassNames(Display.FLEX, Gap.XLARGE, Padding.Horizontal.LARGE, Padding.Vertical.MEDIUM);
+
+		this.footer.addClassNames(Display.FLEX, Gap.XLARGE, Padding.Horizontal.LARGE, Padding.Vertical.MEDIUM,
+				Flex.GROW, AlignItems.END, JustifyContent.END);
 		return this.footer;
 	}
 
@@ -102,6 +114,19 @@ public abstract class Wizard extends Main
 		SvgIcon i = icon.create();
 		i.addClassNames(IconSize.SMALL);
 		return i;
+	}
+
+	private Notification createNotification() {
+		Notification notification = new Notification();
+		notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+		notification.add(new Div(super.getTranslation("wizard.validation.errors")));
+		notification.setDuration(3000);
+		return notification;
+	}
+
+	private ConfirmDialog createConfirmDialog() {
+		return new ConfirmDialog("", super.getTranslation("wizard.validation.errors"), super.getTranslation("OK"),
+				__ -> action.cancel());
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -124,19 +149,23 @@ public abstract class Wizard extends Main
 		if (forwarded != null && forwarded) {
 			return;
 		}
+		int idxActive = getActiveStepIndex();
+		int idxNext = getStepIndex(event.getLocation().getPath());
+		if ((idxNext - idxActive) < 0) {
+			return;
+		}
 		Component view = getCurrentComponentView();
 		if (view != null && view instanceof HasBinder) {
-			Binder<?> binder = ((HasBinder)view).getBinder();
+			Binder<?> binder = ((HasBinder) view).getBinder();
 			saveSessionObject(view.getClass(), binder.getBean());
-			int idxActive = getActiveStepIndex();
-			int idxNext = getStepIndex(event.getLocation().getPath());
-			if ((idxNext - idxActive) < 0) {
-				return;
-			}
 			if (!binder.validate().isOk()) {
-				this.action = event.postpone();
-				confirmDialog.open();
 				steps[idxActive].setState(State.ERROR);
+				this.action = event.postpone();
+				if (modal) {
+					confirmDialog.open();
+				} else {
+					notification.open();
+				}
 			}
 		}
 	}
@@ -187,7 +216,7 @@ public abstract class Wizard extends Main
 				return i;
 			}
 		}
-		return 0;
+		return -1;
 	}
 
 	private int getActiveStepIndex() {
