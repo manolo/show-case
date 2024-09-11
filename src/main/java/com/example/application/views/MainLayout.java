@@ -26,6 +26,7 @@ import com.example.application.views.masterdetailresponsive.MasterDetailResponsi
 import com.example.application.views.pageeditor.PageEditorView;
 import com.example.application.views.personform.PersonFormView;
 import com.example.application.views.spreadsheet.SpreadsheetView;
+import com.example.application.views.wizard.CheckoutStep1View;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.Footer;
@@ -111,6 +112,9 @@ public class MainLayout extends AppLayout {
                 new SideNavItem("Grid with Filters", GridwithFiltersView.class, LineAwesomeIcon.FILTER_SOLID.create()));
         nav.addItem(
                 new SideNavItem("Grid with Filters Rest", GridwithFiltersRestView.class, LineAwesomeIcon.FILTER_SOLID.create()));
+        
+        nav.addItem(
+                new SideNavItem("Steeper", CheckoutStep1View.class, LineAwesomeIcon.MONEY_CHECK_ALT_SOLID.create()));
 
         return nav;
     }
