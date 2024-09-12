@@ -87,18 +87,25 @@ public class MainLayout extends AppLayout {
     private SideNav createNavigation() {
         SideNav nav = new SideNav();
         nav.addItem(new SideNavItem("About", AboutView.class, LineAwesomeIcon.FILE.create()));
+        nav.addItem(new SideNavItem("Extra Addons", AddonsView.class, LineAwesomeIcon.PUZZLE_PIECE_SOLID.create()));
+        nav.addItem(
+                new SideNavItem("Steeper", CheckoutStep1View.class, LineAwesomeIcon.MONEY_CHECK_ALT_SOLID.create()));
         nav.addItem(
                 new SideNavItem("Custom Layout", CustomLayoutView.class, LineAwesomeIcon.PENCIL_RULER_SOLID.create()));
-        nav.addItem(new SideNavItem("Hello", HelloView.class, LineAwesomeIcon.GLOBE_SOLID.create()));
+        nav.addItem(new SideNavItem("Hello World", HelloView.class, LineAwesomeIcon.GLOBE_SOLID.create()));
         nav.addItem(new SideNavItem("Dashboard", DashboardView.class, LineAwesomeIcon.CHART_AREA_SOLID.create()));
-        nav.addItem(new SideNavItem("Forum", ForumView.class, LineAwesomeIcon.LIST_SOLID.create()));
         nav.addItem(new SideNavItem("Data", DataView.class, LineAwesomeIcon.TH_SOLID.create()));
+        nav.addItem(
+                new SideNavItem("Grid with Filters", GridwithFiltersView.class, LineAwesomeIcon.FILTER_SOLID.create()));
+        nav.addItem(new SideNavItem("Grid with Filters Rest", GridwithFiltersRestView.class,
+                LineAwesomeIcon.FILTER_SOLID.create()));
         nav.addItem(new SideNavItem("Edit - Master-Detail", MasterDetailView.class, LineAwesomeIcon.COLUMNS_SOLID.create()));
         nav.addItem(new SideNavItem("Edit - Crud", CrudView.class, LineAwesomeIcon.COLUMNS_SOLID.create()));
         nav.addItem(new SideNavItem("Edit - Grid", GridEditView.class, LineAwesomeIcon.COLUMNS_SOLID.create()));
         nav.addItem(new SideNavItem("Edit - Grid Paginated", GridEditPaginatedView.class, LineAwesomeIcon.COLUMNS_SOLID.create()));
         nav.addItem(new SideNavItem("Edit - Grid Filter Paginated", GridEditPaginatedFilterView.class, LineAwesomeIcon.COLUMNS_SOLID.create()));
         nav.addItem(new SideNavItem("Edit - Responsive", MasterDetailResponsiveView.class, LineAwesomeIcon.COLUMNS_SOLID.create()));
+        nav.addItem(new SideNavItem("Forum", ForumView.class, LineAwesomeIcon.LIST_SOLID.create()));
         nav.addItem(new SideNavItem("Person Form", PersonFormView.class, LineAwesomeIcon.USER.create()));
         nav.addItem(new SideNavItem("Address Form", AddressFormView.class, LineAwesomeIcon.MAP_MARKER_SOLID.create()));
         nav.addItem(
@@ -109,17 +116,6 @@ public class MainLayout extends AppLayout {
         nav.addItem(new SideNavItem("Page Editor", PageEditorView.class, LineAwesomeIcon.EDIT.create()));
         nav.addItem(new SideNavItem("Image Gallery", ImageGalleryView.class, LineAwesomeIcon.TH_LIST_SOLID.create()));
         nav.addItem(new SideNavItem("Checkout Form", CheckoutFormView.class, LineAwesomeIcon.CREDIT_CARD.create()));
-        nav.addItem(
-                new SideNavItem("Grid with Filters", GridwithFiltersView.class, LineAwesomeIcon.FILTER_SOLID.create()));
-        nav.addItem(
-                new SideNavItem("Grid with Filters Rest", GridwithFiltersRestView.class, LineAwesomeIcon.FILTER_SOLID.create()));
-        
-        nav.addItem(
-                new SideNavItem("Steeper", CheckoutStep1View.class, LineAwesomeIcon.MONEY_CHECK_ALT_SOLID.create()));
-
-        nav.addItem(
-                new SideNavItem("Addons", AddonsView.class, LineAwesomeIcon.PUZZLE_PIECE_SOLID.create()));
-
         return nav;
     }
 

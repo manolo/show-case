@@ -19,7 +19,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 @PageTitle("Step 1 - Wizard")
 @Route(value = "1", layout = CheckoutWizard.class)
 public class CheckoutStep1View extends Div implements HasBinder {
-	
+
     TextField name = new TextField("Name");
     EmailField email = new EmailField("Email address");
     TextField phone = new TextField("Phone number");
@@ -29,11 +29,11 @@ public class CheckoutStep1View extends Div implements HasBinder {
     public CheckoutStep1View() {
         addClassNames(Padding.Horizontal.LARGE, Padding.Vertical.MEDIUM);
         add(createForm());
-        
+
         binder.bindInstanceFields(this);
         binder.setBean(new PersonalDetails());
     }
-    
+
     private Component createForm() {
         H3 header = new H3("Personal details");
 
@@ -44,15 +44,15 @@ public class CheckoutStep1View extends Div implements HasBinder {
 
         phone.setRequiredIndicatorVisible(true);
         phone.setPattern("[\\d \\-\\+]+");
-        
+
         FormLayout form = new FormLayout(name, email, phone, remember);
         form.setColspan(name, 2);
-        
+
         return new Section(header, form);
     }
 
-	@Override
-	public Binder<?> getBinder() {
-		return binder;
-	}
+    @Override
+    public Binder<?> getBinder() {
+        return binder;
+    }
 }
