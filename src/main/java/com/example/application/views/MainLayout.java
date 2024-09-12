@@ -4,6 +4,7 @@ package com.example.application.views;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 import com.example.application.views.about.AboutView;
+import com.example.application.views.addons.AddonsView;
 import com.example.application.views.addressform.AddressFormView;
 import com.example.application.views.chat.ChatView;
 import com.example.application.views.checkoutform.CheckoutFormView;
@@ -115,6 +116,9 @@ public class MainLayout extends AppLayout {
         
         nav.addItem(
                 new SideNavItem("Steeper", CheckoutStep1View.class, LineAwesomeIcon.MONEY_CHECK_ALT_SOLID.create()));
+
+        nav.addItem(
+                new SideNavItem("Addons", AddonsView.class, LineAwesomeIcon.PUZZLE_PIECE_SOLID.create()));
 
         return nav;
     }
