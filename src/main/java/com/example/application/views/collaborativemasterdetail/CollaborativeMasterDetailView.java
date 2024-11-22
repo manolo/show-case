@@ -1,7 +1,14 @@
 package com.example.application.views.collaborativemasterdetail;
 
+import java.util.Optional;
+import java.util.UUID;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+
 import com.example.application.data.SamplePerson;
 import com.example.application.services.SamplePersonService;
+import com.example.application.views.MainLayout;
 import com.vaadin.collaborationengine.CollaborationAvatarGroup;
 import com.vaadin.collaborationengine.CollaborationBinder;
 import com.vaadin.collaborationengine.UserInfo;
@@ -29,13 +36,9 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
-import java.util.Optional;
-import java.util.UUID;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 @PageTitle("Collaborative Master-Detail")
-@Route("collaborative-master-detail/:samplePersonID?/:action?(edit)")
+@Route(value = "collaborative-master-detail/:samplePersonID?/:action?(edit)", layout = MainLayout.class)
 @Uses(Icon.class)
 public class CollaborativeMasterDetailView extends Div implements BeforeEnterObserver {
 
