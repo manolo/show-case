@@ -8,6 +8,7 @@ import com.example.application.views.addons.AddonsView;
 import com.example.application.views.addressform.AddressFormView;
 import com.example.application.views.chat.ChatView;
 import com.example.application.views.checkoutform.CheckoutFormView;
+import com.example.application.views.collaborativemasterdetail.CollaborativeMasterDetailView;
 import com.example.application.views.creditcardform.CreditCardFormView;
 import com.example.application.views.crud.CrudView;
 import com.example.application.views.customlayout.CustomLayoutView;
@@ -105,6 +106,9 @@ public class MainLayout extends AppLayout {
         nav.addItem(new SideNavItem("Edit - Grid Paginated", GridEditPaginatedView.class, LineAwesomeIcon.COLUMNS_SOLID.create()));
         nav.addItem(new SideNavItem("Edit - Grid Filter Paginated", GridEditPaginatedFilterView.class, LineAwesomeIcon.COLUMNS_SOLID.create()));
         nav.addItem(new SideNavItem("Edit - Responsive", MasterDetailResponsiveView.class, LineAwesomeIcon.COLUMNS_SOLID.create()));
+        nav.addItem(new SideNavItem("Edit - Collab-Master-Detail", CollaborativeMasterDetailView.class,
+                LineAwesomeIcon.COLUMNS_SOLID.create()));
+
         nav.addItem(new SideNavItem("Forum", ForumView.class, LineAwesomeIcon.LIST_SOLID.create()));
         nav.addItem(new SideNavItem("Person Form", PersonFormView.class, LineAwesomeIcon.USER.create()));
         nav.addItem(new SideNavItem("Address Form", AddressFormView.class, LineAwesomeIcon.MAP_MARKER_SOLID.create()));
