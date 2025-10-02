@@ -1,7 +1,5 @@
 package com.example.application.views.aichat;
 
-import java.util.Locale;
-
 import org.springframework.ai.chat.client.ChatClient;
 import org.vaadin.voiceengine.VoiceEngine;
 

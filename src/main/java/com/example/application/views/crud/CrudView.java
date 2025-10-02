@@ -1,5 +1,8 @@
 package com.example.application.views.crud;
 
+import static com.example.application.views.crud.CrudView.ROUTE_EDIT;
+import static com.example.application.views.crud.CrudView.ROUTE_NEW;
+
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -7,8 +10,6 @@ import com.example.application.components.datepicker.LocalDatePicker;
 import com.example.application.data.SamplePerson;
 import com.example.application.services.SamplePersonService;
 import com.example.application.views.MainLayout;
-import static com.example.application.views.crud.CrudView.ROUTE_EDIT;
-import static com.example.application.views.crud.CrudView.ROUTE_NEW;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.crud.BinderCrudEditor;

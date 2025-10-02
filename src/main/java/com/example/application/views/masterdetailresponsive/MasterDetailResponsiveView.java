@@ -1,5 +1,8 @@
 package com.example.application.views.masterdetailresponsive;
 
+import static com.example.application.views.masterdetailresponsive.MasterDetailResponsiveView.ROUTE_EDIT;
+import static com.example.application.views.masterdetailresponsive.MasterDetailResponsiveView.ROUTE_NEW;
+
 import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
@@ -9,8 +12,6 @@ import com.example.application.components.datepicker.LocalDatePicker;
 import com.example.application.data.SamplePerson;
 import com.example.application.services.SamplePersonService;
 import com.example.application.views.MainLayout;
-import static com.example.application.views.masterdetailresponsive.MasterDetailResponsiveView.ROUTE_EDIT;
-import static com.example.application.views.masterdetailresponsive.MasterDetailResponsiveView.ROUTE_NEW;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.Shortcuts;
