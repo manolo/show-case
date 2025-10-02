@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,8 +53,9 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.spreadsheet.Spreadsheet;
 import com.vaadin.flow.component.spreadsheet.SpreadsheetFilterTable;
 import com.vaadin.flow.component.spreadsheet.SpreadsheetTable;
-import com.vaadin.flow.component.upload.Receiver;
 import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.server.streams.UploadEvent;
+import com.vaadin.flow.server.streams.UploadHandler;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
@@ -70,7 +70,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 @Route(value = "spreadsheet", layout = MainLayout.class)
 @Menu
 @PreserveOnRefresh
-public class SpreadsheetView extends VerticalLayout implements Receiver {
+public class SpreadsheetView extends VerticalLayout implements UploadHandler{
 
     private File uploadedFile;
     private File previousFile;
@@ -97,16 +97,18 @@ public class SpreadsheetView extends VerticalLayout implements Receiver {
     }
 
     @Override
-    public OutputStream receiveUpload(String fileName, String mimeType) {
-        try {
-            File file = new File(fileName);
-            file.deleteOnExit();
-            uploadedFile = file;
-            return new FileOutputStream(uploadedFile);
-        } catch (FileNotFoundException e) {
-            getLogger().warn("ERROR reading file " + fileName, e);
+    public void handleUploadRequest(UploadEvent event) throws IOException {
+        try (InputStream in = event.getInputStream()) {
+            String fileName = event.getFileName();
+            File tempFile = File.createTempFile("upload", fileName != null ? fileName : "");
+            tempFile.deleteOnExit();
+            try (OutputStream out = new FileOutputStream(tempFile)) {
+                in.transferTo(out);
+            }
+            uploadedFile = tempFile;
+        } catch (IOException e) {
+            getLogger().warn("ERROR saving uploaded file", e);
         }
-        return null;
     }
 
     private VerticalLayout createViewHeader() {
@@ -472,4 +474,5 @@ public class SpreadsheetView extends VerticalLayout implements Receiver {
         SpreadsheetTable table = new SpreadsheetFilterTable(spreadsheet, cellAddresses);
         spreadsheet.registerTable(table);
     }
+
 }
