@@ -32,7 +32,8 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 @Menu
 public class AddonsView extends Div {
 
-    public AddonsView() {
+    @SuppressWarnings("deprecation")
+	public AddonsView() {
         addClassNames(Display.FLEX, FlexDirection.COLUMN, Height.FULL);
 
         Main content = new Main();
