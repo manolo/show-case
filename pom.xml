@@ -10,29 +10,21 @@
     <packaging>jar</packaging>
 
     <properties>
-        <java.version>17</java.version>
-        <vaadin.version>24.5.6</vaadin.version>
-        <spring-ai.version>1.0.0-M3</spring-ai.version>
+        <java.version>21</java.version>
+        <vaadin.version>24.9.1</vaadin.version>
+        <spring-ai.version>1.0.3</spring-ai.version>
     </properties>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.8</version>
+        <version>3.5.6</version>
     </parent>
 
     <repositories>
         <repository>
             <id>Vaadin Directory</id>
             <url>https://maven.vaadin.com/vaadin-addons</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>https://repo.spring.io/milestone</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -111,7 +103,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-openai-spring-boot-starter</artifactId>
+            <artifactId>spring-ai-starter-model-openai</artifactId>
         </dependency>
         <!-- <dependency>
            <groupId>es.amaseguros</groupId>
