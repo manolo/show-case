@@ -68,7 +68,7 @@ public class SamplePersonJpaDataProvider extends AbstractBackEndDataProvider<Sam
     }
 
     private Specification<SamplePerson> toPredicate(HashMap<String, List<String>> map) {
-        Specification<SamplePerson> spec = Specification.where(null);
+        Specification<SamplePerson> spec = Specification.unrestricted();
         if (map.get("name") != null) {
             String namePattern = "%" + map.get("name").get(0).toLowerCase() + "%";
             spec = spec.and((root, query, builder) -> builder.or(

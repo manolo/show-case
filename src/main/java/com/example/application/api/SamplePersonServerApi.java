@@ -95,7 +95,7 @@ public class SamplePersonServerApi {
 
     private Specification<SamplePerson> toSpec(String name, String firstName, String lastName, String email, String phone, LocalDate startDate,
             LocalDate endDate, List<String> occupation, List<String> role, Boolean important) {
-        Specification<SamplePerson> spec = Specification.where(null);
+        Specification<SamplePerson> spec = Specification.unrestricted();
 
         if (name != null && !name.isEmpty()) {
             String namePattern = "%" + name.toLowerCase() + "%";
