@@ -8,12 +8,14 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 
 @PageTitle("Hello")
 @Route(value = "hello-world", layout = MainLayout.class)
+@Menu
 @PreserveOnRefresh
 public class HelloView extends HorizontalLayout {
 

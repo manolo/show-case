@@ -17,6 +17,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Main;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Display;
@@ -28,6 +29,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
 @PageTitle("Addons")
 @Route(value = "addons", layout = MainLayout.class)
+@Menu
 public class AddonsView extends Div {
 
     public AddonsView() {

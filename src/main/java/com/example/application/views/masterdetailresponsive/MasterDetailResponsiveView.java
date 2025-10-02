@@ -1,8 +1,5 @@
 package com.example.application.views.masterdetailresponsive;
 
-import static com.example.application.views.masterdetailresponsive.MasterDetailResponsiveView.ROUTE_EDIT;
-import static com.example.application.views.masterdetailresponsive.MasterDetailResponsiveView.ROUTE_NEW;
-
 import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +9,8 @@ import com.example.application.components.datepicker.LocalDatePicker;
 import com.example.application.data.SamplePerson;
 import com.example.application.services.SamplePersonService;
 import com.example.application.views.MainLayout;
+import static com.example.application.views.masterdetailresponsive.MasterDetailResponsiveView.ROUTE_EDIT;
+import static com.example.application.views.masterdetailresponsive.MasterDetailResponsiveView.ROUTE_NEW;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.Shortcuts;
@@ -41,6 +40,7 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.BeforeLeaveEvent;
 import com.vaadin.flow.router.BeforeLeaveEvent.ContinueNavigationAction;
 import com.vaadin.flow.router.BeforeLeaveObserver;
+import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
@@ -50,6 +50,7 @@ import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 @PageTitle("Master-Detail-Responsive")
 @Route(value = ROUTE_EDIT, layout = MainLayout.class)
 @RouteAlias(value = ROUTE_NEW, layout = MainLayout.class)
+@Menu
 @PreserveOnRefresh
 public class MasterDetailResponsiveView extends Div implements BeforeEnterObserver, BeforeLeaveObserver {
 

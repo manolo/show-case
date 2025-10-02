@@ -1,12 +1,17 @@
 package com.example.application.views.pageeditor;
 
 import com.example.application.views.MainLayout;
-import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.html.DescriptionList;
 import com.vaadin.flow.component.html.DescriptionList.Description;
 import com.vaadin.flow.component.html.DescriptionList.Term;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Main;
+import com.vaadin.flow.component.html.Section;
 import com.vaadin.flow.component.richtexteditor.RichTextEditor;
 import com.vaadin.flow.component.richtexteditor.RichTextEditorVariant;
 import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
@@ -29,6 +34,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 
 @PageTitle("Page Editor")
 @Route(value = "page-editor", layout = MainLayout.class)
+@Menu
 @PreserveOnRefresh
 public class PageEditorView extends Main {
 

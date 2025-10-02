@@ -33,12 +33,14 @@ import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.renderer.LitRenderer;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
+import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 
 @PageTitle("Collaborative Master-Detail")
 @Route(value = "collaborative-master-detail/:samplePersonID?/:action?(edit)", layout = MainLayout.class)
+@Menu
 @Uses(Icon.class)
 public class CollaborativeMasterDetailView extends Div implements BeforeEnterObserver {
 

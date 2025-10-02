@@ -1,8 +1,5 @@
 package com.example.application.views.crud;
 
-import static com.example.application.views.crud.CrudView.ROUTE_EDIT;
-import static com.example.application.views.crud.CrudView.ROUTE_NEW;
-
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -10,6 +7,8 @@ import com.example.application.components.datepicker.LocalDatePicker;
 import com.example.application.data.SamplePerson;
 import com.example.application.services.SamplePersonService;
 import com.example.application.views.MainLayout;
+import static com.example.application.views.crud.CrudView.ROUTE_EDIT;
+import static com.example.application.views.crud.CrudView.ROUTE_NEW;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.crud.BinderCrudEditor;
@@ -29,6 +28,7 @@ import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
+import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
@@ -38,6 +38,7 @@ import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 @PageTitle("Crud")
 @Route(value = ROUTE_EDIT, layout = MainLayout.class)
 @RouteAlias(value = ROUTE_NEW, layout = MainLayout.class)
+@Menu
 @PreserveOnRefresh
 public class CrudView extends Div implements BeforeEnterObserver {
 

@@ -15,6 +15,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.renderer.LocalDateRenderer;
+import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
@@ -22,6 +23,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 
 @PageTitle("Grid with Filters")
 @Route(value = "grid-with-filters", layout = MainLayout.class)
+@Menu
 @PreserveOnRefresh
 public class GridwithFiltersView extends Div {
 

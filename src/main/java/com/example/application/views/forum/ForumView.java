@@ -1,5 +1,8 @@
 package com.example.application.views.forum;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -12,14 +15,14 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
+import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
-import java.util.Arrays;
-import java.util.List;
 
 @PageTitle("Forum")
 @Route(value = "feed", layout = MainLayout.class)
+@Menu
 @PreserveOnRefresh
 public class ForumView extends Div implements AfterNavigationObserver {
 

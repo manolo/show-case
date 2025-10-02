@@ -28,12 +28,14 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.data.renderer.TextRenderer;
+import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 
 @PageTitle("Editable Grid Paginated")
 @Route(value = "grid-edit-paginated", layout = MainLayout.class)
+@Menu
 @PreserveOnRefresh
 public class GridEditPaginatedView extends VerticalLayout {
 

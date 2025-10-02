@@ -15,6 +15,7 @@ import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.server.ServiceInitEvent;
 import com.vaadin.flow.server.VaadinServiceInitListener;
 import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.lumo.Lumo;
 
 /**
  * The entry point of the Spring Boot application.
@@ -24,7 +25,7 @@ import com.vaadin.flow.theme.Theme;
  *
  */
 @SpringBootApplication
-@Theme("show-case")
+@Theme(value = "show-case", variant="light", themeClass = Lumo.class)
 @Push
 public class Application implements AppShellConfigurator, VaadinServiceInitListener {
 
@@ -32,16 +33,19 @@ public class Application implements AppShellConfigurator, VaadinServiceInitListe
         SpringApplication.run(Application.class, args);
     }
 
-    @Value("${ama.css.url}")
-    String amaCssUrl;
+    @Value("${custom.css.url}")
+    String customCssUrl;
 
     @Override
     public void serviceInit(ServiceInitEvent initEvent) {
+        if (customCssUrl == null || customCssUrl.isEmpty()) {
+            return;
+        }
         initEvent.getSource()
-				.addUIInitListener(e -> {
-					e.getUI().getLoadingIndicatorConfiguration().setApplyDefaultTheme(false);
-					e.getUI().getPage().addStyleSheet(amaCssUrl);
-				});
+                .addUIInitListener(e -> {
+                    e.getUI().getLoadingIndicatorConfiguration().setApplyDefaultTheme(false);
+                    e.getUI().getPage().addStyleSheet(customCssUrl);
+                });
     }
 
     @Bean

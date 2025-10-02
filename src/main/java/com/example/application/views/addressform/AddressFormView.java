@@ -1,5 +1,8 @@
 package com.example.application.views.addressform;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -12,16 +15,16 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
-import java.util.ArrayList;
-import java.util.List;
 
 @PageTitle("Address Form")
 @Route(value = "address-form", layout = MainLayout.class)
 @PreserveOnRefresh
+@Menu
 public class AddressFormView extends Composite<VerticalLayout> {
 
     public AddressFormView() {

@@ -4,14 +4,15 @@ import com.example.application.components.stepper.Step;
 import com.example.application.components.stepper.Stepper.Orientation;
 import com.example.application.components.stepper.Wizard;
 import com.example.application.views.MainLayout;
+import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.ParentLayout;
 import com.vaadin.flow.router.RoutePrefix;
 import com.vaadin.flow.theme.lumo.LumoUtility.MaxWidth;
-import com.vaadin.flow.theme.lumo.LumoUtility.Width;
 
 @PageTitle("Wizard")
 @RoutePrefix(value = "wizard")
+@Menu
 @ParentLayout(MainLayout.class)
 public class CheckoutWizard extends Wizard {
 
