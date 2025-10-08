@@ -1,19 +1,13 @@
 package com.example.application.views.pageeditor;
 
-import com.example.application.views.MainLayout;
-import com.vaadin.flow.component.html.DescriptionList;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.html.DescriptionList.Description;
 import com.vaadin.flow.component.html.DescriptionList.Term;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Main;
-import com.vaadin.flow.component.html.Section;
 import com.vaadin.flow.component.richtexteditor.RichTextEditor;
 import com.vaadin.flow.component.richtexteditor.RichTextEditorVariant;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Accessibility;
 import com.vaadin.flow.theme.lumo.LumoUtility.Background;
@@ -31,11 +25,11 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 import com.vaadin.flow.theme.lumo.LumoUtility.Overflow;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
+import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Page Editor")
-@Route(value = "page-editor", layout = MainLayout.class)
-@Menu(order = 1)
-@PreserveOnRefresh
+@Route("page-editor")
+@Menu(order = 14, icon = LineAwesomeIconUrl.EDIT)
 public class PageEditorView extends Main {
 
     public PageEditorView() {
@@ -68,7 +62,7 @@ public class PageEditorView extends Main {
         dl.add(createItem("Owner", "My Name"), createItem("Created", "2021-08-14 14:48"),
                 createItem("Last modified", "2021-08-14 14:50"), createBadgeItem("Status", "Draft"));
 
-        Select<String> select = new Select<>();
+        Select select = new Select();
         select.setLabel("Project");
         select.setItems("My Project", "Your Project", "Their Project");
         select.setValue("My Project");

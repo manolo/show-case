@@ -1,8 +1,5 @@
 package com.example.application.views.chat;
 
-import java.util.UUID;
-
-import com.example.application.views.MainLayout;
 import com.vaadin.collaborationengine.CollaborationAvatarGroup;
 import com.vaadin.collaborationengine.CollaborationMessageInput;
 import com.vaadin.collaborationengine.CollaborationMessageList;
@@ -21,7 +18,6 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.Tabs.Orientation;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.Background;
@@ -34,11 +30,12 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 import com.vaadin.flow.theme.lumo.LumoUtility.Overflow;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.Width;
+import java.util.UUID;
+import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Chat")
-@Route(value = "chat", layout = MainLayout.class)
-@Menu(title = "Chat Collaborative", order=1)
-@PreserveOnRefresh
+@Route("chat")
+@Menu(order = 13, icon = LineAwesomeIconUrl.COMMENTS)
 public class ChatView extends HorizontalLayout {
 
     public static class ChatTab extends Tab {

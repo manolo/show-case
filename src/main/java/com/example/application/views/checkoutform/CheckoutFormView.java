@@ -1,28 +1,11 @@
 package com.example.application.views.checkoutform;
 
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.html.Aside;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Footer;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.Header;
-import com.vaadin.flow.component.html.Hr;
-import com.vaadin.flow.component.html.ListItem;
-import com.vaadin.flow.component.html.Main;
-import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.html.Section;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.html.UnorderedList;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.select.Select;
@@ -31,7 +14,6 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.Background;
@@ -51,11 +33,14 @@ import com.vaadin.flow.theme.lumo.LumoUtility.MaxWidth;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.Position;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Checkout Form")
-@Route(value = "checkout-form", layout = MainLayout.class)
-@Menu(order = 1)
-@PreserveOnRefresh
+@Route("checkout-form")
+@Menu(order = 16, icon = LineAwesomeIconUrl.CREDIT_CARD)
 public class CheckoutFormView extends Div {
 
     private static final Set<String> states = new LinkedHashSet<>();

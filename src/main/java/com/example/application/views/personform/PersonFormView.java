@@ -1,7 +1,5 @@
 package com.example.application.views.personform;
 
-import com.example.application.components.datepicker.LocalDatePicker;
-import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -16,14 +14,13 @@ import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
+import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Person Form")
-@Route(value = "person-form", layout = MainLayout.class)
-@Menu(order = 1)
-@PreserveOnRefresh
+@Route("person-form")
+@Menu(order = 8, icon = LineAwesomeIconUrl.USER)
 public class PersonFormView extends Composite<VerticalLayout> {
 
     public PersonFormView() {
@@ -32,7 +29,7 @@ public class PersonFormView extends Composite<VerticalLayout> {
         FormLayout formLayout2Col = new FormLayout();
         TextField textField = new TextField();
         TextField textField2 = new TextField();
-        DatePicker datePicker = new LocalDatePicker();
+        DatePicker datePicker = new DatePicker();
         TextField textField3 = new TextField();
         EmailField emailField = new EmailField();
         TextField textField4 = new TextField();

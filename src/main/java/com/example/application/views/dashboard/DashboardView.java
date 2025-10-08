@@ -1,20 +1,11 @@
 package com.example.application.views.dashboard;
 
 
-import com.example.application.views.MainLayout;
 import com.example.application.views.dashboard.ServiceHealth.Status;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.board.Board;
 import com.vaadin.flow.component.charts.Chart;
-import com.vaadin.flow.component.charts.model.ChartType;
-import com.vaadin.flow.component.charts.model.Configuration;
-import com.vaadin.flow.component.charts.model.DataSeries;
-import com.vaadin.flow.component.charts.model.DataSeriesItem;
-import com.vaadin.flow.component.charts.model.ListSeries;
-import com.vaadin.flow.component.charts.model.Marker;
-import com.vaadin.flow.component.charts.model.PlotOptionsAreaspline;
-import com.vaadin.flow.component.charts.model.PointPlacement;
-import com.vaadin.flow.component.charts.model.XAxis;
+import com.vaadin.flow.component.charts.model.*;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -37,10 +28,11 @@ import com.vaadin.flow.theme.lumo.LumoUtility.FontWeight;
 import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
+import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Dashboard")
-@Route(value = "dashboard", layout = MainLayout.class)
-@Menu(order = 1)
+@Route("dashboard")
+@Menu(order = 3, icon = LineAwesomeIconUrl.CHART_AREA_SOLID)
 public class DashboardView extends Main {
 
     public DashboardView() {
@@ -90,7 +82,7 @@ public class DashboardView extends Main {
 
     private Component createViewEvents() {
         // Header
-        Select<String> year = new Select<>();
+        Select year = new Select();
         year.setItems("2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021");
         year.setValue("2021");
         year.setWidth("100px");
@@ -133,7 +125,7 @@ public class DashboardView extends Main {
         HorizontalLayout header = createHeader("Service health", "Input / output");
 
         // Grid
-        Grid<ServiceHealth> grid = new Grid<>();
+        Grid<ServiceHealth> grid = new Grid();
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
         grid.setAllRowsVisible(true);
 

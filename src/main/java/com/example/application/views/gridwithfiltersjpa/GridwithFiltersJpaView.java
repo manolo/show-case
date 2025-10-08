@@ -1,4 +1,4 @@
-package com.example.application.views.gridwithfilters;
+package com.example.application.views.gridwithfiltersjpa;
 
 import com.example.application.data.SamplePerson;
 import com.example.application.services.SamplePersonService;
@@ -35,18 +35,18 @@ import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
-@PageTitle("Grid with Filters")
-@Route("grid-with-filters")
-@Menu(order = 17, icon = LineAwesomeIconUrl.FILTER_SOLID)
+@PageTitle("Grid with Filters JPA")
+@Route("grid-with-filters-jpa")
+@Menu
 @Uses(Icon.class)
-public class GridwithFiltersView extends Div {
+public class GridwithFiltersJpaView extends Div {
 
     private Grid<SamplePerson> grid;
 
     private Filters filters;
     private final SamplePersonService samplePersonService;
 
-    public GridwithFiltersView(SamplePersonService SamplePersonService) {
+    public GridwithFiltersJpaView(SamplePersonService SamplePersonService) {
         this.samplePersonService = SamplePersonService;
         setSizeFull();
         addClassNames("gridwith-filters-view");

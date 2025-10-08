@@ -1,6 +1,5 @@
 package com.example.application.views.creditcardform;
 
-import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -15,13 +14,12 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
+import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Credit Card Form")
-@Route(value = "credit-card-form", layout = MainLayout.class)
-@Menu(order = 1)
-@PreserveOnRefresh
+@Route("credit-card-form")
+@Menu(order = 10, icon = LineAwesomeIconUrl.CREDIT_CARD)
 public class CreditCardFormView extends Div {
 
     private TextField cardNumber;

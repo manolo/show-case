@@ -1,6 +1,5 @@
 package com.example.application.views.imagegallery;
 
-import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.html.H2;
@@ -12,7 +11,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.Display;
@@ -24,11 +22,11 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 import com.vaadin.flow.theme.lumo.LumoUtility.MaxWidth;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
+import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Image Gallery")
-@Route(value = "image-gallery", layout = MainLayout.class)
-@Menu(order = 1)
-@PreserveOnRefresh
+@Route("image-gallery")
+@Menu(order = 15, icon = LineAwesomeIconUrl.TH_LIST_SOLID)
 public class ImageGalleryView extends Main implements HasComponents, HasStyle {
 
     private OrderedList imageContainer;

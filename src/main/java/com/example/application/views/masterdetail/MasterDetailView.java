@@ -1,23 +1,18 @@
 package com.example.application.views.masterdetail;
 
-import java.util.Optional;
-
-import org.springframework.data.domain.PageRequest;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
-
-import com.example.application.components.datepicker.LocalDatePicker;
 import com.example.application.data.SamplePerson;
 import com.example.application.services.SamplePersonService;
-import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.datepicker.DatePicker;
+import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -27,19 +22,20 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.renderer.LitRenderer;
-import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
+import java.util.Optional;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Master-Detail")
-@Route(value = "master-detail/:samplePersonID?/:action?(edit)", layout = MainLayout.class)
-@Menu(order = 1)
-@PreserveOnRefresh
+@Route("master-detail/:samplePersonID?/:action?(edit)")
+@Menu(order = 6, icon = LineAwesomeIconUrl.COLUMNS_SOLID)
+@Uses(Icon.class)
 public class MasterDetailView extends Div implements BeforeEnterObserver {
 
     private final String SAMPLEPERSON_ID = "samplePersonID";
@@ -82,8 +78,7 @@ public class MasterDetailView extends Div implements BeforeEnterObserver {
         grid.addColumn("lastName").setAutoWidth(true);
         grid.addColumn("email").setAutoWidth(true);
         grid.addColumn("phone").setAutoWidth(true);
-        grid.addColumn("dateOfBirth").setAutoWidth(true).setRenderer(
-                new LocalDateRenderer<>(SamplePerson::getDateOfBirth, dateOfBirth.getI18n().getDateFormats().get(0)));
+        grid.addColumn("dateOfBirth").setAutoWidth(true);
         grid.addColumn("occupation").setAutoWidth(true);
         grid.addColumn("role").setAutoWidth(true);
         LitRenderer<SamplePerson> importantRenderer = LitRenderer.<SamplePerson>of(
@@ -95,9 +90,7 @@ public class MasterDetailView extends Div implements BeforeEnterObserver {
 
         grid.addColumn(importantRenderer).setHeader("Important").setAutoWidth(true);
 
-        grid.setItems(query -> samplePersonService.list(
-                PageRequest.of(query.getPage(), query.getPageSize(), VaadinSpringDataHelpers.toSpringDataSort(query)))
-                .stream());
+        grid.setItems(query -> samplePersonService.list(VaadinSpringDataHelpers.toSpringPageRequest(query)).stream());
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
 
         // when a row is selected or deselected, populate form
@@ -176,7 +169,7 @@ public class MasterDetailView extends Div implements BeforeEnterObserver {
         lastName = new TextField("Last Name");
         email = new TextField("Email");
         phone = new TextField("Phone");
-        dateOfBirth = new LocalDatePicker("Date Of Birth");
+        dateOfBirth = new DatePicker("Date Of Birth");
         occupation = new TextField("Occupation");
         role = new TextField("Role");
         important = new Checkbox("Important");

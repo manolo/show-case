@@ -1,9 +1,5 @@
 package com.example.application.views.addressform;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -17,14 +13,15 @@ import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
+import java.util.ArrayList;
+import java.util.List;
+import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Address Form")
-@Route(value = "address-form", layout = MainLayout.class)
-@PreserveOnRefresh
-@Menu(order = 1)
+@Route("address-form")
+@Menu(order = 9, icon = LineAwesomeIconUrl.MAP_MARKER_SOLID)
 public class AddressFormView extends Composite<VerticalLayout> {
 
     public AddressFormView() {
@@ -34,8 +31,8 @@ public class AddressFormView extends Composite<VerticalLayout> {
         FormLayout formLayout2Col = new FormLayout();
         TextField textField2 = new TextField();
         TextField textField3 = new TextField();
-        Select<SampleItem> select = new Select<>();
-        Select<SampleItem> select2 = new Select<>();
+        Select select = new Select();
+        Select select2 = new Select();
         HorizontalLayout layoutRow = new HorizontalLayout();
         Button buttonPrimary = new Button();
         Button buttonSecondary = new Button();
@@ -89,7 +86,7 @@ public class AddressFormView extends Composite<VerticalLayout> {
     record SampleItem(String value, String label, Boolean disabled) {
     }
 
-    private void setSelectSampleData(Select<SampleItem> select) {
+    private void setSelectSampleData(Select select) {
         List<SampleItem> sampleItems = new ArrayList<>();
         sampleItems.add(new SampleItem("state1", "State 1", null));
         sampleItems.add(new SampleItem("state2", "State 2", null));
