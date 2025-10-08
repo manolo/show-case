@@ -10,12 +10,13 @@ import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Section;
+import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
 @PageTitle("Checkout Success")
-@Route(value = "wizard/4", layout = CheckoutWizard.class)
+@Route(value = "4", layout = CheckoutWizard.class)
 public class CheckoutStep4View extends Div {
 
 	FormLayout formLayout = new FormLayout();

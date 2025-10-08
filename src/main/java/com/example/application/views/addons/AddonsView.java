@@ -76,19 +76,24 @@ public class AddonsView extends Div {
         content.add(new H3("Toggle Button"));
 
         // Discouraged, use a custom component extending checkbox with custom css
-        ToggleButton toggle = new ToggleButton("Toggle (disabled)");
-        toggle.setEnabled(false);
-        content.add(toggle);
-
-        toggle = new ToggleButton("Toggle");
+        ToggleButton toggle = new ToggleButton("Toggle (extends checkbox)");
         Div message = new Div();
         toggle.addValueChangeListener(evt -> message.setText(
                 String.format("Toggle button value changed from '%s' to '%s'",
                         evt.getOldValue(), evt.getValue())));
         content.add(toggle);
 
+        toggle = new ToggleButton("Toggle disabled (extends checkbox)");
+        toggle.setEnabled(false);
+        content.add(toggle);
+
         // Recommended way, maintain only the custom css, and change the class name
-        Checkbox checkbox = new Checkbox("Toggle checkbox");
+        Checkbox checkbox = new Checkbox("Toggle (checkbox with css)");
+        checkbox.addClassName("toggle");
+        content.add(checkbox);
+
+        checkbox = new Checkbox("Toggle disabled (checkbox with css)");
+        checkbox.setEnabled(false);
         checkbox.addClassName("toggle");
         content.add(checkbox);
 

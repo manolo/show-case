@@ -63,15 +63,15 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
     private SideNav createNavigation() {
         SideNav nav = new SideNav();
         
-        SideNavItem original = new SideNavItem("start views");
-        original.setExpanded(false);
-        SideNavItem custom = new SideNavItem("custom views");
-        custom.setExpanded(false);
-        nav.addItem(original, custom);
+        SideNavItem startViews = new SideNavItem("📁 Start views");
+        startViews.setExpanded(false);
+        SideNavItem customViews = new SideNavItem("📁 Custom views");
+        customViews.setExpanded(false);
+        nav.addItem(startViews, customViews);
 
         List<MenuEntry> menuEntries = MenuConfiguration.getMenuEntries();
         menuEntries.forEach(entry -> {
-        	SideNavItem parent = entry.order() != null && entry.order() < 50 ? original : custom; 
+        	SideNavItem parent = entry.order() != null && entry.order() < 50 ? startViews : customViews; 
             if (entry.icon() != null) {
             	parent.addItem(new SideNavItem(entry.title(), entry.path(), new SvgIcon(entry.icon())));
             } else {

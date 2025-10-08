@@ -25,7 +25,7 @@ import com.vaadin.flow.theme.lumo.Lumo;
  *
  */
 @SpringBootApplication
-@Theme(value = "show-case", variant="light", themeClass = Lumo.class)
+@Theme(value = "show-case", variant="light")
 @Push
 public class Application implements AppShellConfigurator, VaadinServiceInitListener {
 

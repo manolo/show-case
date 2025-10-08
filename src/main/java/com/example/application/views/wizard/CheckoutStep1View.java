@@ -12,12 +12,14 @@ import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
 @PageTitle("Step 1 - Wizard")
 @Route(value = "1", layout = CheckoutWizard.class)
+@Menu(title = "Wizard")
 public class CheckoutStep1View extends Div implements HasBinder {
 
     TextField name = new TextField("Name");

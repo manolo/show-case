@@ -12,7 +12,6 @@ import com.vaadin.flow.theme.lumo.LumoUtility.MaxWidth;
 
 @PageTitle("Wizard")
 @RoutePrefix(value = "wizard")
-@Menu
 @ParentLayout(MainLayout.class)
 public class CheckoutWizard extends Wizard {
 

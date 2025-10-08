@@ -87,7 +87,7 @@ public abstract class Wizard extends Main
 
     private Div createContent() {
         this.content = new Div();
-        this.content.addClassNames("flex-1", Overflow.AUTO);
+        this.content.addClassNames("flex-1", Overflow.AUTO, Flex.GROW);
         return this.content;
     }
 
