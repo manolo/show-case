@@ -8,10 +8,12 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Hello World")
 @Route("hello-world")
+@PermitAll
 @Menu(order = 2, icon = LineAwesomeIconUrl.GLOBE_SOLID)
 public class HelloWorldView extends HorizontalLayout {
 

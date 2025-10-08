@@ -21,6 +21,7 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -32,6 +33,7 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Data Grid")
 @Route("data-grid")
+@PermitAll
 @Menu(order = 5, icon = LineAwesomeIconUrl.TH_SOLID)
 public class DataGridView extends Div {
 

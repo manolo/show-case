@@ -9,6 +9,7 @@ import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.theme.lumo.LumoUtility.Accessibility;
 import com.vaadin.flow.theme.lumo.LumoUtility.Background;
 import com.vaadin.flow.theme.lumo.LumoUtility.Border;
@@ -29,6 +30,7 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Page Editor")
 @Route("page-editor")
+@PermitAll
 @Menu(order = 14, icon = LineAwesomeIconUrl.EDIT)
 public class PageEditorView extends Main {
 

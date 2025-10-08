@@ -14,6 +14,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Address Form")
 @Route("address-form")
+@PermitAll
 @Menu(order = 9, icon = LineAwesomeIconUrl.MAP_MARKER_SOLID)
 public class AddressFormView extends Composite<VerticalLayout> {
 

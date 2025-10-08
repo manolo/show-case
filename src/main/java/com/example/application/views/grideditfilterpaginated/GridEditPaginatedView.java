@@ -32,9 +32,11 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Editable Grid Paginated")
 @Route(value = "grid-edit-paginated", layout = MainLayout.class)
+@PermitAll
 @Menu
 @PreserveOnRefresh
 public class GridEditPaginatedView extends VerticalLayout {

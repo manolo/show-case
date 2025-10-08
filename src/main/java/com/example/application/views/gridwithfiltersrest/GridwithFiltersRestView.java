@@ -19,10 +19,12 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
 @PageTitle("Grid with Filters REST")
 @Route(value = "grid-with-filters-rest", layout = MainLayout.class)
+@PermitAll
 @Menu
 @PreserveOnRefresh
 public class GridwithFiltersRestView extends Div {

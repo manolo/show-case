@@ -20,6 +20,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.theme.lumo.LumoUtility.Display;
 import com.vaadin.flow.theme.lumo.LumoUtility.FlexDirection;
 import com.vaadin.flow.theme.lumo.LumoUtility.Height;
@@ -29,11 +30,12 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
 @PageTitle("Addons")
 @Route(value = "addons", layout = MainLayout.class)
+@PermitAll
 @Menu(order = 100)
 public class AddonsView extends Div {
 
     @SuppressWarnings("deprecation")
-	public AddonsView() {
+    public AddonsView() {
         addClassNames(Display.FLEX, FlexDirection.COLUMN, Height.FULL);
 
         Main content = new Main();

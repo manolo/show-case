@@ -15,11 +15,13 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Person Form")
 @Route("person-form")
+@PermitAll
 @Menu(order = 8, icon = LineAwesomeIconUrl.USER)
 public class PersonFormView extends Composite<VerticalLayout> {
 

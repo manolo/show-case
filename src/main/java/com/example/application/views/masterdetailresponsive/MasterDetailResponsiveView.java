@@ -46,11 +46,13 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
+import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 
 @PageTitle("Master-Detail-Responsive")
 @Route(value = ROUTE_EDIT, layout = MainLayout.class)
 @RouteAlias(value = ROUTE_NEW, layout = MainLayout.class)
+@PermitAll
 @Menu
 @PreserveOnRefresh
 public class MasterDetailResponsiveView extends Div implements BeforeEnterObserver, BeforeLeaveObserver {

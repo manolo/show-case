@@ -38,9 +38,11 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Editable Grid Filter Rest")
 @Route(value = "grid-edit-filter-rest", layout = MainLayout.class)
+@PermitAll
 @Menu
 @PreserveOnRefresh
 public class GridEditFilterRestView extends VerticalLayout implements HasFilterParameters {
@@ -77,7 +79,7 @@ public class GridEditFilterRestView extends VerticalLayout implements HasFilterP
     private ConfirmDialog dialog;
 
     public GridEditFilterRestView(SamplePersonServiceRest samplePersonService) {
-    	this.samplePersonService = samplePersonService;
+        this.samplePersonService = samplePersonService;
         // Some styles
         addClassNames("grid-edit-view");
         addClassNames("gridwith-filters-view");
@@ -158,9 +160,9 @@ public class GridEditFilterRestView extends VerticalLayout implements HasFilterP
         if (field instanceof TextField) {
             ((TextField)field).setClearButtonVisible(true);
         }
-        
+
         field.addValueChangeListener(e -> grid.getDataProvider().refreshAll());
-        
+
         if (columnNames.length > 1) {
             Column<?>[] cols = Arrays.asList(columnNames).stream().map(n -> grid.getColumnByKey(n)).toArray(Column<?>[]::new);
             headerRow.join(cols).setComponent((Component)field);
@@ -189,15 +191,15 @@ public class GridEditFilterRestView extends VerticalLayout implements HasFilterP
             close();
         }
     }
-    
+
     private void delete() {
-    	if (editor.getItem().getId() != null) {
-        	samplePersonService.delete(editor.getItem().getId());
+        if (editor.getItem().getId() != null) {
+            samplePersonService.delete(editor.getItem().getId());
             close();
             grid.getDataProvider().refreshAll();
-    	}
+        }
     }
-    
+
     private void close() {
         editor.cancel();
         // workaround because cancel should clear binder

@@ -36,11 +36,13 @@ import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.server.VaadinRequest;
+import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 
 @PageTitle("Crud Component")
 @Route(value = ROUTE_EDIT, layout = MainLayout.class)
 @RouteAlias(value = ROUTE_NEW, layout = MainLayout.class)
+@PermitAll
 @Menu
 @PreserveOnRefresh
 public class CrudView extends Div implements BeforeEnterObserver {
@@ -117,7 +119,7 @@ public class CrudView extends Div implements BeforeEnterObserver {
         crud.addNewListener(e -> {
             UI.getCurrent().navigate("crud/new");
         });
-        
+
         crud.setSizeFull();
         this.setSizeFull();
         localize();
@@ -140,18 +142,18 @@ public class CrudView extends Div implements BeforeEnterObserver {
             }
         }
     }
-    
+
     private void localize() {
-    	CrudI18n i18n = CrudI18n.createDefault();
-    	i18n.setCancel(getTranslation("Cancel"));
-    	i18n.setSaveItem(getTranslation("Save"));
-    	i18n.setDeleteItem(getTranslation("Delete"));
-    	i18n.setNewItem(getTranslation("New"));
-    	i18n.getConfirm().getCancel().getButton().setConfirm(getTranslation("OK"));
-    	i18n.getConfirm().getCancel().getButton().setDismiss(getTranslation("Cancel"));
-    	i18n.getConfirm().getDelete().getButton().setConfirm(getTranslation("OK"));
-    	i18n.getConfirm().getDelete().getButton().setDismiss(getTranslation("Cancel"));
-    	crud.setI18n(i18n);
+        CrudI18n i18n = CrudI18n.createDefault();
+        i18n.setCancel(getTranslation("Cancel"));
+        i18n.setSaveItem(getTranslation("Save"));
+        i18n.setDeleteItem(getTranslation("Delete"));
+        i18n.setNewItem(getTranslation("New"));
+        i18n.getConfirm().getCancel().getButton().setConfirm(getTranslation("OK"));
+        i18n.getConfirm().getCancel().getButton().setDismiss(getTranslation("Cancel"));
+        i18n.getConfirm().getDelete().getButton().setConfirm(getTranslation("OK"));
+        i18n.getConfirm().getDelete().getButton().setDismiss(getTranslation("Cancel"));
+        crud.setI18n(i18n);
     }
 
 }

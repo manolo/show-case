@@ -19,6 +19,7 @@ import com.vaadin.flow.component.tabs.Tabs.Orientation;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.Background;
 import com.vaadin.flow.theme.lumo.LumoUtility.BoxSizing;
@@ -35,6 +36,7 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Chat")
 @Route("chat")
+@PermitAll
 @Menu(order = 13, icon = LineAwesomeIconUrl.COMMENTS)
 public class ChatView extends HorizontalLayout {
 

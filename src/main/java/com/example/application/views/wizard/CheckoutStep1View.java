@@ -15,10 +15,12 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
 @PageTitle("Step 1 - Wizard")
 @Route(value = "1", layout = CheckoutWizard.class)
+@PermitAll
 @Menu(title = "Wizard")
 public class CheckoutStep1View extends Div implements HasBinder {
 

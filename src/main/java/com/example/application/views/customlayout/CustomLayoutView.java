@@ -22,12 +22,14 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
+import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 
 
 @Menu(order = 1, icon = LineAwesomeIconUrl.PENCIL_RULER_SOLID)
 @PageTitle("Custom Layout")
 @Route(value = "custom-layout", layout = MainLayout.class)
+@PermitAll
 @PreserveOnRefresh
 public class CustomLayoutView extends Composite<VerticalLayout> {
 

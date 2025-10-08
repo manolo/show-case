@@ -40,9 +40,11 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Editable Grid Filter Paginated")
 @Route(value = "grid-edit-filter-paginated", layout = MainLayout.class)
+@PermitAll
 @Menu
 @PreserveOnRefresh
 public class GridEditPaginatedFilterView extends VerticalLayout implements HasFilterParameters {

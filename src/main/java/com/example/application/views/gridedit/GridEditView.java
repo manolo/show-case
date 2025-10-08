@@ -26,10 +26,12 @@ import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 
 @PageTitle("Editable Grid")
 @Route(value = "grid-edit", layout = MainLayout.class)
+@PermitAll
 @PreserveOnRefresh
 public class GridEditView extends HorizontalLayout {
 

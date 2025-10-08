@@ -14,12 +14,14 @@ import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 import java.util.Arrays;
 import java.util.List;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Feed")
 @Route("feed")
+@PermitAll
 @Menu(order = 4, icon = LineAwesomeIconUrl.LIST_SOLID)
 public class FeedView extends Div implements AfterNavigationObserver {
 

@@ -15,10 +15,12 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Credit Card Form")
 @Route("credit-card-form")
+@PermitAll
 @Menu(order = 10, icon = LineAwesomeIconUrl.CREDIT_CARD)
 public class CreditCardFormView extends Div {
 

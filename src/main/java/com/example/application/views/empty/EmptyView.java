@@ -9,6 +9,7 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
+import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
@@ -16,6 +17,7 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 @Route("empty")
 @Menu(order = 0, icon = LineAwesomeIconUrl.FILE)
 @RouteAlias(value = "", layout = MainLayout.class)
+@PermitAll
 
 public class EmptyView extends VerticalLayout {
 
