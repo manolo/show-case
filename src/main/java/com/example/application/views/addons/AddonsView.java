@@ -31,7 +31,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 @PageTitle("Addons")
 @Route(value = "addons", layout = MainLayout.class)
 @PermitAll
-@Menu(order = 100)
+@Menu
 public class AddonsView extends Div {
 
     @SuppressWarnings("deprecation")

@@ -1,32 +1,45 @@
 # Vaadin ShowCase
 
-This project can be used as a starting point to create your own Vaadin application with Spring Boot.
-It contains all the necessary configuration and some placeholder files to get you started.
+This showcase demonstrates all Vaadin Flow views that can be directly configured at [start.vaadin.com](https://start.vaadin.com/) and downloaded with your skeleton starter project. 
 
-## Running the application
+It provides practical examples of common UI patterns and features available in Vaadin, helping developers understand how to implement these views in their own applications.
 
-The project is a standard Maven project. To run it from the command line,
-type `mvnw` (Windows), or `./mvnw` (Mac & Linux), then open
-http://localhost:8080 in your browser.
+In addition there are a bunch of custom views intended to demo specific Vaadin features or UI patterns:
 
-You can also import the project to your IDE of choice as you would with any
-Maven project. Read more on [how to import Vaadin projects to different IDEs](https://vaadin.com/docs/latest/guide/step-by-step/importing) (Eclipse, IntelliJ IDEA, NetBeans, and VS Code).
+**MasterDetailResponsiveView** Demonstrates a responsive master-detail UI pattern for editing and viewing entities (SamplePerson), supporting navigation, editing, and refresh persistence.
+
+**GridEditFilterRestView** Shows an editable grid with filtering capabilities, using REST data sources. It uses a custom DataProvider able to read from API services, and allows inline editing and filtering of data records.
+
+**GridwithFiltersRestView** Demos a grid component with REST-based data and filter controls, enabling users to filter and view data interactively.
+
+**CrudView** Demonstrates the Vaadin Crud component for full Create, Read, Update, Delete operations on entities, including form layouts and validation. It simplifies crud  views versus the regular usage of master-detail pattern. 
+In addition it demonstrates how to use i18n in some components including datapickers
+
+**GridEditPaginatedFilterView** Combines editable grid, filtering, and pagination features, using a paginated grid for large datasets with inline editing and filter controls.
+
+**GridEditPaginatedView** Demos an editable paginated grid, focusing on editing and navigating large datasets efficiently.
+
+**AddonsView** Showcases various Vaadin and third-party add-ons, including text field formatters (phone, credit card, date, IBAN), toggle buttons, and input masks.
+
+**Wizard Views** The wizard views (CheckoutStep1View, CheckoutStep2View, CheckoutStep3View, CheckoutStep4View) together demonstrate a step-by-step form flow, where each class represents a distinct step in a multi-part checkout process. This approach showcases how to split complex forms into manageable steps, improving user experience and maintainability in Vaadin applications.
+
+---
+
+# Running the application
+
+The project is a standard Maven project. To run it from the command line, type `mvnw` (Windows), or `./mvnw` (Mac & Linux), then open http://localhost:8080 in your browser.
+
+You can also import the project to your IDE of choice as you would with any Maven project. Read more on [how to import Vaadin projects to different IDEs](https://vaadin.com/docs/latest/guide/step-by-step/importing) (Eclipse, IntelliJ IDEA, NetBeans, and VS Code).
 
 ## Deploying to Production
 
-To create a production build, call `mvnw clean package -Pproduction` (Windows),
-or `./mvnw clean package -Pproduction` (Mac & Linux).
-This will build a JAR file with all the dependencies and front-end resources,
-ready to be deployed. The file can be found in the `target` folder after the build completes.
+To create a production build, call `mvnw clean package -Pproduction` (Windows), or `./mvnw clean package -Pproduction` (Mac & Linux). This will build a JAR file with all the dependencies and front-end resources, ready to be deployed. The file can be found in the `target` folder after the build completes.
 
-Once the JAR file is built, you can run it using
-`java -jar target/show-case-1.0-SNAPSHOT.jar`
+Once the JAR file is built, you can run it using `java -jar target/show-case-1.0-SNAPSHOT.jar`
 
 ## Project structure
 
-- `MainLayout.java` in `src/main/java` contains the navigation setup (i.e., the
-  side/top bar and the main menu). This setup uses
-  [App Layout](https://vaadin.com/docs/components/app-layout).
+- `MainLayout.java` in `src/main/java` contains the navigation setup (i.e., the side/top bar and the main menu). This setup uses [App Layout](https://vaadin.com/docs/components/app-layout).
 - `views` package in `src/main/java` contains the server-side Java views of your application.
 - `views` folder in `src/main/frontend` contains the client-side JavaScript views of your application.
 - `themes` folder in `src/main/frontend` contains the custom CSS styles.
@@ -38,12 +51,11 @@ Once the JAR file is built, you can run it using
 - Create new projects at [start.vaadin.com](https://start.vaadin.com/).
 - Search UI components and their usage examples at [vaadin.com/docs/latest/components](https://vaadin.com/docs/latest/components).
 - View use case applications that demonstrate Vaadin capabilities at [vaadin.com/examples-and-demos](https://vaadin.com/examples-and-demos).
-- Build any UI without custom CSS by discovering Vaadin's set of [CSS utility classes](https://vaadin.com/docs/styling/lumo/utility-classes). 
+- Build any UI without custom CSS by discovering Vaadin's set of [CSS utility classes](https://vaadin.com/docs/styling/lumo/utility-classes).
 - Find a collection of solutions to common use cases at [cookbook.vaadin.com](https://cookbook.vaadin.com/).
 - Find add-ons at [vaadin.com/directory](https://vaadin.com/directory).
 - Ask questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/vaadin) or join our [Discord channel](https://discord.gg/MYFq5RTbBn).
 - Report issues, create pull requests in [GitHub](https://github.com/vaadin).
-
 
 ## Deploying using Docker
 
@@ -73,8 +85,7 @@ The included `kubernetes.yaml` sets up a deployment with 2 pods (server instance
 kubectl apply -f kubernetes.yaml
 ```
 
-If everything works, you can access your application by opening http://localhost:8000/.
-If you have something else running on port 8000, you need to change the load balancer port in `kubernetes.yaml`.
+If everything works, you can access your application by opening http://localhost:8000/. If you have something else running on port 8000, you need to change the load balancer port in `kubernetes.yaml`.
 
 Tip: If you want to understand which pod your requests go to, you can add the value of `VaadinServletRequest.getCurrent().getLocalAddr()` somewhere in your UI.
 
