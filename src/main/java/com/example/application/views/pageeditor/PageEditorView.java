@@ -34,7 +34,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 
 @PageTitle("Page Editor")
 @Route(value = "page-editor", layout = MainLayout.class)
-@Menu
+@Menu(order = 1)
 @PreserveOnRefresh
 public class PageEditorView extends Main {
 

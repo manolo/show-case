@@ -22,7 +22,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 
 @PageTitle("Person Form")
 @Route(value = "person-form", layout = MainLayout.class)
-@Menu
+@Menu(order = 1)
 @PreserveOnRefresh
 public class PersonFormView extends Composite<VerticalLayout> {
 

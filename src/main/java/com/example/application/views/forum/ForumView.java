@@ -22,7 +22,7 @@ import com.vaadin.flow.router.Route;
 
 @PageTitle("Forum")
 @Route(value = "feed", layout = MainLayout.class)
-@Menu
+@Menu(order = 1)
 @PreserveOnRefresh
 public class ForumView extends Div implements AfterNavigationObserver {
 

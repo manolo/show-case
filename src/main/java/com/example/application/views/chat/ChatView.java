@@ -37,7 +37,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Width;
 
 @PageTitle("Chat")
 @Route(value = "chat", layout = MainLayout.class)
-@Menu(title = "Chat Collaborative")
+@Menu(title = "Chat Collaborative", order=1)
 @PreserveOnRefresh
 public class ChatView extends HorizontalLayout {
 

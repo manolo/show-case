@@ -20,7 +20,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 
 @PageTitle("About")
 @Route(value = "", layout = MainLayout.class)
-@Menu
+@Menu(order = 1)
 public class AboutView extends VerticalLayout {
 
     public AboutView() throws InterruptedException {

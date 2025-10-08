@@ -20,7 +20,7 @@ import com.vaadin.flow.router.Route;
 
 @PageTitle("Credit Card Form")
 @Route(value = "credit-card-form", layout = MainLayout.class)
-@Menu
+@Menu(order = 1)
 @PreserveOnRefresh
 public class CreditCardFormView extends Div {
 

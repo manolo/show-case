@@ -24,7 +24,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 
 @PageTitle("Custom Layout")
 @Route(value = "custom-layout", layout = MainLayout.class)
-@Menu
+@Menu(order = 1)
 @PreserveOnRefresh
 public class CustomLayoutView extends Composite<VerticalLayout> {
 

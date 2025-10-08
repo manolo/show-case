@@ -24,7 +24,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 @PageTitle("Address Form")
 @Route(value = "address-form", layout = MainLayout.class)
 @PreserveOnRefresh
-@Menu
+@Menu(order = 1)
 public class AddressFormView extends Composite<VerticalLayout> {
 
     public AddressFormView() {

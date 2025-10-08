@@ -18,6 +18,7 @@ import com.vaadin.flow.component.crud.Crud.EditMode;
 import com.vaadin.flow.component.crud.CrudEditorPosition;
 import com.vaadin.flow.component.crud.CrudFilter;
 import com.vaadin.flow.component.crud.CrudGrid;
+import com.vaadin.flow.component.crud.CrudI18n;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
@@ -34,9 +35,10 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
+import com.vaadin.flow.server.VaadinRequest;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 
-@PageTitle("Crud")
+@PageTitle("Crud Component")
 @Route(value = ROUTE_EDIT, layout = MainLayout.class)
 @RouteAlias(value = ROUTE_NEW, layout = MainLayout.class)
 @Menu
@@ -90,6 +92,8 @@ public class CrudView extends Div implements BeforeEnterObserver {
 
         crud.getGrid().getColumnByKey("dateOfBirth").setRenderer(
                 new LocalDateRenderer<>(SamplePerson::getDateOfBirth, dateOfBirth.getI18n().getDateFormats().get(0)));
+        crud.getGrid().removeColumnByKey("id");
+        crud.getGrid().removeColumnByKey("version");
 
         crud.setEditorPosition(CrudEditorPosition.ASIDE);
 
@@ -104,15 +108,19 @@ public class CrudView extends Div implements BeforeEnterObserver {
         crud.addEditListener(e -> {
             UI.getCurrent().navigate(String.format(ROUTE_EDIT_TPL, e.getItem().getId()));
         });
+        crud.getGrid().addItemClickListener(e -> {
+            crud.edit(e.getItem(), EditMode.EXISTING_ITEM);
+        });
         crud.addCancelListener(e -> {
             UI.getCurrent().navigate(this.getClass());
         });
         crud.addNewListener(e -> {
             UI.getCurrent().navigate("crud/new");
         });
-
+        
         crud.setSizeFull();
         this.setSizeFull();
+        localize();
         add(crud);
     }
 
@@ -131,6 +139,19 @@ public class CrudView extends Div implements BeforeEnterObserver {
                 event.forwardTo(this.getClass());
             }
         }
+    }
+    
+    private void localize() {
+    	CrudI18n i18n = CrudI18n.createDefault();
+    	i18n.setCancel(getTranslation("Cancel"));
+    	i18n.setSaveItem(getTranslation("Save"));
+    	i18n.setDeleteItem(getTranslation("Delete"));
+    	i18n.setNewItem(getTranslation("New"));
+    	i18n.getConfirm().getCancel().getButton().setConfirm(getTranslation("OK"));
+    	i18n.getConfirm().getCancel().getButton().setDismiss(getTranslation("Cancel"));
+    	i18n.getConfirm().getDelete().getButton().setConfirm(getTranslation("OK"));
+    	i18n.getConfirm().getDelete().getButton().setDismiss(getTranslation("Cancel"));
+    	crud.setI18n(i18n);
     }
 
 }

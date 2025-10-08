@@ -27,7 +27,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 
 @PageTitle("Image Gallery")
 @Route(value = "image-gallery", layout = MainLayout.class)
-@Menu
+@Menu(order = 1)
 @PreserveOnRefresh
 public class ImageGalleryView extends Main implements HasComponents, HasStyle {
 

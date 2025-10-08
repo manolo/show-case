@@ -21,7 +21,7 @@ import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
-@PageTitle("Grid with Filters")
+@PageTitle("Grid with Filters REST")
 @Route(value = "grid-with-filters-rest", layout = MainLayout.class)
 @Menu
 @PreserveOnRefresh

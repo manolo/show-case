@@ -38,7 +38,7 @@ import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 
 @PageTitle("Master-Detail")
 @Route(value = "master-detail/:samplePersonID?/:action?(edit)", layout = MainLayout.class)
-@Menu
+@Menu(order = 1)
 @PreserveOnRefresh
 public class MasterDetailView extends Div implements BeforeEnterObserver {
 

@@ -40,7 +40,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 
 @PageTitle("Dashboard")
 @Route(value = "dashboard", layout = MainLayout.class)
-@Menu
+@Menu(order = 1)
 public class DashboardView extends Main {
 
     public DashboardView() {

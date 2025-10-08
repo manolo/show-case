@@ -36,7 +36,7 @@ import com.vaadin.flow.router.Route;
 
 @PageTitle("Data")
 @Route(value = "data-grid", layout = MainLayout.class)
-@Menu
+@Menu(order = 1)
 @PreserveOnRefresh
 public class DataView extends Div {
 

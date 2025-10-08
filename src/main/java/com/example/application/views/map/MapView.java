@@ -42,7 +42,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Width;
 
 @PageTitle("Map")
 @Route(value = "map", layout = MainLayout.class)
-@Menu
+@Menu(order = 1)
 @PreserveOnRefresh
 public class MapView extends HorizontalLayout {
 

@@ -4,14 +4,18 @@ import java.util.List;
 
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.SvgIcon;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
+import com.vaadin.flow.router.AfterNavigationEvent;
+import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.Layout;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.server.menu.MenuConfiguration;
@@ -23,7 +27,8 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
  */
 @Layout
 @AnonymousAllowed
-public class MainLayout extends AppLayout {
+@Uses(Icon.class)
+public class MainLayout extends AppLayout implements AfterNavigationObserver {
 
     private H1 viewTitle;
 
@@ -53,16 +58,23 @@ public class MainLayout extends AppLayout {
         addToDrawer(header, scroller, createFooter());
     }
 
+
     private SideNav createNavigation() {
         SideNav nav = new SideNav();
+        
+        SideNavItem original = new SideNavItem("start views");
+        original.setExpanded(false);
+        SideNavItem custom = new SideNavItem("custom views");
+        custom.setExpanded(false);
+        nav.addItem(original, custom);
 
         List<MenuEntry> menuEntries = MenuConfiguration.getMenuEntries();
-        System.err.println("menuEntries: " + menuEntries.size() + " " + menuEntries);
         menuEntries.forEach(entry -> {
+        	SideNavItem parent = entry.order() != null && entry.order() < 50 ? original : custom; 
             if (entry.icon() != null) {
-                nav.addItem(new SideNavItem(entry.title(), entry.path(), new SvgIcon(entry.icon())));
+            	parent.addItem(new SideNavItem(entry.title(), entry.path(), new SvgIcon(entry.icon())));
             } else {
-                nav.addItem(new SideNavItem(entry.title(), entry.path()));
+            	parent.addItem(new SideNavItem(entry.title(), entry.path()));
             }
         });
 
@@ -75,11 +87,10 @@ public class MainLayout extends AppLayout {
         return layout;
     }
 
-    @Override
-    protected void afterNavigation() {
-        super.afterNavigation();
+	@Override
+	public void afterNavigation(AfterNavigationEvent event) {
         viewTitle.setText(getCurrentPageTitle());
-    }
+	}
 
     private String getCurrentPageTitle() {
         return MenuConfiguration.getPageHeader(getContent()).orElse("");

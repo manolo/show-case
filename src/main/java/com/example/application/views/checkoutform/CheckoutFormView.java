@@ -54,7 +54,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 
 @PageTitle("Checkout Form")
 @Route(value = "checkout-form", layout = MainLayout.class)
-@Menu
+@Menu(order = 1)
 @PreserveOnRefresh
 public class CheckoutFormView extends Div {
 

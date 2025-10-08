@@ -68,7 +68,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 
 @PageTitle("Spreadsheet")
 @Route(value = "spreadsheet", layout = MainLayout.class)
-@Menu
+@Menu(order = 1)
 @PreserveOnRefresh
 public class SpreadsheetView extends VerticalLayout implements UploadHandler{
 

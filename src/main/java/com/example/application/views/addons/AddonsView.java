@@ -29,7 +29,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
 @PageTitle("Addons")
 @Route(value = "addons", layout = MainLayout.class)
-@Menu
+@Menu(order = 100)
 public class AddonsView extends Div {
 
     @SuppressWarnings("deprecation")
