@@ -1,35 +1,26 @@
-package com.example.application.views.hello;
+package com.example.application.views.helloworld;
 
-import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
+import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
-@PageTitle("Hello")
-@Route(value = "hello-world", layout = MainLayout.class)
-@Menu(order = 1)
-@PreserveOnRefresh
-public class HelloView extends HorizontalLayout {
+@PageTitle("Hello World")
+@Route("hello-world")
+@Menu(order = 2, icon = LineAwesomeIconUrl.GLOBE_SOLID)
+public class HelloWorldView extends HorizontalLayout {
 
     private TextField name;
     private Button sayHello;
 
-    public HelloView() {
+    public HelloWorldView() {
         name = new TextField("Your name");
-        sayHello = new Button();
-        sayHello.getElement().getStyle().setBorderRadius("100%");
-        sayHello.addClassName("fab");
-        sayHello.setIcon(VaadinIcon.LOCATION_ARROW.create());
-        sayHello.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_PRIMARY);
-
+        sayHello = new Button("Say hello");
         sayHello.addClickListener(e -> {
             Notification.show("Hello " + name.getValue());
         });

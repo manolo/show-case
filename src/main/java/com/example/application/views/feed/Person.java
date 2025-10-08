@@ -1,4 +1,4 @@
-package com.example.application.views.forum;
+package com.example.application.views.feed;
 
 public class Person {
 

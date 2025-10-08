@@ -1,9 +1,5 @@
-package com.example.application.views.forum;
+package com.example.application.views.feed;
 
-import java.util.Arrays;
-import java.util.List;
-
-import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
@@ -17,19 +13,20 @@ import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
+import java.util.Arrays;
+import java.util.List;
+import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
-@PageTitle("Forum")
-@Route(value = "feed", layout = MainLayout.class)
-@Menu(order = 1)
-@PreserveOnRefresh
-public class ForumView extends Div implements AfterNavigationObserver {
+@PageTitle("Feed")
+@Route("feed")
+@Menu(order = 4, icon = LineAwesomeIconUrl.LIST_SOLID)
+public class FeedView extends Div implements AfterNavigationObserver {
 
     Grid<Person> grid = new Grid<>();
 
-    public ForumView() {
-        addClassName("forum-view");
+    public FeedView() {
+        addClassName("feed-view");
         setSizeFull();
         grid.setHeight("100%");
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_NO_ROW_BORDERS);

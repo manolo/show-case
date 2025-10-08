@@ -1,4 +1,4 @@
-package com.example.application.views.data;
+package com.example.application.views.datagrid;
 
 public class Client {
 

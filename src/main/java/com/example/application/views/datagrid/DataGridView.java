@@ -1,16 +1,5 @@
-package com.example.application.views.data;
+package com.example.application.views.datagrid;
 
-import java.text.NumberFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-
-import org.apache.commons.lang3.StringUtils;
-
-import com.example.application.components.datepicker.LocalDatePicker;
-import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.grid.Grid;
@@ -31,14 +20,20 @@ import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import org.apache.commons.lang3.StringUtils;
+import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
-@PageTitle("Data")
-@Route(value = "data-grid", layout = MainLayout.class)
-@Menu(order = 1)
-@PreserveOnRefresh
-public class DataView extends Div {
+@PageTitle("Data Grid")
+@Route("data-grid")
+@Menu(order = 5, icon = LineAwesomeIconUrl.TH_SOLID)
+public class DataGridView extends Div {
 
     private GridPro<Client> grid;
     private GridListDataView<Client> gridListDataView;
@@ -48,10 +43,8 @@ public class DataView extends Div {
     private Grid.Column<Client> statusColumn;
     private Grid.Column<Client> dateColumn;
 
-    private DatePicker dateFilter = new LocalDatePicker();
-
-    public DataView() {
-        addClassName("data-view");
+    public DataGridView() {
+        addClassName("data-grid-view");
         setSizeFull();
         createGrid();
         add(grid);
@@ -114,8 +107,8 @@ public class DataView extends Div {
     private void createDateColumn() {
         dateColumn = grid
                 .addColumn(new LocalDateRenderer<>(client -> LocalDate.parse(client.getDate()),
-                        () -> DateTimeFormatter.ofPattern(dateFilter.getI18n().getDateFormats().get(0))))
-                .setComparator(client -> client.getDate()).setHeader("Date").setWidth("200px").setFlexGrow(0);
+                        () -> DateTimeFormatter.ofPattern("M/d/yyyy")))
+                .setComparator(client -> client.getDate()).setHeader("Date").setWidth("180px").setFlexGrow(0);
     }
 
     private void addFiltersToGrid() {
@@ -148,7 +141,7 @@ public class DataView extends Div {
                 event -> gridListDataView.addFilter(client -> areStatusesEqual(client, statusFilter)));
         filterRow.getCell(statusColumn).setComponent(statusFilter);
 
-
+        DatePicker dateFilter = new DatePicker();
         dateFilter.setPlaceholder("Filter");
         dateFilter.setClearButtonVisible(true);
         dateFilter.setWidth("100%");
