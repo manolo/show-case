@@ -376,7 +376,7 @@ public class SpreadsheetView extends VerticalLayout implements Receiver {
 
     private MenuItem createIconItem(HasMenuItems menu, LumoIcon iconName, String label, String ariaLabel,
             ComponentEventListener<ClickEvent<MenuItem>> clickListener) {
-        Icon icon = new Icon("lumo", iconName.toString().toLowerCase());
+        Icon icon = iconName.create();
 
         MenuItem item = menu.addItem(icon, clickListener);
         item.setAriaLabel(ariaLabel);

@@ -2,17 +2,17 @@
 
 ## Project Overview
 
-Feature-rich Vaadin 24 showcase application demonstrating modern Vaadin components, patterns, and integrations. Built with Spring Boot 3.5 and Java 21.
+Feature-rich Vaadin 25 showcase application demonstrating modern Vaadin components, patterns, and integrations. Built with Spring Boot 4.0 and Java 21.
 
 ## Tech Stack
 
 | Technology | Version | Notes |
 |---|---|---|
-| Vaadin | 24.9.2 | Flow (Java-based UI), NOT React/Hilla |
-| Spring Boot | 3.5.6 | Parent POM |
+| Vaadin | 25.0.6 | Flow (Java-based UI), NOT React/Hilla |
+| Spring Boot | 4.0.3 | Parent POM |
 | Java | 21 | Required minimum |
 | H2 Database | runtime | In-memory, initialized from `data.sql` |
-| Spring AI | 1.0.3 | OpenAI integration (requires `OPENAI_API_KEY` env var) |
+| Spring AI | 2.0.0-M1 | OpenAI integration (requires `OPENAI_API_KEY` env var) |
 | Maven | - | Build tool, `mvn spring-boot:run` to start |
 
 ## Project Structure
@@ -114,6 +114,6 @@ Server starts on port 8080 (configurable via `PORT` env var).
 ## Important Notes
 
 - This is a **Vaadin Flow (Java)** project - UI is built entirely in Java, NOT React/Hilla
-- When using Vaadin MCP tools, use `ui_language: "java"` and `vaadin_version: "24"`
+- When using Vaadin MCP tools, use `ui_language: "java"` and `vaadin_version: "25"`
 - The `src/main/frontend/generated/` directory is auto-generated - do not edit manually
 - The `src/main/bundles/` directory contains pre-built frontend bundles

@@ -5,11 +5,13 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.sql.init.SqlDataSourceScriptDatabaseInitializer;
-import org.springframework.boot.autoconfigure.sql.init.SqlInitializationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.jdbc.autoconfigure.ApplicationDataSourceScriptDatabaseInitializer;
+import org.springframework.boot.sql.autoconfigure.init.SqlInitializationProperties;
 import org.springframework.context.annotation.Bean;
 
 import com.example.application.data.SamplePersonRepository;
+import com.vaadin.flow.component.dependency.StyleSheet;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.server.ServiceInitEvent;
@@ -25,7 +27,9 @@ import com.vaadin.flow.theme.lumo.Lumo;
  *
  */
 @SpringBootApplication
-@Theme(value = "show-case", variant="light")
+@StyleSheet(Lumo.STYLESHEET)
+@EnableConfigurationProperties(SqlInitializationProperties.class)
+@Theme(value = "show-case")
 @Push
 public class Application implements AppShellConfigurator, VaadinServiceInitListener {
 
@@ -49,10 +53,10 @@ public class Application implements AppShellConfigurator, VaadinServiceInitListe
     }
 
     @Bean
-    SqlDataSourceScriptDatabaseInitializer dataSourceScriptDatabaseInitializer(DataSource dataSource,
+    ApplicationDataSourceScriptDatabaseInitializer dataSourceScriptDatabaseInitializer(DataSource dataSource,
             SqlInitializationProperties properties, SamplePersonRepository repository) {
         // This bean ensures the database is only initialized when empty
-        return new SqlDataSourceScriptDatabaseInitializer(dataSource, properties) {
+        return new ApplicationDataSourceScriptDatabaseInitializer(dataSource, properties) {
             @Override
             public boolean initializeDatabase() {
                 if (repository.count() == 0L) {

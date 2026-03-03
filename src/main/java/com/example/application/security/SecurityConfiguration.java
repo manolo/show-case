@@ -21,7 +21,7 @@ public class SecurityConfiguration {
    }
    @Bean
    public SecurityFilterChain vaadinSecurityFilterChain(HttpSecurity http) throws Exception {
-       http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/images/*.png").permitAll());
+       http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/images/*.png", "/*.css").permitAll());
        http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/line-awesome/**").permitAll());
 
        // Allow REST API without login (optional if there are spring webservices exposed)

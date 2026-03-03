@@ -5,6 +5,7 @@ import com.vaadin.flow.component.html.ListItem;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.html.UnorderedList;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.theme.lumo.LumoIcon;
 import com.vaadin.flow.component.map.Map;
 import com.vaadin.flow.component.map.configuration.Coordinate;
 import com.vaadin.flow.component.map.configuration.Feature;
@@ -169,7 +170,7 @@ public class MapView extends HorizontalLayout {
             updateFilter(searchField.getValue().toLowerCase());
         });
         searchField.setClearButtonVisible(true);
-        searchField.setSuffixComponent(new Icon("lumo", "search"));
+        searchField.setSuffixComponent(LumoIcon.SEARCH.create());
 
         Scroller scroller = new Scroller();
         scroller.addClassNames(Padding.Horizontal.MEDIUM, Width.FULL, BoxSizing.BORDER);

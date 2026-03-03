@@ -15,6 +15,7 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.theme.lumo.LumoIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -69,7 +70,7 @@ public class GridwithFiltersJpaView extends Div {
                 LumoUtility.AlignItems.CENTER);
         mobileFilters.addClassName("mobile-filters");
 
-        Icon mobileIcon = new Icon("lumo", "plus");
+        Icon mobileIcon = LumoIcon.PLUS.create();
         Span filtersHeading = new Span("Filters");
         mobileFilters.add(mobileIcon, filtersHeading);
         mobileFilters.setFlexGrow(1, filtersHeading);
