@@ -1,8 +1,36 @@
+/* Custom utility classes not included in Lumo Utility stylesheet */
+
+.rounded-full {
+    border-radius: 9999px;
+}
+
+.border-2 {
+    border-width: 2px;
+}
+
+.no-underline {
+    text-decoration: none;
+}
+
+@media (min-width: 1024px) {
+    .lg\:items-center {
+        align-items: center;
+    }
+    .lg\:overflow-ellipsis {
+        text-overflow: ellipsis;
+    }
+    .lg\:overflow-hidden {
+        overflow: hidden;
+    }
+    .lg\:whitespace-nowrap {
+        white-space: nowrap;
+    }
+}
+
 /* Numbered steps */
 
 nav.stepper ul {
     counter-reset: step;
-	color: red;
 }
 
 nav.stepper li {

@@ -28,6 +28,7 @@ import com.vaadin.flow.theme.lumo.Lumo;
  */
 @SpringBootApplication
 @StyleSheet(Lumo.STYLESHEET)
+@StyleSheet(Lumo.UTILITY_STYLESHEET)
 @EnableConfigurationProperties(SqlInitializationProperties.class)
 @Theme(value = "show-case")
 @Push
