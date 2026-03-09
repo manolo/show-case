@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
@@ -73,7 +73,7 @@ public class SamplePersonServerApi {
     }
 
     @GetMapping("/list")
-    public Page<SamplePerson> listPersons(
+    public PagedModel<SamplePerson> listPersons(
             @PageableDefault(page = 0, size = 10000)
             @SortDefault.SortDefaults({
                 @SortDefault(sort = "lastName"),
@@ -90,7 +90,7 @@ public class SamplePersonServerApi {
             @RequestParam(required = false) List<String> role,
             @RequestParam(required = false) Boolean important) {
         Specification<SamplePerson> spec = toSpec(name, firstName, lastName, email, phone, startDate, endDate, occupation, role, important);
-        return service.list(pageable, spec);
+        return new PagedModel<>(service.list(pageable, spec));
     }
 
     private Specification<SamplePerson> toSpec(String name, String firstName, String lastName, String email, String phone, LocalDate startDate,
