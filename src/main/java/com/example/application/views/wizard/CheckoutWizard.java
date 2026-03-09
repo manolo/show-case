@@ -9,10 +9,12 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.ParentLayout;
 import com.vaadin.flow.router.RoutePrefix;
 import com.vaadin.flow.theme.lumo.LumoUtility.MaxWidth;
+import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Wizard")
 @RoutePrefix(value = "wizard")
 @ParentLayout(MainLayout.class)
+@PermitAll
 public class CheckoutWizard extends Wizard {
 
     public CheckoutWizard() {
