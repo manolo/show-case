@@ -20,7 +20,6 @@ import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.theme.lumo.LumoUtility;
@@ -29,7 +28,6 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 @Route(value = "grid-with-filters-rest", layout = MainLayout.class)
 @PermitAll
 @Menu
-@PreserveOnRefresh
 public class GridwithFiltersRestView extends Div {
 
     private final Grid<SamplePerson> grid;
@@ -45,8 +43,11 @@ public class GridwithFiltersRestView extends Div {
         List<String> roles = samplePersonService.findDistinctRoleValues();
 
         grid = createGrid();
-        samplePersonfilterComponent = new SamplePersonFilter(() -> grid.getDataProvider().refreshAll(), occupations,
-                roles);
+        samplePersonfilterComponent = new SamplePersonFilter(() -> {
+            if (grid.isAttached()) {
+                grid.getDataProvider().refreshAll();
+            }
+        }, occupations, roles);
         ConfigurableFilterDataProvider<SamplePerson, Void, HasFilterParameters> filterDataProvider = samplePersonDataProvider
                 .withConfigurableFilter();
         grid.setDataProvider(filterDataProvider);
