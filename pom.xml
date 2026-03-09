@@ -147,6 +147,11 @@
             <version>23.3.2</version>
         </dependency>
         <dependency>
+            <groupId>com.vaadin.external</groupId>
+            <artifactId>elemental-json</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+        <dependency>
             <groupId>org.vaadin.addons.componentfactory</groupId>
             <artifactId>vcf-input-mask</artifactId>
             <version>2.2.0</version>
