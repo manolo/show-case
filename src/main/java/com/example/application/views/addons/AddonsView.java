@@ -1,13 +1,13 @@
 package com.example.application.views.addons;
 
-import java.time.LocalDate;
-
-import org.vaadin.textfieldformatter.AbstractPhoneFieldFormatter;
-import org.vaadin.textfieldformatter.CreditCardFieldFormatter;
-import org.vaadin.textfieldformatter.DateFieldFormatter;
-import org.vaadin.textfieldformatter.IBANFormatter;
-import org.vaadin.textfieldformatter.NumeralFieldFormatter;
-import org.vaadin.textfieldformatter.phone.PhoneI18nFieldFormatter;
+// TODO: Uncomment textfieldformatter imports when the addon supports Vaadin 25
+// (currently uses elemental.json.JsonValue which was replaced by Jackson in Vaadin 25)
+// import org.vaadin.textfieldformatter.AbstractPhoneFieldFormatter;
+// import org.vaadin.textfieldformatter.CreditCardFieldFormatter;
+// import org.vaadin.textfieldformatter.DateFieldFormatter;
+// import org.vaadin.textfieldformatter.IBANFormatter;
+// import org.vaadin.textfieldformatter.NumeralFieldFormatter;
+// import org.vaadin.textfieldformatter.phone.PhoneI18nFieldFormatter;
 
 import com.example.application.components.toggle.ToggleButton;
 import com.example.application.views.MainLayout;
@@ -16,6 +16,7 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Main;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
@@ -34,7 +35,6 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 @Menu
 public class AddonsView extends Div {
 
-    @SuppressWarnings("deprecation")
     public AddonsView() {
         addClassNames(Display.FLEX, FlexDirection.COLUMN, Height.FULL);
 
@@ -42,38 +42,10 @@ public class AddonsView extends Div {
         content.addClassNames(Display.GRID, MaxWidth.SCREEN_SMALL, JustifyContent.START, Padding.Top.XLARGE, Padding.Horizontal.XLARGE);
         add(content);
 
+        // TODO: textfieldformatter addon is not compatible with Vaadin 25
+        // (uses elemental.json API removed in favor of Jackson)
         content.add(new H3("Text Field Formatter"));
-
-        TextField textField = new TextField("ES Phone");
-        textField.setPlaceholder("+34 ...");
-        new PhoneI18nFieldFormatter(AbstractPhoneFieldFormatter.REGION_ES).extend(textField);
-        content.add(textField);
-
-        textField = new TextField("ES Numeral");
-        new NumeralFieldFormatter(".", ",", 3).extend(textField);
-        content.add(textField);
-
-        TextField cc = new TextField("Credit Card formatter");
-        CreditCardFieldFormatter formatter = new CreditCardFieldFormatter();
-        formatter.addCreditCardChangedListener(e -> {
-            cc.setHelperText(e.getCreditCardType().name());
-        });
-        formatter.extend(cc);
-        content.add(cc);
-
-        textField = new TextField("Date");
-        textField.setHelperText("format yyyy-MM-dd, limits 2000-01-01  2019-09-03");
-        new DateFieldFormatter.Builder()
-                .datePattern("yyyyMMdd")
-                .delimiter("-")
-                .dateMin(LocalDate.of(2000, 01, 01))
-                .dateMax(LocalDate.of(2019, 9, 3))
-                .build().extend(textField);
-        content.add(textField);
-
-        textField = new TextField("IBAN");
-        IBANFormatter.fromIBANLength(18).extend(textField);
-        content.add(textField);
+        content.add(new Paragraph("Disabled: textfieldformatter addon pending Vaadin 25 compatibility"));
 
         content.add(new H3("Toggle Button"));
 
@@ -101,12 +73,12 @@ public class AddonsView extends Div {
 
         content.add(new H3("Input Mask"));
 
-        textField = new TextField("Phone with inputMask");
+        TextField textField = new TextField("Phone with inputMask");
         textField.setPlaceholder("(+00) 000-00-00-00");
         new InputMask("(+00) 000-00-00-00").extend(textField);
         content.add(textField);
 
-        textField = new TextField("Date witn inputMask");
+        textField = new TextField("Date with inputMask");
         textField.setPlaceholder("00/00/0000");
         new InputMask("00/00/0000").extend(textField);
         content.add(textField);
