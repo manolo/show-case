@@ -3,6 +3,7 @@ package com.example.application.views.gridwithfiltersrest;
 import java.util.List;
 
 import com.example.application.components.datepicker.LocalDatePicker;
+import com.example.application.components.filter.HasFilterParameters;
 import com.example.application.components.filter.SamplePersonFilter;
 import com.example.application.data.SamplePerson;
 import com.example.application.services.SamplePersonServiceRest;
@@ -15,6 +16,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.theme.lumo.LumoIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
@@ -45,7 +47,10 @@ public class GridwithFiltersRestView extends Div {
         grid = createGrid();
         samplePersonfilterComponent = new SamplePersonFilter(() -> grid.getDataProvider().refreshAll(), occupations,
                 roles);
-        grid.setDataProvider(samplePersonDataProvider.withFilter(samplePersonfilterComponent));
+        ConfigurableFilterDataProvider<SamplePerson, Void, HasFilterParameters> filterDataProvider = samplePersonDataProvider
+                .withConfigurableFilter();
+        grid.setDataProvider(filterDataProvider);
+        grid.addAttachListener(e -> filterDataProvider.setFilter(samplePersonfilterComponent));
 
         VerticalLayout layout = new VerticalLayout(createMobileFilters(), samplePersonfilterComponent, grid);
         layout.setSizeFull();
