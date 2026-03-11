@@ -1,6 +1,6 @@
 package com.example.application.views.empty;
 
-import com.example.application.views.MainLayout;
+
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
@@ -16,7 +16,7 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 @PageTitle("Empty")
 @Route("empty")
 @Menu(order = 0, icon = LineAwesomeIconUrl.FILE)
-@RouteAlias(value = "", layout = MainLayout.class)
+@RouteAlias("")
 @PermitAll
 
 public class EmptyView extends VerticalLayout {

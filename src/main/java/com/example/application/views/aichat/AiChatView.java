@@ -4,7 +4,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.vaadin.voiceengine.VoiceEngine;
 
-import com.example.application.views.MainLayout;
+
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -16,7 +16,7 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 
-@Route(value = "aichat", layout = MainLayout.class)
+@Route("aichat")
 @Menu(title = "Chat AI")
 @PermitAll
 public class AiChatView extends VerticalLayout {

@@ -3,7 +3,7 @@ package com.example.application.views.customlayout;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 import com.example.application.components.phonenumberfield.PhoneNumberField;
-import com.example.application.views.MainLayout;
+
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.formlayout.FormLayout.ResponsiveStep;
@@ -28,7 +28,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 
 @Menu(order = 1, icon = LineAwesomeIconUrl.PENCIL_RULER_SOLID)
 @PageTitle("Custom Layout")
-@Route(value = "custom-layout", layout = MainLayout.class)
+@Route("custom-layout")
 @PermitAll
 @PreserveOnRefresh
 public class CustomLayoutView extends Composite<VerticalLayout> {

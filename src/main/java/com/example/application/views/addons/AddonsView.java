@@ -10,7 +10,7 @@ package com.example.application.views.addons;
 // import org.vaadin.textfieldformatter.phone.PhoneI18nFieldFormatter;
 
 import com.example.application.components.toggle.ToggleButton;
-import com.example.application.views.MainLayout;
+
 import com.vaadin.componentfactory.addons.inputmask.InputMask;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.html.Div;
@@ -30,7 +30,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.MaxWidth;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
 @PageTitle("Addons")
-@Route(value = "addons", layout = MainLayout.class)
+@Route("addons")
 @PermitAll
 @Menu
 public class AddonsView extends Div {
