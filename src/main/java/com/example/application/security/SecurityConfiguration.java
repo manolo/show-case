@@ -13,24 +13,28 @@ import com.vaadin.flow.spring.security.VaadinAwareSecurityContextHolderStrategyC
 import com.vaadin.flow.spring.security.VaadinSecurityConfigurer;
 
 @Configuration
-@EnableWebSecurity @Import(VaadinAwareSecurityContextHolderStrategyConfiguration.class)
+@EnableWebSecurity
+@Import(VaadinAwareSecurityContextHolderStrategyConfiguration.class)
 public class SecurityConfiguration {
-   @Bean
-   public PasswordEncoder passwordEncoder() {
-       return new BCryptPasswordEncoder();
-   }
-   @Bean
-   public SecurityFilterChain vaadinSecurityFilterChain(HttpSecurity http) throws Exception {
-       http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/images/*.png", "/**/*.css").permitAll());
-       http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/line-awesome/**").permitAll());
 
-       // Allow REST API without login (optional if there are spring webservices exposed)
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public SecurityFilterChain vaadinSecurityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/images/*.png", "/**/*.css").permitAll()
+                .requestMatchers("/line-awesome/**").permitAll()
+                .requestMatchers("/api/**").permitAll());
+
+        // Allow REST API without login (optional if there are spring webservices exposed)
         http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"));
-        http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/api/**").permitAll());
 
-       http.with(VaadinSecurityConfigurer.vaadin(), vaadin -> {
-           vaadin.loginView(LoginView.class);
-       });
-       return http.build();
-   }
+        http.with(VaadinSecurityConfigurer.vaadin(), vaadin -> {
+            vaadin.loginView(LoginView.class);
+        });
+        return http.build();
+    }
 }
