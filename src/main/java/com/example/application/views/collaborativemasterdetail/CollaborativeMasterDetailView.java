@@ -30,7 +30,7 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
-import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
+
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -108,7 +108,7 @@ public class CollaborativeMasterDetailView extends Div implements BeforeEnterObs
 
         grid.addColumn(importantRenderer).setHeader("Important").setAutoWidth(true);
 
-        grid.setItems(query -> samplePersonService.list(VaadinSpringDataHelpers.toSpringPageRequest(query)).stream());
+        grid.setItemsPageable(samplePersonService::listItems);
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
 
         // when a row is selected or deselected, populate form

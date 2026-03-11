@@ -2,7 +2,7 @@ package com.example.application.views.gridedit;
 
 import com.example.application.data.SamplePerson;
 import com.example.application.services.SamplePersonService;
-import com.example.application.views.MainLayout;
+
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -21,12 +21,10 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 import jakarta.annotation.security.PermitAll;
-import org.springframework.data.domain.PageRequest;
 
 @PageTitle("Editable Grid Dbl-Click")
-@Route(value = "grid-editor", layout = MainLayout.class)
+@Route("grid-editor")
 @PermitAll
 @PreserveOnRefresh
 @Menu
@@ -75,10 +73,7 @@ public class GridEditorView extends VerticalLayout {
         grid.setSelectionMode(Grid.SelectionMode.NONE);
         grid.setHeightFull();
 
-        grid.setItems(query -> service.list(
-                PageRequest.of(query.getPage(), query.getPageSize(),
-                        VaadinSpringDataHelpers.toSpringDataSort(query)))
-                .stream());
+        grid.setItemsPageable(service::listItems);
 
         grid.addItemDoubleClickListener(e -> {
             if (editor.isOpen() && binder.hasChanges()) {

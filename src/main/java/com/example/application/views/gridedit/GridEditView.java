@@ -1,11 +1,9 @@
 package com.example.application.views.gridedit;
 
-import org.springframework.data.domain.PageRequest;
-
 import com.example.application.components.datepicker.LocalDatePicker;
 import com.example.application.data.SamplePerson;
 import com.example.application.services.SamplePersonService;
-import com.example.application.views.MainLayout;
+
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.Shortcuts;
 import com.vaadin.flow.component.button.Button;
@@ -28,10 +26,10 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
-import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
+
 
 @PageTitle("Editable Grid Button")
-@Route(value = "grid-edit", layout = MainLayout.class)
+@Route("grid-edit")
 @PermitAll
 @PreserveOnRefresh
 @Menu
@@ -86,9 +84,7 @@ public class GridEditView extends HorizontalLayout {
         grid.getColumnByKey("important").setRenderer(new TextRenderer<>(p -> p.isImportant() ? "✔" : "᠆"));
 
         // Load data
-        grid.setItems(query -> samplePersonService.list(
-                PageRequest.of(query.getPage(), query.getPageSize(), VaadinSpringDataHelpers.toSpringDataSort(query)))
-                .stream());
+        grid.setItemsPageable(samplePersonService::listItems);
 
         grid.setSelectionMode(Grid.SelectionMode.NONE);
 

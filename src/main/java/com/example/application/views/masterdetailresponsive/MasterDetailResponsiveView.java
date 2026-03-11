@@ -5,13 +5,12 @@ import static com.example.application.views.masterdetailresponsive.MasterDetailR
 
 import java.util.Optional;
 
-import org.springframework.data.domain.PageRequest;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 import com.example.application.components.datepicker.LocalDatePicker;
 import com.example.application.data.SamplePerson;
 import com.example.application.services.SamplePersonService;
-import com.example.application.views.MainLayout;
+
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.Shortcuts;
@@ -47,11 +46,11 @@ import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import jakarta.annotation.security.PermitAll;
-import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
+
 
 @PageTitle("Master-Detail-Responsive")
-@Route(value = ROUTE_EDIT, layout = MainLayout.class)
-@RouteAlias(value = ROUTE_NEW, layout = MainLayout.class)
+@Route(ROUTE_EDIT)
+@RouteAlias(ROUTE_NEW)
 @PermitAll
 @Menu
 @PreserveOnRefresh
@@ -112,9 +111,7 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
         grid.getColumnByKey("dateOfBirth").setRenderer(
                 new LocalDateRenderer<>(SamplePerson::getDateOfBirth, dateOfBirth.getI18n().getDateFormats().get(0)));
 
-        grid.setItems(query -> samplePersonService.list(
-                PageRequest.of(query.getPage(), query.getPageSize(), VaadinSpringDataHelpers.toSpringDataSort(query)))
-                .stream());
+        grid.setItemsPageable(samplePersonService::listItems);
 
         // when a row is selected or deselected, populate form
         grid.asSingleSelect().addValueChangeListener(event -> {
