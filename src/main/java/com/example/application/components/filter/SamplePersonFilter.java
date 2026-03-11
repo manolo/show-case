@@ -78,6 +78,14 @@ public class SamplePersonFilter extends Div implements HasFilterParameters{
         return dateRangeComponent;
     }
 
+    public void setOccupationItems(List<String> items) {
+        occupations.setItems(items);
+    }
+
+    public void setRoleItems(List<String> items) {
+        roles.setItems(items);
+    }
+
     @Override
     public HashMap<String, List<String>> getFilterParameters() {
         HashMap<String, List<String>> map = new HashMap<>();

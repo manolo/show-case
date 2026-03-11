@@ -7,7 +7,7 @@ import com.example.application.components.filter.HasFilterParameters;
 import com.example.application.components.filter.SamplePersonFilter;
 import com.example.application.data.SamplePerson;
 import com.example.application.services.SamplePersonServiceRest;
-import com.example.application.views.MainLayout;
+
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
@@ -18,6 +18,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ConfigurableFilterDataProvider;
 import com.vaadin.flow.data.renderer.LocalDateRenderer;
+import com.vaadin.flow.router.AfterNavigationEvent;
+import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -25,29 +27,28 @@ import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
 @PageTitle("Grid with Filters REST")
-@Route(value = "grid-with-filters-rest", layout = MainLayout.class)
+@Route("grid-with-filters-rest")
 @PermitAll
 @Menu
-public class GridwithFiltersRestView extends Div {
+public class GridwithFiltersRestView extends Div implements AfterNavigationObserver {
 
     private final Grid<SamplePerson> grid;
 
     private final SamplePersonFilter samplePersonfilterComponent;
+    private final SamplePersonServiceRest samplePersonService;
 
     public GridwithFiltersRestView(SamplePersonServiceRest samplePersonService,
             SamplePersonRestDataProvider samplePersonDataProvider) {
+        this.samplePersonService = samplePersonService;
         setSizeFull();
         addClassNames("gridwith-filters-view");
-
-        List<String> occupations = samplePersonService.findDistinctOccupationValues();
-        List<String> roles = samplePersonService.findDistinctRoleValues();
 
         grid = createGrid();
         samplePersonfilterComponent = new SamplePersonFilter(() -> {
             if (grid.isAttached()) {
                 grid.getDataProvider().refreshAll();
             }
-        }, occupations, roles);
+        }, List.of(), List.of());
         ConfigurableFilterDataProvider<SamplePerson, Void, HasFilterParameters> filterDataProvider = samplePersonDataProvider
                 .withConfigurableFilter();
         grid.setDataProvider(filterDataProvider);
@@ -58,6 +59,12 @@ public class GridwithFiltersRestView extends Div {
         layout.setPadding(false);
         layout.setSpacing(false);
         add(layout);
+    }
+
+    @Override
+    public void afterNavigation(AfterNavigationEvent event) {
+        samplePersonfilterComponent.setOccupationItems(samplePersonService.findDistinctOccupationValues());
+        samplePersonfilterComponent.setRoleItems(samplePersonService.findDistinctRoleValues());
     }
 
     private HorizontalLayout createMobileFilters() {

@@ -10,7 +10,7 @@ import com.example.application.components.datepicker.LocalDatePicker;
 import com.example.application.components.filter.HasFilterParameters;
 import com.example.application.data.SamplePerson;
 import com.example.application.services.SamplePersonServiceRest;
-import com.example.application.views.MainLayout;
+
 import com.example.application.views.gridwithfiltersrest.SamplePersonRestDataProvider;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
@@ -36,6 +36,8 @@ import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.data.value.HasValueChangeMode;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.AfterNavigationEvent;
+import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
@@ -43,11 +45,11 @@ import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Editable Grid Filter Paginated")
-@Route(value = "grid-edit-filter-paginated", layout = MainLayout.class)
+@Route("grid-edit-filter-paginated")
 @PermitAll
 @Menu
 @PreserveOnRefresh
-public class GridEditPaginatedFilterView extends VerticalLayout implements HasFilterParameters {
+public class GridEditPaginatedFilterView extends VerticalLayout implements HasFilterParameters, AfterNavigationObserver {
 
     private final PaginatedGrid<SamplePerson, HasFilterParameters> grid = new PaginatedGrid<>(SamplePerson.class);
     private final Editor<SamplePerson> editor = grid.getEditor();
@@ -75,10 +77,13 @@ public class GridEditPaginatedFilterView extends VerticalLayout implements HasFi
     private final MultiSelectComboBox<String> rolesFilter = new MultiSelectComboBox<>();
     private final Checkbox importantFilter = new Checkbox();
 
+    private final SamplePersonServiceRest samplePersonService;
+
     // Confirmation dialog
     private ConfirmDialog dialog;
 
     public GridEditPaginatedFilterView(SamplePersonServiceRest samplePersonService) {
+        this.samplePersonService = samplePersonService;
         // Some styles
         addClassNames("grid-edit-view");
         addClassNames("gridwith-filters-view");
@@ -143,9 +148,6 @@ public class GridEditPaginatedFilterView extends VerticalLayout implements HasFi
         createFilterHeader(headerRow, occupationsFilter, "occupation");
         createFilterHeader(headerRow, rolesFilter, "role");
         createFilterHeader(headerRow, importantFilter, "important");
-        occupationsFilter.setItems(samplePersonService.findDistinctOccupationValues());
-        rolesFilter.setItems(samplePersonService.findDistinctRoleValues());
-
         // Configure and set the data provider
         SamplePersonRestDataProvider samplePersonDataProvider = new SamplePersonRestDataProvider(samplePersonService);
         grid.setDataProvider(samplePersonDataProvider.withFilter(this));
@@ -195,6 +197,12 @@ public class GridEditPaginatedFilterView extends VerticalLayout implements HasFi
         // workaround because cancel should clear binder
         binder.refreshFields();
         editor.closeEditor();
+    }
+
+    @Override
+    public void afterNavigation(AfterNavigationEvent event) {
+        occupationsFilter.setItems(samplePersonService.findDistinctOccupationValues());
+        rolesFilter.setItems(samplePersonService.findDistinctRoleValues());
     }
 
     @Override

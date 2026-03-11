@@ -9,7 +9,7 @@ import com.example.application.components.filter.HasFilterParameters;
 import com.example.application.components.filter.SamplePersonFilter;
 import com.example.application.data.SamplePerson;
 import com.example.application.services.SamplePersonServiceRest;
-import com.example.application.views.MainLayout;
+
 import com.example.application.views.gridwithfiltersrest.SamplePersonRestDataProvider;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.Shortcuts;
@@ -28,6 +28,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.data.renderer.TextRenderer;
+import com.vaadin.flow.router.AfterNavigationEvent;
+import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.PreserveOnRefresh;
@@ -35,11 +37,11 @@ import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 
 @PageTitle("Editable Grid Paginated")
-@Route(value = "grid-edit-paginated", layout = MainLayout.class)
+@Route("grid-edit-paginated")
 @PermitAll
 @Menu
 @PreserveOnRefresh
-public class GridEditPaginatedView extends VerticalLayout {
+public class GridEditPaginatedView extends VerticalLayout implements AfterNavigationObserver {
 
     PaginatedGrid<SamplePerson, HasFilterParameters> grid = new PaginatedGrid<>(SamplePerson.class);
     private final Editor<SamplePerson> editor = grid.getEditor();
@@ -56,9 +58,11 @@ public class GridEditPaginatedView extends VerticalLayout {
     private final Button save = new Button(VaadinIcon.CHECK.create(), e -> save());
     private final HorizontalLayout buttons = new HorizontalLayout(save, cancel);
     private final SamplePersonFilter samplePersonfilterComponent;
+    private final SamplePersonServiceRest samplePersonService;
     private ConfirmDialog dialog;
 
     public GridEditPaginatedView(SamplePersonServiceRest samplePersonService) {
+        this.samplePersonService = samplePersonService;
         // Some styles
         addClassNames("grid-edit-view");
         addClassNames("gridwith-filters-view");
@@ -111,14 +115,17 @@ public class GridEditPaginatedView extends VerticalLayout {
         // Configure dialog to discard unsaved changes
         dialog = new ConfirmDialog("Discard changes", "There are unsaved changes?", "Discard", e -> close(), "Cancel",
                 e -> {});
-        List<String> occupations = samplePersonService.findDistinctOccupationValues();
-        List<String> roles = samplePersonService.findDistinctRoleValues();
-
-        samplePersonfilterComponent = new SamplePersonFilter(grid::refreshPaginator, occupations, roles);
+        samplePersonfilterComponent = new SamplePersonFilter(grid::refreshPaginator, List.of(), List.of());
         SamplePersonRestDataProvider samplePersonDataProvider = new SamplePersonRestDataProvider(samplePersonService);
         grid.setDataProvider(samplePersonDataProvider.withFilter(samplePersonfilterComponent));
 
         add(samplePersonfilterComponent, grid);
+    }
+
+    @Override
+    public void afterNavigation(AfterNavigationEvent event) {
+        samplePersonfilterComponent.setOccupationItems(samplePersonService.findDistinctOccupationValues());
+        samplePersonfilterComponent.setRoleItems(samplePersonService.findDistinctRoleValues());
     }
 
     private void edit(SamplePerson person) {
