@@ -16,7 +16,6 @@ import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.server.ServiceInitEvent;
 import com.vaadin.flow.server.VaadinServiceInitListener;
-import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 
 /**
@@ -29,8 +28,8 @@ import com.vaadin.flow.theme.lumo.Lumo;
 @SpringBootApplication
 @StyleSheet(Lumo.STYLESHEET)
 @StyleSheet(Lumo.UTILITY_STYLESHEET)
+@StyleSheet("styles.css")
 @EnableConfigurationProperties(SqlInitializationProperties.class)
-@Theme(value = "show-case")
 @Push
 public class Application implements AppShellConfigurator, VaadinServiceInitListener {
 
