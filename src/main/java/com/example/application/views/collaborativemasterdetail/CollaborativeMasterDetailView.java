@@ -70,7 +70,7 @@ public class CollaborativeMasterDetailView extends Div implements BeforeEnterObs
 
     public CollaborativeMasterDetailView(SamplePersonService samplePersonService) {
         this.samplePersonService = samplePersonService;
-        addClassNames("collaborative-master-detail-view");
+        addClassNames("collaborative-master-detail-view", "master-detail");
 
         // UserInfo is used by Collaboration Engine and is used to share details
         // of users to each other to able collaboration. Replace this with

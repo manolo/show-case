@@ -1,10 +1,10 @@
 @import url('./main-layout.css');
 @import url('./views/custom-layout-view.css');
 @import url('./views/dashboard-view.css');
-@import url('./views/forum-view.css');
-@import url('./views/data-view.css');
+@import url('./views/feed-view.css');
+@import url('./views/data-grid-view.css');
+@import url('./views/master-detail-common.css');
 @import url('./views/master-detail-view.css');
-@import url('./views/collaborative-master-detail-view.css');
 @import url('./views/grid-edit-view.css');
 @import url('./views/master-detail-responsive-view.css');
 @import url('./views/credit-card-form-view.css');

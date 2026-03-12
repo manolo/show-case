@@ -1,0 +1,36 @@
+.master-detail {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.master-detail vaadin-grid {
+  height: 100%;
+}
+
+.master-detail .editor-layout {
+  display: flex;
+  flex-direction: column;
+}
+
+.master-detail .editor {
+  flex-grow: 1;
+  padding: var(--lumo-space-l);
+}
+
+.master-detail .editor vaadin-checkbox {
+  padding-top: var(--lumo-space-m);
+}
+
+.master-detail .button-layout {
+  background-color: var(--lumo-contrast-5pct);
+  padding-bottom: var(--lumo-space-s);
+  padding-top: var(--lumo-space-s);
+  padding-left: var(--lumo-space-l);
+  padding-right: var(--lumo-space-l);
+  gap: var(--lumo-space-m);
+}
+
+.master-detail .grid-wrapper {
+  width: 100%;
+}

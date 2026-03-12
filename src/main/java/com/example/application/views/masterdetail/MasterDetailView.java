@@ -65,7 +65,7 @@ public class MasterDetailView extends Div implements BeforeEnterObserver {
 
     public MasterDetailView(SamplePersonService samplePersonService) {
         this.samplePersonService = samplePersonService;
-        addClassNames("master-detail-view");
+        addClassNames("master-detail-view", "master-detail");
 
         // Create UI
         SplitLayout splitLayout = new SplitLayout();

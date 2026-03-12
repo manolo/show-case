@@ -91,7 +91,7 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
 
     public MasterDetailResponsiveView(SamplePersonService samplePersonService) {
         this.item = samplePersonService;
-        addClassNames(ROUTE + "-view");
+        addClassNames(ROUTE + "-view", "master-detail");
 
         // Create UI
         HorizontalLayout horizontalLayout = new HorizontalLayout();
