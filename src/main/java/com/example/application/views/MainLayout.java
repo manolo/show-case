@@ -26,8 +26,11 @@ import com.vaadin.flow.router.Layout;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.server.menu.MenuConfiguration;
 import com.vaadin.flow.server.menu.MenuEntry;
+import com.vaadin.flow.shared.Registration;
+import com.vaadin.flow.signals.Signal;
 import com.vaadin.flow.signals.local.ValueSignal;
 import com.vaadin.flow.spring.security.AuthenticationContext;
+import com.vaadin.flow.theme.aura.Aura;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
 /**
@@ -40,6 +43,8 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
 
     private final ValueSignal<String> title = new ValueSignal<>("");
     private final ValueSignal<Boolean> dark = new ValueSignal<>(false);
+    private final ValueSignal<Boolean> aura = new ValueSignal<>(false);
+    private Registration auraStylesheet;
     private final AuthenticationContext authenticationContext;
 
     public MainLayout(AuthenticationContext authenticationContext) {
@@ -62,7 +67,13 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
         darkToggle.setAriaLabel("Toggle dark mode");
         darkToggle.addClickListener(e -> dark.update(v -> !v));
 
-        addToNavbar(true, toggle, viewTitle, darkToggle);
+        Button themeToggle = new Button();
+        themeToggle.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        themeToggle.setAriaLabel("Toggle Lumo / Aura theme");
+        themeToggle.bindText(aura.map(a -> a ? "Aura" : "Lumo"));
+        themeToggle.addClickListener(e -> aura.update(v -> !v));
+
+        addToNavbar(true, toggle, viewTitle, themeToggle, darkToggle);
     }
 
     private void addDrawerContent() {
@@ -108,7 +119,18 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
     @Override
     protected void onAttach(com.vaadin.flow.component.AttachEvent attachEvent) {
         super.onAttach(attachEvent);
-        UI.getCurrent().getElement().getThemeList().bind("dark", dark);
+        UI ui = attachEvent.getUI();
+        ui.getElement().getThemeList().bind("dark", dark);
+        Signal.effect(this, () -> {
+            if (aura.get()) {
+                if (auraStylesheet == null) {
+                    auraStylesheet = ui.getPage().addStyleSheet(Aura.STYLESHEET);
+                }
+            } else if (auraStylesheet != null) {
+                auraStylesheet.remove();
+                auraStylesheet = null;
+            }
+        });
     }
 
     @Override
