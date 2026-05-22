@@ -4,7 +4,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.ListItem;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.html.UnorderedList;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.theme.lumo.LumoIcon;
 import com.vaadin.flow.component.map.Map;
 import com.vaadin.flow.component.map.configuration.Coordinate;
@@ -20,6 +19,8 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.signals.Signal;
+import com.vaadin.flow.signals.local.ValueSignal;
 import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.BoxSizing;
@@ -36,7 +37,6 @@ import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 import com.vaadin.flow.theme.lumo.LumoUtility.Width;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
@@ -46,51 +46,10 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 @Menu(order = 11, icon = LineAwesomeIconUrl.MAP)
 public class MapView extends HorizontalLayout {
 
-    public static class Location {
-        private int id;
-        private String country;
-        private String city;
-        private String place;
-        private double latitude;
-        private double longitude;
-
-        public Location(int id, String country, String city, String place, double latitude, double longitude) {
-            this.id = id;
-            this.country = country;
-            this.city = city;
-            this.place = place;
-            this.latitude = latitude;
-            this.longitude = longitude;
-
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public String getCountry() {
-            return country;
-        }
-
-        public String getCity() {
-            return city;
-        }
-
-        public String getPlace() {
-            return place;
-        }
-
-        public double getLatitude() {
-            return latitude;
-        }
-
-        public double getLongitude() {
-            return longitude;
-        }
-
+    public record Location(int id, String country, String city, String place, double latitude, double longitude) {
     }
 
-    private static Location[] locations = new Location[]{
+    private static final Location[] locations = new Location[]{
             new Location(1, "Netherlands", "Amsterdam", "Van Gogh Museum", 52.358438, 4.881063),
             new Location(2, "Andorra", "Andorra la Vella", "Casa de la Vall", 42.506563, 1.520563),
             new Location(3, "Greece", "Athens", "Acropolis of Athens", 37.971563, 23.725687),
@@ -138,13 +97,20 @@ public class MapView extends HorizontalLayout {
             new Location(44, "Poland", "Warsaw", "Old Town Market Square", 52.249688, 21.012188),
             new Location(45, "Croatia", "Zagreb", "Park Maksimir", 45.824313, 16.017688)};
 
-    private Map map = new Map();
+    private final Map map = new Map();
+    private final UnorderedList cardList = new UnorderedList();
+    private final java.util.Map<Location, Button> locationToCard = new HashMap<>();
+    private final java.util.Map<Feature, Location> featureToLocation = new HashMap<>();
 
-    private UnorderedList cardList;
-    private java.util.Map<Location, Button> locationToCard = new HashMap<>();
-
-    private List<Location> filteredLocations;
-    private java.util.Map<Feature, Location> featureToLocation = new HashMap<>();
+    private final ValueSignal<String> filter = new ValueSignal<>("");
+    private final Signal<List<Location>> filtered = Signal.computed(() -> {
+        String f = filter.get().toLowerCase();
+        return Stream.of(locations)
+                .filter(l -> l.place().toLowerCase().contains(f)
+                        || l.city().toLowerCase().contains(f)
+                        || l.country().toLowerCase().contains(f))
+                .toList();
+    });
 
     public MapView() {
         addClassName("map-view");
@@ -158,24 +124,21 @@ public class MapView extends HorizontalLayout {
         VerticalLayout sidebar = new VerticalLayout();
         sidebar.setSpacing(false);
         sidebar.setPadding(false);
-
         sidebar.setWidth("auto");
         sidebar.addClassNames("sidebar");
+
         TextField searchField = new TextField();
         searchField.setPlaceholder("Search");
         searchField.setWidthFull();
         searchField.addClassNames(Padding.MEDIUM, BoxSizing.BORDER);
         searchField.setValueChangeMode(ValueChangeMode.EAGER);
-        searchField.addValueChangeListener(e -> {
-            updateFilter(searchField.getValue().toLowerCase());
-        });
         searchField.setClearButtonVisible(true);
         searchField.setSuffixComponent(LumoIcon.SEARCH.create());
+        searchField.bindValue(filter, filter::set);
 
         Scroller scroller = new Scroller();
         scroller.addClassNames(Padding.Horizontal.MEDIUM, Width.FULL, BoxSizing.BORDER);
 
-        cardList = new UnorderedList();
         cardList.addClassNames("card-list", Gap.XSMALL, Display.FLEX, FlexDirection.COLUMN, ListStyleType.NONE,
                 Margin.NONE, Padding.NONE);
         sidebar.add(searchField, scroller);
@@ -183,60 +146,35 @@ public class MapView extends HorizontalLayout {
 
         add(map, sidebar);
 
-        configureMap();
-        updateCardList();
-    }
-
-    private void centerMapOn(Location location) {
-        View view = map.getView();
-        view.setCenter(new Coordinate(location.getLongitude(), location.getLatitude()));
-        view.setZoom(14);
-    }
-
-    private void scrollToCard(Location location) {
-        locationToCard.get(location).scrollIntoView();
-    }
-
-    private void centerMapDefault() {
-        View view = new View();
-        view.setCenter(new Coordinate(7, 55));
-        view.setZoom(4.4f);
-        map.setView(view);
-    }
-
-    private void configureMap() {
-
-        this.centerMapDefault();
-
-        this.map.addFeatureClickListener(e -> {
-            Feature feature = e.getFeature();
-            Location location = featureToLocation.get(feature);
-            this.centerMapOn(location);
-            this.scrollToCard(location);
+        centerMapDefault();
+        map.addFeatureClickListener(e -> {
+            Location location = featureToLocation.get(e.getFeature());
+            if (location != null) {
+                centerMapOn(location);
+                locationToCard.get(location).scrollIntoView();
+            }
         });
 
-        this.updateFilter("");
+        Signal.effect(cardList, this::rebuildCards);
+        Signal.effect(map, this::rebuildMarkers);
     }
 
-    private void updateCardList() {
+    private void rebuildCards() {
         cardList.removeAll();
         locationToCard.clear();
-        for (Location location : filteredLocations) {
+        for (Location location : filtered.get()) {
             Button button = new Button();
             button.addClassNames(Height.AUTO, Padding.MEDIUM);
-            button.addClickListener(e -> {
-                centerMapOn(location);
-            });
+            button.addClickListener(e -> centerMapOn(location));
 
             Span card = new Span();
             card.addClassNames("card", Width.FULL, Display.FLEX, FlexDirection.COLUMN, AlignItems.START, Gap.XSMALL);
-            Span country = new Span(location.getCountry());
+            Span country = new Span(location.country());
             country.addClassNames(TextColor.SECONDARY);
-            Span city = new Span(location.getCity());
+            Span city = new Span(location.city());
             city.addClassNames(FontSize.XLARGE, FontWeight.SEMIBOLD, TextColor.HEADER, Padding.Bottom.XSMALL);
-            Span place = new Span(location.getPlace());
+            Span place = new Span(location.place());
             place.addClassNames(TextColor.SECONDARY);
-
             card.add(country, city, place);
 
             button.getElement().appendChild(card.getElement());
@@ -245,25 +183,29 @@ public class MapView extends HorizontalLayout {
         }
     }
 
-    private void updateFilter(String filter) {
+    private void rebuildMarkers() {
         featureToLocation.clear();
-        filteredLocations = Stream.of(locations)
-                .filter(location -> location.place.toLowerCase().contains(filter)
-                        || location.city.toLowerCase().contains(filter)
-                        || location.country.toLowerCase().contains(filter))
-                .collect(Collectors.toList());
-
-        FeatureLayer featureLayer = this.map.getFeatureLayer();
-
-        for (Feature f : featureLayer.getFeatures().toArray(Feature[]::new)) {
-            featureLayer.removeFeature(f);
+        FeatureLayer layer = map.getFeatureLayer();
+        for (Feature f : layer.getFeatures().toArray(Feature[]::new)) {
+            layer.removeFeature(f);
         }
-
-        this.filteredLocations.forEach((location) -> {
-            MarkerFeature feature = new MarkerFeature(new Coordinate(location.getLongitude(), location.getLatitude()));
+        for (Location location : filtered.get()) {
+            MarkerFeature feature = new MarkerFeature(new Coordinate(location.longitude(), location.latitude()));
             featureToLocation.put(feature, location);
-            featureLayer.addFeature(feature);
-        });
-        updateCardList();
+            layer.addFeature(feature);
+        }
+    }
+
+    private void centerMapOn(Location location) {
+        View view = map.getView();
+        view.setCenter(new Coordinate(location.longitude(), location.latitude()));
+        view.setZoom(14);
+    }
+
+    private void centerMapDefault() {
+        View view = new View();
+        view.setCenter(new Coordinate(7, 55));
+        view.setZoom(4.4f);
+        map.setView(view);
     }
 }

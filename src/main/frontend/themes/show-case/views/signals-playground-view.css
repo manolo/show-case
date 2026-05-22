@@ -1,0 +1,18 @@
+.signals-playground-view .playground-panel {
+    background: var(--lumo-contrast-5pct);
+    transition: background 0.3s ease;
+}
+
+.signals-playground-view .playground-highlight {
+    background: var(--lumo-primary-color-50pct);
+    color: var(--lumo-primary-contrast-color);
+}
+
+.signals-playground-view .playground-flash {
+    animation: playground-flash 0.6s ease-out;
+}
+
+@keyframes playground-flash {
+    from { background: var(--lumo-success-color-50pct); }
+    to { background: var(--lumo-contrast-5pct); }
+}

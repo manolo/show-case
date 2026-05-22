@@ -62,6 +62,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamRegistration;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.signals.local.ValueSignal;
 import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.theme.lumo.LumoIcon;
 import com.vaadin.flow.theme.lumo.LumoUtility;
@@ -77,6 +78,7 @@ public class SpreadsheetView extends VerticalLayout implements Receiver {
     private final Spreadsheet spreadsheet;
     private H3 invoiceNumber;
     private Span invoiceSource;
+    private final ValueSignal<Boolean> hasInvoice = new ValueSignal<>(false);
 
     public SpreadsheetView() throws IOException, URISyntaxException {
         setSizeFull();
@@ -120,10 +122,13 @@ public class SpreadsheetView extends VerticalLayout implements Receiver {
         viewHeading.addClassName(LumoUtility.Padding.Left.SMALL);
         invoiceNumber = new H3();
         invoiceNumber.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
+        invoiceNumber.bindVisible(hasInvoice);
         invoiceSource = new Span();
         invoiceSource.addClassNames(LumoUtility.TextColor.SECONDARY);
+        invoiceSource.bindVisible(hasInvoice);
 
         updateInvoiceNumberAndSource();
+        refreshHasInvoice();
 
         viewHeading.add(invoiceNumber, invoiceSource);
         header.add(viewHeading, createMenuBar());
@@ -140,13 +145,8 @@ public class SpreadsheetView extends VerticalLayout implements Receiver {
         return spreadsheet.getDataFormatter().formatCellValue(spreadsheet.getCell(cellReference));
     }
 
-    private void toggleTitleVisibility() {
-        Cell cellA2 = spreadsheet.getCell("A2");
-        Cell cellD4 = spreadsheet.getCell("D4");
-
-        boolean isVisible = cellA2 != null && cellD4 != null;
-        invoiceNumber.setVisible(isVisible);
-        invoiceSource.setVisible(isVisible);
+    private void refreshHasInvoice() {
+        hasInvoice.set(spreadsheet.getCell("A2") != null && spreadsheet.getCell("D4") != null);
     }
 
     private MenuBar createMenuBar() {
@@ -157,13 +157,13 @@ public class SpreadsheetView extends VerticalLayout implements Receiver {
         AtomicReference<CellRangeAddress> selectedCellMergedRegion = new AtomicReference<>();
         AtomicReference<CellReference> selectedCellReference = new AtomicReference<>();
 
-        spreadsheet.addSheetChangeListener(event -> toggleTitleVisibility());
+        spreadsheet.addSheetChangeListener(event -> refreshHasInvoice());
 
         spreadsheet.addCellValueChangeListener(event -> {
             Cell cellA2 = spreadsheet.getCell("A2");
             Cell cellD4 = spreadsheet.getCell("D4");
 
-            toggleTitleVisibility();
+            refreshHasInvoice();
 
             if (cellA2 == null || cellD4 == null) {
                 return;
@@ -280,7 +280,7 @@ public class SpreadsheetView extends VerticalLayout implements Receiver {
                     if (previousFile == null
                             || !previousFile.getAbsolutePath().equals(uploadedFile.getAbsolutePath())) {
                         spreadsheet.read(uploadedFile);
-                        toggleTitleVisibility();
+                        refreshHasInvoice();
                         previousFile = uploadedFile;
                         uploadFileDialog.close();
                     } else {

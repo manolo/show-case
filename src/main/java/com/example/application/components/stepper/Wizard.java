@@ -26,6 +26,8 @@ import com.vaadin.flow.router.BeforeLeaveObserver;
 import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.VaadinService;
+import com.vaadin.flow.signals.Signal;
+import com.vaadin.flow.signals.local.ValueSignal;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.BoxSizing;
 import com.vaadin.flow.theme.lumo.LumoUtility.Display;
@@ -47,12 +49,13 @@ public abstract class Wizard extends Main
     private Div footer;
     private RouterLink previous;
     private RouterLink next;
-    private String currentPath;
-    private Step[] steps;
+    private final Step[] steps;
+
+    private final ValueSignal<Integer> currentStep = new ValueSignal<>(-1);
 
     private ContinueNavigationAction action;
-    private ConfirmDialog confirmDialog = createConfirmDialog();
-    private Notification notification = createNotification();
+    private final ConfirmDialog confirmDialog = createConfirmDialog();
+    private final Notification notification = createNotification();
 
     private boolean modal = false;
 
@@ -61,6 +64,18 @@ public abstract class Wizard extends Main
         stepper = new Stepper(steps);
         addClassNames(Display.FLEX, FlexDirection.COLUMN, Height.FULL);
         add(createStepper(), createContent(), createFooter());
+
+        previous.bindVisible(currentStep.map(i -> i > 0));
+        next.bindVisible(currentStep.map(i -> i >= 0 && i < steps.length - 1));
+
+        Signal.effect(previous, () -> {
+            int i = currentStep.get();
+            if (i > 0) previous.setRoute(steps[i - 1].getRouteClass());
+        });
+        Signal.effect(next, () -> {
+            int i = currentStep.get();
+            if (i >= 0 && i < steps.length - 1) next.setRoute(steps[i + 1].getRouteClass());
+        });
     }
 
     public Wizard(Orientation orientiation, Step... steps) {
@@ -92,7 +107,6 @@ public abstract class Wizard extends Main
     }
 
     private Div createFooter() {
-        new RouterLink();
         this.previous = new RouterLink();
         this.previous.setText("Previous");
         this.previous.addComponentAsFirst(createSmallIcon(LineAwesomeIcon.ANGLE_LEFT_SOLID));
@@ -104,7 +118,6 @@ public abstract class Wizard extends Main
         this.next.addClassNames(AlignItems.CENTER, Display.FLEX, Gap.SMALL);
 
         this.footer = new Div(this.previous, this.next);
-
         this.footer.addClassNames(Display.FLEX, Gap.XLARGE, Padding.Horizontal.LARGE, Padding.Vertical.XLARGE,
                 Flex.GROW, AlignItems.START, JustifyContent.END);
         return this.footer;
@@ -189,30 +202,16 @@ public abstract class Wizard extends Main
 
     @Override
     public void afterNavigation(AfterNavigationEvent event) {
-        this.currentPath = event.getLocation().getPath();
-        int l = steps.length;
-        for (int i = 0; i < l; i++) {
-            Step s = steps[i];
-            if (s.getHref().equals(currentPath)) {
-                saveSessionObject(getClass(), i);
-                if (i == 0) {
-                    this.previous.getElement().removeAttribute("href");
-                } else {
-                    this.previous.setRoute(s.getPrevStep().getRouteClass());
-                }
-                if (i == l - 1) {
-                    this.next.getElement().removeAttribute("href");
-                } else {
-                    this.next.setRoute(s.getNextStep().getRouteClass());
-                }
-            }
+        int idx = getStepIndex(event.getLocation().getPath());
+        if (idx >= 0) {
+            saveSessionObject(getClass(), idx);
+            currentStep.set(idx);
         }
     }
 
     private int getStepIndex(String path) {
         for (int i = 0; i < steps.length; i++) {
-            Step s = steps[i];
-            if (s.getHref().equals(path)) {
+            if (steps[i].getHref().equals(path)) {
                 return i;
             }
         }

@@ -12,13 +12,14 @@ import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.Page;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.Tabs.Orientation;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.signals.Signal;
+import com.vaadin.flow.signals.local.ValueSignal;
 import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.Background;
@@ -53,33 +54,23 @@ public class ChatView extends HorizontalLayout {
     }
 
     public static class ChatInfo {
-        private String name;
-        private int unread;
-        private Span unreadBadge;
+        private final String name;
+        private final ValueSignal<Integer> unread = new ValueSignal<>(0);
 
-        private ChatInfo(String name, int unread) {
+        private ChatInfo(String name) {
             this.name = name;
-            this.unread = unread;
         }
 
         public void resetUnread() {
-            unread = 0;
-            updateBadge();
+            unread.set(0);
         }
 
         public void incrementUnread() {
-            unread++;
-            updateBadge();
+            unread.update(u -> u + 1);
         }
 
-        private void updateBadge() {
-            unreadBadge.setText(unread + "");
-            unreadBadge.setVisible(unread != 0);
-        }
-
-        public void setUnreadBadge(Span unreadBadge) {
-            this.unreadBadge = unreadBadge;
-            updateBadge();
+        public ValueSignal<Integer> unreadSignal() {
+            return unread;
         }
 
         public String getCollaborationTopic() {
@@ -87,27 +78,19 @@ public class ChatView extends HorizontalLayout {
         }
     }
 
-    private ChatInfo[] chats = new ChatInfo[]{new ChatInfo("general", 0), new ChatInfo("support", 0),
-            new ChatInfo("casual", 0)};
+    private final ChatInfo[] chats = new ChatInfo[]{new ChatInfo("general"), new ChatInfo("support"),
+            new ChatInfo("casual")};
     private ChatInfo currentChat = chats[0];
-    private Tabs tabs;
+    private final Tabs tabs;
 
     public ChatView() {
         addClassNames("chat-view", Width.FULL, Display.FLEX, Flex.AUTO);
         setSpacing(false);
 
-        // UserInfo is used by Collaboration Engine and is used to share details
-        // of users to each other to able collaboration. Replace this with
-        // information about the actual user that is logged, providing a user
-        // identifier, and the user's real name. You can also provide the users
-        // avatar by passing an url to the image as a third parameter, or by
-        // configuring an `ImageProvider` to `avatarGroup`.
         UserInfo userInfo = new UserInfo(UUID.randomUUID().toString(), "Steve Lange");
 
         tabs = new Tabs();
         for (ChatInfo chat : chats) {
-            // Listen for new messages in each chat so we can update the
-            // "unread" count
             MessageManager mm = new MessageManager(this, userInfo, chat.getCollaborationTopic());
             mm.setMessageHandler(context -> {
                 if (currentChat != chat) {
@@ -120,22 +103,11 @@ public class ChatView extends HorizontalLayout {
         tabs.setOrientation(Orientation.VERTICAL);
         tabs.addClassNames(Flex.GROW, Flex.SHRINK, Overflow.HIDDEN);
 
-        // CollaborationMessageList displays messages that are in a
-        // Collaboration Engine topic. You should give in the user details of
-        // the current user using the component, and a topic Id. Topic id can be
-        // any freeform string. In this template, we have used the format
-        // "chat/#general".
         CollaborationMessageList list = new CollaborationMessageList(userInfo, currentChat.getCollaborationTopic());
         list.setSizeFull();
 
-        // `CollaborationMessageInput is a textfield and button, to be able to
-        // submit new messages. To avoid having to set the same info into both
-        // the message list and message input, the input takes in the list as an
-        // constructor argument to get the information from there.
         CollaborationMessageInput input = new CollaborationMessageInput(list);
         input.setWidthFull();
-
-        // Layouting
 
         VerticalLayout chatContainer = new VerticalLayout();
         chatContainer.addClassNames(Flex.AUTO, Overflow.HIDDEN);
@@ -161,7 +133,6 @@ public class ChatView extends HorizontalLayout {
         setSizeFull();
         expand(list);
 
-        // Change the topic id of the chat when a new tab is selected
         tabs.addSelectedChangeListener(event -> {
             currentChat = ((ChatTab) event.getSelectedTab()).getChatInfo();
             currentChat.resetUnread();
@@ -174,8 +145,9 @@ public class ChatView extends HorizontalLayout {
         tab.addClassNames(JustifyContent.BETWEEN);
 
         Span badge = new Span();
-        chat.setUnreadBadge(badge);
         badge.getElement().getThemeList().add("badge small contrast");
+        badge.bindText(chat.unreadSignal().map(String::valueOf));
+        badge.bindVisible(chat.unreadSignal().map(u -> u != 0));
         tab.add(new Span("#" + chat.name), badge);
 
         return tab;
@@ -183,17 +155,10 @@ public class ChatView extends HorizontalLayout {
 
     @Override
     protected void onAttach(AttachEvent attachEvent) {
-        Page page = attachEvent.getUI().getPage();
-        page.retrieveExtendedClientDetails(details -> {
-            setMobile(details.getWindowInnerWidth() < 740);
+        Signal.effect(tabs, () -> {
+            var size = attachEvent.getUI().getPage().windowSizeSignal().get();
+            tabs.setOrientation(size != null && size.width() < 740 ? Orientation.HORIZONTAL : Orientation.VERTICAL);
         });
-        page.addBrowserWindowResizeListener(e -> {
-            setMobile(e.getWidth() < 740);
-        });
-    }
-
-    private void setMobile(boolean mobile) {
-        tabs.setOrientation(mobile ? Orientation.HORIZONTAL : Orientation.VERTICAL);
     }
 
 }

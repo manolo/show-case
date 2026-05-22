@@ -1,5 +1,8 @@
 package com.example.application.components.stepper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 import com.vaadin.flow.component.Component;
@@ -11,6 +14,8 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.signals.Signal;
+import com.vaadin.flow.signals.local.ValueSignal;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.Background;
 import com.vaadin.flow.theme.lumo.LumoUtility.Border;
@@ -32,47 +37,59 @@ import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 import com.vaadin.flow.theme.lumo.LumoUtility.Width;
 
 public class Step extends ListItem implements AfterNavigationObserver, HasTheme {
-	
+
     public enum State {
         ACTIVE,
         COMPLETE,
         ERROR,
         INACTIVE
     }
-    
+
     public interface HasBinder {
-    	Binder<?> getBinder();
+        Binder<?> getBinder();
     }
 
-    private Stepper.Orientation orientation;
-    private boolean small;
-    private State state;
-    private RouterLink link;
-    private Div circle;
-    private Div layout;
-    private Span label;
-    private Span description;
-    private Class<? extends Component> routeClass;
-    private Step prev;
-	private Step next;
+    private final ValueSignal<State> state = new ValueSignal<>(State.INACTIVE);
+    private final ValueSignal<Boolean> small = new ValueSignal<>(false);
+    private final ValueSignal<Stepper.Orientation> orientation = new ValueSignal<>(Stepper.Orientation.VERTICAL);
 
-	public Step(String label, String description, Class<? extends Component> routeClass) {
+    private final RouterLink link;
+    private final Div circle;
+    private final Span label;
+    private final Span description;
+    private final Class<? extends Component> routeClass;
+    private Step prev;
+    private Step next;
+
+    public Step(String labelText, String descriptionText, Class<? extends Component> routeClass) {
         addClassNames(MinWidth.NONE, Position.RELATIVE);
         this.routeClass = routeClass;
 
         this.circle = new Div();
-        this.label = new Span(label);
-        this.description = new Span(description);
+        this.label = new Span(labelText);
+        this.description = new Span(descriptionText);
 
-        this.layout = new Div(this.label, this.description);
-        this.layout.addClassNames(Display.FLEX, FlexDirection.COLUMN, Overflow.HIDDEN);
+        Div layout = new Div(this.label, this.description);
+        layout.addClassNames(Display.FLEX, FlexDirection.COLUMN, Overflow.HIDDEN);
 
         this.link = new RouterLink();
         this.link.add(this.circle, layout);
         if (routeClass != null) this.link.setRoute(routeClass);
         add(this.link);
 
-        setState(State.INACTIVE);
+        this.link.bindClassNames(Signal.computed(() -> linkClasses(small.get())));
+        this.circle.bindClassNames(Signal.computed(() -> circleClasses(state.get(), small.get())));
+        this.label.bindClassNames(Signal.computed(() -> labelClasses(state.get(), small.get(), orientation.get())));
+        this.description.bindClassNames(Signal.computed(() -> descriptionClasses(small.get(), orientation.get())));
+
+        Signal.effect(this.circle, () -> {
+            this.circle.removeAll();
+            switch (state.get()) {
+                case COMPLETE -> this.circle.add(LineAwesomeIcon.CHECK_SOLID.create());
+                case ERROR -> this.circle.add(LineAwesomeIcon.EXCLAMATION_SOLID.create());
+                case ACTIVE, INACTIVE -> {}
+            }
+        });
     }
 
     public Step(String label, Class<? extends Component> navigationTarget) {
@@ -80,108 +97,76 @@ public class Step extends ListItem implements AfterNavigationObserver, HasTheme 
     }
 
     public void setOrientation(Stepper.Orientation orientation) {
-        this.orientation = orientation;
-        updateClassNames();
+        this.orientation.set(orientation);
     }
 
     public void setSmall(boolean small) {
-        this.small = small;
-        updateClassNames();
+        this.small.set(small);
     }
 
     public void setState(State state) {
-        this.state = state;
-        updateClassNames();
+        this.state.set(state);
     }
-    
+
     public State getState() {
-    	return state;
+        return state.peek();
     }
 
-    private void updateClassNames() {
-        updateLinkClassNames();
-        updateCircleIcon();
-        updateCircleClassNames();
-        updateLabelClassNames();
-        updateDescriptionClassNames();
+    private static List<String> linkClasses(boolean small) {
+        List<String> classes = new ArrayList<>(List.of(AlignItems.CENTER, Display.FLEX, "no-underline", Padding.SMALL));
+        classes.add(small ? Gap.SMALL : Gap.MEDIUM);
+        return classes;
     }
 
-    private void updateLinkClassNames() {
-        this.link.getClassNames().clear();
-        this.link.addClassNames(AlignItems.CENTER, Display.FLEX, "no-underline", Padding.SMALL);
-
-        if (this.small) {
-            this.link.addClassNames(Gap.SMALL);
+    private static List<String> circleClasses(State state, boolean small) {
+        List<String> classes = new ArrayList<>(List.of(AlignItems.CENTER, Border.ALL, BoxSizing.BORDER, Display.FLEX,
+                Flex.SHRINK_NONE, FontWeight.MEDIUM, JustifyContent.CENTER, "rounded-full"));
+        if (small) {
+            classes.add(FontSize.XSMALL); classes.add(Height.XSMALL); classes.add(Width.XSMALL);
         } else {
-            this.link.addClassNames(Gap.MEDIUM);
+            classes.add(FontSize.SMALL); classes.add(Height.MEDIUM); classes.add(Width.MEDIUM);
         }
-    }
-
-	private void updateCircleIcon() {
-		this.circle.removeAll();
-		switch (this.state) {
-		case COMPLETE -> this.circle.add(LineAwesomeIcon.CHECK_SOLID.create());
-		case ERROR -> this.circle.add(LineAwesomeIcon.EXCLAMATION_SOLID.create());
-		case ACTIVE, INACTIVE -> {}
-		}
-	}
-
-    private void updateCircleClassNames() {
-        this.circle.getClassNames().clear();
-        this.circle.addClassNames(AlignItems.CENTER, Border.ALL, BoxSizing.BORDER, Display.FLEX, Flex.SHRINK_NONE,
-                FontWeight.MEDIUM, JustifyContent.CENTER, "rounded-full");
-
-        if (this.small) {
-            this.circle.addClassNames(FontSize.XSMALL, Height.XSMALL, Width.XSMALL);
-        } else {
-            this.circle.addClassNames(FontSize.SMALL, Height.MEDIUM, Width.MEDIUM);
-        }
-
-        switch (this.state) {
-            case ACTIVE ->
-                    this.circle.addClassNames(Background.BASE, BorderColor.PRIMARY, "border-2", TextColor.PRIMARY);
-            case COMPLETE ->
-                    this.circle.addClassNames(Background.PRIMARY, BorderColor.PRIMARY, TextColor.PRIMARY_CONTRAST);
-            case ERROR -> this.circle.addClassNames(Background.ERROR, BorderColor.ERROR, TextColor.ERROR_CONTRAST);
-            case INACTIVE -> this.circle.addClassNames(Background.BASE, BorderColor.CONTRAST_30, TextColor.SECONDARY);
-        }
-    }
-
-    private void updateLabelClassNames() {
-        this.label.getClassNames().clear();
-        this.label.addClassNames(FontWeight.MEDIUM);
-
-        if (this.orientation != null && this.orientation.equals(Stepper.Orientation.HORIZONTAL)) {
-            this.label.addClassNames("lg:overflow-ellipsis", "lg:overflow-hidden", "lg:whitespace-nowrap");
-        }
-
-        if (this.small) {
-            this.label.addClassNames(FontSize.SMALL);
-        }
-
         switch (state) {
-            case ACTIVE -> this.label.addClassName(TextColor.PRIMARY);
-            case COMPLETE -> this.label.addClassName(TextColor.BODY);
-            case ERROR -> this.label.addClassName(TextColor.ERROR);
-            case INACTIVE -> this.label.addClassName(TextColor.SECONDARY);
+            case ACTIVE -> {
+                classes.add(Background.BASE); classes.add(BorderColor.PRIMARY); classes.add("border-2"); classes.add(TextColor.PRIMARY);
+            }
+            case COMPLETE -> {
+                classes.add(Background.PRIMARY); classes.add(BorderColor.PRIMARY); classes.add(TextColor.PRIMARY_CONTRAST);
+            }
+            case ERROR -> {
+                classes.add(Background.ERROR); classes.add(BorderColor.ERROR); classes.add(TextColor.ERROR_CONTRAST);
+            }
+            case INACTIVE -> {
+                classes.add(Background.BASE); classes.add(BorderColor.CONTRAST_30); classes.add(TextColor.SECONDARY);
+            }
         }
+        return classes;
     }
 
-    private void updateDescriptionClassNames() {
-        this.description.getClassNames().clear();
-        this.description.addClassNames(TextColor.SECONDARY);
-
-        if (this.orientation != null && this.orientation.equals(Stepper.Orientation.HORIZONTAL)) {
-            this.description.addClassNames("lg:overflow-ellipsis", "lg:overflow-hidden", "lg:whitespace-nowrap");
+    private static List<String> labelClasses(State state, boolean small, Stepper.Orientation orientation) {
+        List<String> classes = new ArrayList<>(List.of(FontWeight.MEDIUM));
+        if (orientation == Stepper.Orientation.HORIZONTAL) {
+            classes.add("lg:overflow-ellipsis"); classes.add("lg:overflow-hidden"); classes.add("lg:whitespace-nowrap");
         }
-
-        if (this.small) {
-            this.description.addClassNames(FontSize.XSMALL);
-        } else {
-            this.description.addClassNames(FontSize.SMALL);
+        if (small) classes.add(FontSize.SMALL);
+        switch (state) {
+            case ACTIVE -> classes.add(TextColor.PRIMARY);
+            case COMPLETE -> classes.add(TextColor.BODY);
+            case ERROR -> classes.add(TextColor.ERROR);
+            case INACTIVE -> classes.add(TextColor.SECONDARY);
         }
+        return classes;
     }
-    
+
+    private static List<String> descriptionClasses(boolean small, Stepper.Orientation orientation) {
+        List<String> classes = new ArrayList<>(List.of(TextColor.SECONDARY));
+        if (orientation == Stepper.Orientation.HORIZONTAL) {
+            classes.add("lg:overflow-ellipsis"); classes.add("lg:overflow-hidden"); classes.add("lg:whitespace-nowrap");
+        }
+        classes.add(small ? FontSize.XSMALL : FontSize.SMALL);
+        return classes;
+    }
+
     @Override
     public void afterNavigation(AfterNavigationEvent event) {
         if (this.link.getHref().equals(event.getLocation().getPath())) {
@@ -189,32 +174,31 @@ public class Step extends ListItem implements AfterNavigationObserver, HasTheme 
             setState(State.ACTIVE);
         } else {
             this.link.getElement().removeAttribute("aria-current");
-            // TODO: Check if COMPLETE, ERROR, etc.
             setState(State.INACTIVE);
         }
     }
 
     public String getHref() {
-    	return this.link.getHref();
+        return this.link.getHref();
     }
-    
+
     public Class<? extends Component> getRouteClass() {
-		return routeClass;
-	}
-    
+        return routeClass;
+    }
+
     public Step getPrevStep() {
-		return prev;
-	}
+        return prev;
+    }
 
-	public void setPrevStep(Step previous) {
-		this.prev = previous;
-	}
+    public void setPrevStep(Step previous) {
+        this.prev = previous;
+    }
 
-	public Step getNextStep() {
-		return next;
-	}
+    public Step getNextStep() {
+        return next;
+    }
 
-	public void setNextStep(Step next) {
-		this.next = next;
-	}
+    public void setNextStep(Step next) {
+        this.next = next;
+    }
 }

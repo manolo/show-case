@@ -2,8 +2,11 @@ package com.example.application.views;
 
 import java.util.List;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Footer;
@@ -12,6 +15,7 @@ import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.SvgIcon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.sidenav.SideNav;
@@ -22,6 +26,7 @@ import com.vaadin.flow.router.Layout;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.server.menu.MenuConfiguration;
 import com.vaadin.flow.server.menu.MenuEntry;
+import com.vaadin.flow.signals.local.ValueSignal;
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
@@ -33,8 +38,10 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 @Uses(Icon.class)
 public class MainLayout extends AppLayout implements AfterNavigationObserver {
 
-    private H1 viewTitle;
+    private final ValueSignal<String> title = new ValueSignal<>("");
+    private final ValueSignal<Boolean> dark = new ValueSignal<>(false);
     private final AuthenticationContext authenticationContext;
+
     public MainLayout(AuthenticationContext authenticationContext) {
         this.authenticationContext = authenticationContext;
         setPrimarySection(Section.DRAWER);
@@ -46,10 +53,16 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
         DrawerToggle toggle = new DrawerToggle();
         toggle.setAriaLabel("Menu toggle");
 
-        viewTitle = new H1();
+        H1 viewTitle = new H1();
         viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
+        viewTitle.bindText(title);
 
-        addToNavbar(true, toggle, viewTitle);
+        Button darkToggle = new Button(VaadinIcon.MOON.create());
+        darkToggle.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        darkToggle.setAriaLabel("Toggle dark mode");
+        darkToggle.addClickListener(e -> dark.update(v -> !v));
+
+        addToNavbar(true, toggle, viewTitle, darkToggle);
     }
 
     private void addDrawerContent() {
@@ -93,11 +106,13 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
     }
 
     @Override
-    public void afterNavigation(AfterNavigationEvent event) {
-        viewTitle.setText(getCurrentPageTitle());
+    protected void onAttach(com.vaadin.flow.component.AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        UI.getCurrent().getElement().getThemeList().bind("dark", dark);
     }
 
-    private String getCurrentPageTitle() {
-        return MenuConfiguration.getPageHeader(getContent()).orElse("");
+    @Override
+    public void afterNavigation(AfterNavigationEvent event) {
+        title.set(MenuConfiguration.getPageHeader(getContent()).orElse(""));
     }
 }

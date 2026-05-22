@@ -9,7 +9,7 @@ Feature-rich Vaadin 25.1 showcase application demonstrating modern Vaadin compon
 | Technology | Version | Notes |
 |---|---|---|
 | Vaadin | 25.1 | Flow (Java-based UI), NOT React/Hilla. Signals support. |
-| Spring Boot | 4.0.3 | Parent POM |
+| Spring Boot | 4.0.4 | Parent POM (4.0.4+ required by Vaadin 25.1) |
 | Java | 21 | Required minimum |
 | H2 Database | runtime | In-memory, initialized from `data.sql` |
 | Spring AI | 2.0.0-M1 | OpenAI integration (requires `OPENAI_API_KEY` env var) |
@@ -46,17 +46,18 @@ src/main/java/com/example/application/
 ## Key Views
 
 - **HelloWorldView** - Simple greeting demo with reactive Signal binding
+- **SignalsPlaygroundView** - `/signals` route with 16 demos covering every Signals API (ValueSignal, ListSignal, Signal.computed, Signal.effect, bindText/Visible/Enabled/Value/ReadOnly/ClassName/ThemeName/HelperText/Placeholder/Width/Style, bindChildren, windowSizeSignal, localeSignal, flashClass)
 - **DashboardView** - Charts and metrics
 - **FeedView** - Social feed cards
 - **MasterDetailView** / **MasterDetailResponsiveView** - Split layout CRUD (responsive view uses Signals for detail panel visibility)
 - **GridEditView** / **GridwithFiltersView** / **GridEditPaginatedView** - Data grid variants (filter views use Signals for mobile filter toggle)
 - **CheckoutFormView** - Checkout form with Signal driven conditional visibility (state select)
-- **CheckoutWizard** (4 steps) - Router-based multi-step form
+- **CheckoutWizard** (4 steps) - Router-based multi-step form; the Wizard tracks the current step in a `ValueSignal<Integer>` and derives previous/next visibility and routes from it
 - **SampleTabbedLayout** (List, Form, Details) - Tabbed RouterLayout demo at `/tabbed`
-- **ChatView** - Vaadin Collaboration Engine messaging
-- **AiChatView** - OpenAI chat with voice support (Spring AI + VoiceEngine addon)
-- **SpreadsheetView** - Excel editing (vaadin-spreadsheet-flow)
-- **MapView** - Leaflet maps with markers
+- **ChatView** - Vaadin Collaboration Engine messaging; unread badge per channel uses `ValueSignal<Integer>`, mobile detection uses `Page.windowSizeSignal()`
+- **AiChatView** - OpenAI chat with voice support; Ask button enabled state via `Signal.computed`
+- **SpreadsheetView** - Excel editing; invoice header visibility via `ValueSignal<Boolean>`
+- **MapView** - Maps with markers; search filter implemented with `ValueSignal<String>` + computed list + two `Signal.effect`s rebuilding cards and markers
 - **ImageGalleryView** - Unsplash image grid
 - **CrudView**, **AddonsView**, **CreditCardFormView**, **AddressFormView**
 
@@ -108,7 +109,7 @@ Server starts on port 8080 (configurable via `PORT` env var).
 
 - **All views** use `@Route`, `@Menu`, `@PageTitle`, `@PermitAll`
 - **Data binding** with `BeanValidationBinder`
-- **Signals** (`ValueSignal`, `Signal.computed`, `Signal.effect`) for reactive UI state: conditional visibility (`bindVisible`), reactive text (`bindText`), two way field binding (`bindValue`), attribute binding (`bindAttribute`). Used in: CheckoutFormView, MasterDetailResponsiveView, GridwithFilters* views, HelloWorldView.
+- **Signals** (`ValueSignal`, `ListSignal`, `Signal.computed`, `Signal.effect`) for reactive UI state across the showcase: `bindText`, `bindVisible`, `bindEnabled`, `bindValue` (two-way), `bindReadOnly`, `bindClassName(s)`, `bindThemeName(s)`, `bindHelperText`, `bindPlaceholder`, `bindAttribute`, `bindWidth/Height`, `bindChildren` (for ListSignal), `getStyle().bind`, `getElement().getThemeList().bind`. Built-in sources: `Page.windowSizeSignal()`, `UI.localeSignal()`. Used in: HelloWorldView, CheckoutFormView, MasterDetailResponsiveView, GridwithFilters* views, ChatView, MapView, SpreadsheetView, MainLayout (dark mode + reactive title), AiChatView, Stepper/Step/Wizard, and the dedicated SignalsPlaygroundView playground.
 - **Filtering** via JPA Specifications (`SamplePersonFilter`)
 - **Layouts** use `LumoUtility` CSS classes for spacing/alignment
 - **Custom fields** extend `CustomField<T>`
