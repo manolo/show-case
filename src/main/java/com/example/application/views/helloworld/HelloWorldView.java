@@ -6,6 +6,7 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -31,6 +32,7 @@ public class HelloWorldView extends HorizontalLayout {
         sayHello.addClickShortcut(Key.ENTER);
 
         ValueSignal<String> nameSignal = new ValueSignal<>("");
+        name.setValueChangeMode(ValueChangeMode.EAGER);
         name.bindValue(nameSignal, nameSignal::set);
         Span greeting = new Span();
         greeting.bindText(nameSignal.map(n -> n.isEmpty() ? "" : "Hello " + n));

@@ -21,6 +21,7 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -88,6 +89,7 @@ public class SignalsPlaygroundView extends VerticalLayout {
         ValueSignal<String> name = new ValueSignal<>("");
 
         TextField field = new TextField("Type something");
+        field.setValueChangeMode(ValueChangeMode.EAGER);
         field.bindValue(name, name::set);
 
         Span mirror = new Span();
@@ -102,8 +104,10 @@ public class SignalsPlaygroundView extends VerticalLayout {
         ValueSignal<String> last = new ValueSignal<>("Doe");
 
         TextField firstField = new TextField("First name");
+        firstField.setValueChangeMode(ValueChangeMode.EAGER);
         firstField.bindValue(first, first::set);
         TextField lastField = new TextField("Last name");
+        lastField.setValueChangeMode(ValueChangeMode.EAGER);
         lastField.bindValue(last, last::set);
 
         Span full = new Span();
@@ -119,8 +123,10 @@ public class SignalsPlaygroundView extends VerticalLayout {
         ValueSignal<String> pass = new ValueSignal<>("");
 
         TextField emailField = new TextField("Email");
+        emailField.setValueChangeMode(ValueChangeMode.EAGER);
         emailField.bindValue(email, email::set);
         PasswordField passField = new PasswordField("Password (min 8)");
+        passField.setValueChangeMode(ValueChangeMode.EAGER);
         passField.bindValue(pass, pass::set);
 
         Button submit = new Button("Sign up");
@@ -181,6 +187,7 @@ public class SignalsPlaygroundView extends VerticalLayout {
         ValueSignal<String> text = new ValueSignal<>("");
         TextArea area = new TextArea("Comment (max 200)");
         area.setMaxLength(200);
+        area.setValueChangeMode(ValueChangeMode.EAGER);
         area.bindValue(text, text::set);
         area.bindHelperText(text.map(t -> (200 - t.length()) + " characters remaining"));
         area.setWidthFull();
@@ -223,6 +230,7 @@ public class SignalsPlaygroundView extends VerticalLayout {
         widthField.setStepButtonsVisible(true);
         widthField.setMin(50);
         widthField.setMax(800);
+        widthField.setValueChangeMode(ValueChangeMode.EAGER);
         widthField.addValueChangeListener(e -> width.set(e.getValue().intValue() + "px"));
 
         Div panel = new Div();
@@ -239,6 +247,7 @@ public class SignalsPlaygroundView extends VerticalLayout {
 
         TextField colorField = new TextField("CSS color");
         colorField.setValue("orange");
+        colorField.setValueChangeMode(ValueChangeMode.EAGER);
         colorField.bindValue(color, color::set);
 
         Div panel = new Div();
@@ -274,6 +283,7 @@ public class SignalsPlaygroundView extends VerticalLayout {
 
         TextField input = new TextField();
         input.setPlaceholder("New todo");
+        input.setValueChangeMode(ValueChangeMode.EAGER);
         input.bindValue(newText, newText::set);
 
         Button add = new Button(VaadinIcon.PLUS.create());
