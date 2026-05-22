@@ -59,7 +59,7 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
         toggle.setAriaLabel("Menu toggle");
 
         H1 viewTitle = new H1();
-        viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE);
+        viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE, LumoUtility.Flex.GROW);
         viewTitle.bindText(title);
 
         Button darkToggle = new Button(VaadinIcon.MOON.create());
