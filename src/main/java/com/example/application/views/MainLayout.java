@@ -67,10 +67,10 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
         darkToggle.setAriaLabel("Toggle dark mode");
         darkToggle.addClickListener(e -> dark.update(v -> !v));
 
-        Button themeToggle = new Button();
+        Button themeToggle = new Button(VaadinIcon.PALETTE.create());
         themeToggle.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         themeToggle.setAriaLabel("Toggle Lumo / Aura theme");
-        themeToggle.bindText(aura.map(a -> a ? "Aura" : "Lumo"));
+        themeToggle.getElement().setProperty("title", "Toggle Lumo / Aura theme");
         themeToggle.addClickListener(e -> aura.update(v -> !v));
 
         addToNavbar(true, toggle, viewTitle, themeToggle, darkToggle);
