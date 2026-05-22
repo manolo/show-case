@@ -26,6 +26,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 
+import com.vaadin.flow.signals.Signal;
+import com.vaadin.flow.signals.local.ValueSignal;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -74,15 +76,15 @@ public class GridwithFiltersJpaView extends Div {
         Span filtersHeading = new Span("Filters");
         mobileFilters.add(mobileIcon, filtersHeading);
         mobileFilters.setFlexGrow(1, filtersHeading);
-        mobileFilters.addClickListener(e -> {
-            if (filters.getClassNames().contains("visible")) {
-                filters.removeClassName("visible");
-                mobileIcon.getElement().setAttribute("icon", "lumo:plus");
-            } else {
-                filters.addClassName("visible");
-                mobileIcon.getElement().setAttribute("icon", "lumo:minus");
-            }
+
+        ValueSignal<Boolean> filtersVisible = new ValueSignal<>(false);
+        mobileFilters.addClickListener(e -> filtersVisible.update(v -> !v));
+        Signal.effect(filters, () -> {
+            if (filtersVisible.get()) filters.addClassName("visible");
+            else filters.removeClassName("visible");
         });
+        mobileIcon.getElement().bindAttribute("icon", filtersVisible.map(v -> v ? "lumo:minus" : "lumo:plus"));
+
         return mobileFilters;
     }
 

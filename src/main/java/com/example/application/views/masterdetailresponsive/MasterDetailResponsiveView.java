@@ -35,6 +35,8 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.data.renderer.TextRenderer;
+import com.vaadin.flow.signals.Signal;
+import com.vaadin.flow.signals.local.ValueSignal;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.BeforeLeaveEvent;
@@ -83,6 +85,8 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
 
     private final BeanValidationBinder<SamplePerson> binder;
 
+    private final ValueSignal<Boolean> detailVisible = new ValueSignal<>(false);
+
     private SamplePerson samplePerson;
 
     private final SamplePersonService item;
@@ -99,7 +103,8 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
         horizontalLayout.setSizeFull();
         createGridLayout(horizontalLayout);
         createEditorLayout(horizontalLayout);
-        showDetail(false);
+        editorLayoutDiv.bindVisible(detailVisible);
+        plus.bindVisible(Signal.not(detailVisible));
         add(horizontalLayout);
 
         // Configure Grid
@@ -174,7 +179,7 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
             }
         } else {
             this.samplePerson = null;
-            showDetail(false);
+            detailVisible.set(false);
         }
     }
 
@@ -268,18 +273,13 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
 
     private void clearForm() {
         populateForm(null);
-        showDetail(false);
+        detailVisible.set(false);
     }
 
     private void populateForm(SamplePerson value) {
         this.samplePerson = value;
         grid.select(this.samplePerson);
         binder.readBean(this.samplePerson);
-        showDetail(true);
-    }
-
-    private void showDetail(boolean show) {
-        editorLayoutDiv.setVisible(show);
-        plus.setVisible(!show);
+        detailVisible.set(true);
     }
 }

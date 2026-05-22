@@ -15,6 +15,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.signals.local.ValueSignal;
 import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.theme.lumo.LumoUtility.AlignItems;
 import com.vaadin.flow.theme.lumo.LumoUtility.Background;
@@ -194,10 +195,10 @@ public class CheckoutFormView extends Div {
         stateSelect.setRequiredIndicatorVisible(true);
 
         stateSelect.setItems(states);
-        stateSelect.setVisible(false);
         countrySelect.setItems(countries);
-        countrySelect
-                .addValueChangeListener(e -> stateSelect.setVisible(countrySelect.getValue().equals("United States")));
+        ValueSignal<String> countrySignal = new ValueSignal<>("");
+        countrySelect.bindValue(countrySignal, countrySignal::set);
+        stateSelect.bindVisible(countrySignal.map("United States"::equals));
 
         Checkbox sameAddress = new Checkbox("Billing address is the same as shipping address");
         sameAddress.addClassNames(Margin.Top.SMALL);

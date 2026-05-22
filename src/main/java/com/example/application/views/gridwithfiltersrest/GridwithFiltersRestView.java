@@ -24,6 +24,8 @@ import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
+import com.vaadin.flow.signals.Signal;
+import com.vaadin.flow.signals.local.ValueSignal;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
 @PageTitle("Grid with Filters REST")
@@ -79,15 +81,12 @@ public class GridwithFiltersRestView extends Div implements AfterNavigationObser
         Span filtersHeading = new Span("Filters");
         mobileFilters.add(mobileIcon, filtersHeading);
         mobileFilters.setFlexGrow(1, filtersHeading);
-        mobileFilters.addClickListener(e -> {
-            if (samplePersonfilterComponent.isVisible()) {
-                samplePersonfilterComponent.setVisible(false);
-                mobileIcon.getElement().setAttribute("icon", "lumo:plus");
-            } else {
-                samplePersonfilterComponent.setVisible(true);
-                mobileIcon.getElement().setAttribute("icon", "lumo:minus");
-            }
-        });
+
+        ValueSignal<Boolean> filtersVisible = new ValueSignal<>(true);
+        mobileFilters.addClickListener(e -> filtersVisible.update(v -> !v));
+        samplePersonfilterComponent.bindVisible(filtersVisible);
+        mobileIcon.getElement().bindAttribute("icon", filtersVisible.map(v -> v ? "lumo:minus" : "lumo:plus"));
+
         return mobileFilters;
     }
 

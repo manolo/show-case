@@ -2,13 +2,13 @@
 
 ## Project Overview
 
-Feature-rich Vaadin 25 showcase application demonstrating modern Vaadin components, patterns, and integrations. Built with Spring Boot 4.0 and Java 21.
+Feature-rich Vaadin 25.1 showcase application demonstrating modern Vaadin components, patterns, and integrations including Signals (reactive state management). Built with Spring Boot 4.0 and Java 21.
 
 ## Tech Stack
 
 | Technology | Version | Notes |
 |---|---|---|
-| Vaadin | 25.0.6 | Flow (Java-based UI), NOT React/Hilla |
+| Vaadin | 25.1 | Flow (Java-based UI), NOT React/Hilla. Signals support. |
 | Spring Boot | 4.0.3 | Parent POM |
 | Java | 21 | Required minimum |
 | H2 Database | runtime | In-memory, initialized from `data.sql` |
@@ -33,6 +33,7 @@ src/main/java/com/example/application/
   components/
     Stepper.java, Step.java     # Multi-step navigation
     Wizard.java                 # Router-based wizard layout
+    TabbedLayout.java, TabDef.java # Reusable tabbed RouterLayout
     PhoneNumberField.java       # Custom composite field
     LocalDatePicker.java        # LocalDate wrapper for DatePicker
     ToggleButton.java           # Toggle switch component
@@ -44,12 +45,14 @@ src/main/java/com/example/application/
 
 ## Key Views
 
-- **HelloWorldView** - Simple greeting demo
+- **HelloWorldView** - Simple greeting demo with reactive Signal binding
 - **DashboardView** - Charts and metrics
 - **FeedView** - Social feed cards
-- **MasterDetailView** / **MasterDetailResponsiveView** - Split layout CRUD
-- **GridEditView** / **GridwithFiltersView** / **GridEditPaginatedView** - Data grid variants
+- **MasterDetailView** / **MasterDetailResponsiveView** - Split layout CRUD (responsive view uses Signals for detail panel visibility)
+- **GridEditView** / **GridwithFiltersView** / **GridEditPaginatedView** - Data grid variants (filter views use Signals for mobile filter toggle)
+- **CheckoutFormView** - Checkout form with Signal driven conditional visibility (state select)
 - **CheckoutWizard** (4 steps) - Router-based multi-step form
+- **SampleTabbedLayout** (List, Form, Details) - Tabbed RouterLayout demo at `/tabbed`
 - **ChatView** - Vaadin Collaboration Engine messaging
 - **AiChatView** - OpenAI chat with voice support (Spring AI + VoiceEngine addon)
 - **SpreadsheetView** - Excel editing (vaadin-spreadsheet-flow)
@@ -105,15 +108,17 @@ Server starts on port 8080 (configurable via `PORT` env var).
 
 - **All views** use `@Route`, `@Menu`, `@PageTitle`, `@PermitAll`
 - **Data binding** with `BeanValidationBinder`
+- **Signals** (`ValueSignal`, `Signal.computed`, `Signal.effect`) for reactive UI state: conditional visibility (`bindVisible`), reactive text (`bindText`), two way field binding (`bindValue`), attribute binding (`bindAttribute`). Used in: CheckoutFormView, MasterDetailResponsiveView, GridwithFilters* views, HelloWorldView.
 - **Filtering** via JPA Specifications (`SamplePersonFilter`)
 - **Layouts** use `LumoUtility` CSS classes for spacing/alignment
 - **Custom fields** extend `CustomField<T>`
 - **Wizard** uses `RouterLayout` with session-scoped data in `VaadinSession`
+- **TabbedLayout** uses `RouterLayout` with `Tabs` synced to child route URLs via regex matching
 - **Real-time** features use `@Push` and Collaboration Engine
 
 ## Important Notes
 
 - This is a **Vaadin Flow (Java)** project - UI is built entirely in Java, NOT React/Hilla
-- When using Vaadin MCP tools, use `ui_language: "java"` and `vaadin_version: "25"`
+- When using Vaadin MCP tools, use `ui_language: "java"` and `vaadin_version: "25.1"`
 - The `src/main/frontend/generated/` directory is auto-generated - do not edit manually
 - The `src/main/bundles/` directory contains pre-built frontend bundles

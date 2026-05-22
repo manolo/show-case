@@ -2,12 +2,14 @@ package com.example.application.views.helloworld;
 
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.signals.local.ValueSignal;
 import jakarta.annotation.security.PermitAll;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
@@ -28,10 +30,16 @@ public class HelloWorldView extends HorizontalLayout {
         });
         sayHello.addClickShortcut(Key.ENTER);
 
-        setMargin(true);
-        setVerticalComponentAlignment(Alignment.END, name, sayHello);
+        ValueSignal<String> nameSignal = new ValueSignal<>("");
+        name.bindValue(nameSignal, nameSignal::set);
+        Span greeting = new Span();
+        greeting.bindText(nameSignal.map(n -> n.isEmpty() ? "" : "Hello " + n));
+        greeting.bindVisible(nameSignal.map(n -> !n.isEmpty()));
 
-        add(name, sayHello);
+        setMargin(true);
+        setVerticalComponentAlignment(Alignment.END, name, sayHello, greeting);
+
+        add(name, sayHello, greeting);
     }
 
 }
