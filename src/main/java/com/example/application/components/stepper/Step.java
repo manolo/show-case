@@ -81,6 +81,7 @@ public class Step extends ListItem implements AfterNavigationObserver, HasTheme 
         this.circle.bindClassNames(Signal.computed(() -> circleClasses(state.get(), small.get())));
         this.label.bindClassNames(Signal.computed(() -> labelClasses(state.get(), small.get(), orientation.get())));
         this.description.bindClassNames(Signal.computed(() -> descriptionClasses(small.get(), orientation.get())));
+        this.link.getElement().bindAttribute("aria-current", state.map(s -> s == State.ACTIVE ? "step" : null));
 
         Signal.effect(this.circle, () -> {
             this.circle.removeAll();
@@ -169,13 +170,7 @@ public class Step extends ListItem implements AfterNavigationObserver, HasTheme 
 
     @Override
     public void afterNavigation(AfterNavigationEvent event) {
-        if (this.link.getHref().equals(event.getLocation().getPath())) {
-            this.link.getElement().setAttribute("aria-current", "step");
-            setState(State.ACTIVE);
-        } else {
-            this.link.getElement().removeAttribute("aria-current");
-            setState(State.INACTIVE);
-        }
+        setState(this.link.getHref().equals(event.getLocation().getPath()) ? State.ACTIVE : State.INACTIVE);
     }
 
     public String getHref() {
