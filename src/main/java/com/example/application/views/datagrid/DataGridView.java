@@ -6,7 +6,6 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.Grid.SelectionMode;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.HeaderRow;
-import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.gridpro.GridPro;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
@@ -21,6 +20,8 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.signals.Signal;
+import com.vaadin.flow.signals.local.ValueSignal;
 import jakarta.annotation.security.PermitAll;
 import java.text.NumberFormat;
 import java.time.LocalDate;
@@ -38,7 +39,12 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 public class DataGridView extends Div {
 
     private GridPro<Client> grid;
-    private GridListDataView<Client> gridListDataView;
+    private List<Client> clients;
+
+    private final ValueSignal<String> clientFilter = new ValueSignal<>("");
+    private final ValueSignal<String> amountFilter = new ValueSignal<>("");
+    private final ValueSignal<String> statusFilter = new ValueSignal<>("");
+    private final ValueSignal<LocalDate> dateFilter = new ValueSignal<>(null);
 
     private Grid.Column<Client> clientColumn;
     private Grid.Column<Client> amountColumn;
@@ -64,8 +70,14 @@ public class DataGridView extends Div {
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_COLUMN_BORDERS);
         grid.setHeight("100%");
 
-        List<Client> clients = getClients();
-        gridListDataView = grid.setItems(clients);
+        clients = getClients();
+        Signal<List<Client>> filtered = Signal.computed(() -> clients.stream()
+                .filter(c -> StringUtils.containsIgnoreCase(c.getClient(), clientFilter.get()))
+                .filter(c -> StringUtils.containsIgnoreCase(Double.toString(c.getAmount()), amountFilter.get()))
+                .filter(c -> statusFilter.get().isEmpty() || StringUtils.equals(c.getStatus(), statusFilter.get()))
+                .filter(c -> dateFilter.get() == null || dateFilter.get().equals(LocalDate.parse(c.getDate())))
+                .toList());
+        Signal.effect(grid, () -> grid.setItems(filtered.get()));
     }
 
     private void addColumnsToGrid() {
@@ -116,57 +128,37 @@ public class DataGridView extends Div {
     private void addFiltersToGrid() {
         HeaderRow filterRow = grid.appendHeaderRow();
 
-        TextField clientFilter = new TextField();
-        clientFilter.setPlaceholder("Filter");
-        clientFilter.setClearButtonVisible(true);
-        clientFilter.setWidth("100%");
-        clientFilter.setValueChangeMode(ValueChangeMode.EAGER);
-        clientFilter.addValueChangeListener(event -> gridListDataView
-                .addFilter(client -> StringUtils.containsIgnoreCase(client.getClient(), clientFilter.getValue())));
-        filterRow.getCell(clientColumn).setComponent(clientFilter);
+        TextField clientField = filterTextField();
+        clientField.bindValue(clientFilter, clientFilter::set);
+        filterRow.getCell(clientColumn).setComponent(clientField);
 
-        TextField amountFilter = new TextField();
-        amountFilter.setPlaceholder("Filter");
-        amountFilter.setClearButtonVisible(true);
-        amountFilter.setWidth("100%");
-        amountFilter.setValueChangeMode(ValueChangeMode.EAGER);
-        amountFilter.addValueChangeListener(event -> gridListDataView.addFilter(client -> StringUtils
-                .containsIgnoreCase(Double.toString(client.getAmount()), amountFilter.getValue())));
-        filterRow.getCell(amountColumn).setComponent(amountFilter);
+        TextField amountField = filterTextField();
+        amountField.bindValue(amountFilter, amountFilter::set);
+        filterRow.getCell(amountColumn).setComponent(amountField);
 
-        ComboBox<String> statusFilter = new ComboBox<>();
-        statusFilter.setItems(Arrays.asList("Pending", "Success", "Error"));
-        statusFilter.setPlaceholder("Filter");
-        statusFilter.setClearButtonVisible(true);
-        statusFilter.setWidth("100%");
-        statusFilter.addValueChangeListener(
-                event -> gridListDataView.addFilter(client -> areStatusesEqual(client, statusFilter)));
-        filterRow.getCell(statusColumn).setComponent(statusFilter);
+        ComboBox<String> statusBox = new ComboBox<>();
+        statusBox.setItems(Arrays.asList("Pending", "Success", "Error"));
+        statusBox.setPlaceholder("Filter");
+        statusBox.setClearButtonVisible(true);
+        statusBox.setWidth("100%");
+        statusBox.bindValue(statusFilter.map(s -> s.isEmpty() ? null : s), v -> statusFilter.set(v == null ? "" : v));
+        filterRow.getCell(statusColumn).setComponent(statusBox);
 
-        DatePicker dateFilter = new DatePicker();
-        dateFilter.setPlaceholder("Filter");
-        dateFilter.setClearButtonVisible(true);
-        dateFilter.setWidth("100%");
-        dateFilter.addValueChangeListener(
-                event -> gridListDataView.addFilter(client -> areDatesEqual(client, dateFilter)));
-        filterRow.getCell(dateColumn).setComponent(dateFilter);
+        DatePicker datePicker = new DatePicker();
+        datePicker.setPlaceholder("Filter");
+        datePicker.setClearButtonVisible(true);
+        datePicker.setWidth("100%");
+        datePicker.bindValue(dateFilter, dateFilter::set);
+        filterRow.getCell(dateColumn).setComponent(datePicker);
     }
 
-    private boolean areStatusesEqual(Client client, ComboBox<String> statusFilter) {
-        String statusFilterValue = statusFilter.getValue();
-        if (statusFilterValue != null) {
-            return StringUtils.equals(client.getStatus(), statusFilterValue);
-        }
-        return true;
-    }
-
-    private boolean areDatesEqual(Client client, DatePicker dateFilter) {
-        LocalDate dateFilterValue = dateFilter.getValue();
-        if (dateFilterValue != null) {
-            LocalDate clientDate = LocalDate.parse(client.getDate());
-            return dateFilterValue.equals(clientDate);
-        }
-        return true;
+    private TextField filterTextField() {
+        TextField field = new TextField();
+        field.setPlaceholder("Filter");
+        field.setClearButtonVisible(true);
+        field.setWidth("100%");
+        field.setValueChangeMode(ValueChangeMode.EAGER);
+        return field;
     }
 
     private List<Client> getClients() {
