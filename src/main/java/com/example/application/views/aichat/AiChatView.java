@@ -12,6 +12,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.signals.Signal;
@@ -28,28 +29,34 @@ public class AiChatView extends VerticalLayout {
     private final TextArea textArea = new TextArea();
 
     private final ValueSignal<String> question = new ValueSignal<>("");
+    private final ValueSignal<String> response = new ValueSignal<>("");
+    private final ValueSignal<Boolean> streaming = new ValueSignal<>(false);
 
     public AiChatView(ChatClient.Builder chatClientBuilder, @Value("${spring.ai.openai.apikey}") String apikey) {
         ChatClient chatClient = chatClientBuilder.build();
         VoiceEngine voiceEngine = new VoiceEngine().setButtons(VoiceEngine.Buttons.MICROPHONE, VoiceEngine.Buttons.PLAY,
                 VoiceEngine.Buttons.CANCEL, VoiceEngine.Buttons.LANG, VoiceEngine.Buttons.VOICE);
 
+        boolean apikeyPresent = apikey != null;
+
+        textField.setValueChangeMode(ValueChangeMode.EAGER);
         textField.bindValue(question, question::set);
-        button.bindEnabled(Signal.computed(() -> apikey != null && !question.get().isBlank()));
+        textArea.bindValue(response, ignored -> {});
+        textArea.bindReadOnly(streaming);
+        button.bindEnabled(Signal.computed(() -> apikeyPresent && !question.get().isBlank() && !streaming.get()));
 
         HorizontalLayout questionRow = new HorizontalLayout(textField, button, voiceEngine);
         UI ui = UI.getCurrent();
         button.addClickListener(e -> {
-            textArea.clear();
-            chatClient.prompt().user(question.peek()).stream().content().subscribe(token -> {
-                ui.access(() -> {
-                    textArea.setValue(textArea.getValue() + token);
-                });
-            }, null, () -> {
-                ui.access(() -> {
-                    voiceEngine.play(textArea.getValue());
-                });
-            });
+            response.set("");
+            streaming.set(true);
+            chatClient.prompt().user(question.peek()).stream().content().subscribe(
+                    token -> ui.access(() -> response.update(r -> r + token)),
+                    error -> ui.access(() -> streaming.set(false)),
+                    () -> ui.access(() -> {
+                        streaming.set(false);
+                        voiceEngine.play(response.peek());
+                    }));
         });
 
         button.addClickShortcut(Key.ENTER);
@@ -63,11 +70,10 @@ public class AiChatView extends VerticalLayout {
         questionRow.setWidthFull();
         textField.setWidthFull();
 
-        if (apikey == null) {
-            textArea.setValue("$OPENAI_API_KEY environent variable is not propertly set.");
+        if (!apikeyPresent) {
+            response.set("$OPENAI_API_KEY environment variable is not properly set.");
         }
 
         add(questionRow, textArea);
-
     }
 }

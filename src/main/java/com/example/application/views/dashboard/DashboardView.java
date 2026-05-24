@@ -22,6 +22,8 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.signals.Signal;
+import com.vaadin.flow.signals.local.ValueSignal;
 import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.theme.lumo.LumoUtility.BoxSizing;
 import com.vaadin.flow.theme.lumo.LumoUtility.FontSize;
@@ -83,16 +85,16 @@ public class DashboardView extends Main {
     }
 
     private Component createViewEvents() {
-        // Header
-        Select year = new Select();
+        ValueSignal<String> selectedYear = new ValueSignal<>("2021");
+
+        Select<String> year = new Select<>();
         year.setItems("2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021");
-        year.setValue("2021");
         year.setWidth("100px");
+        year.bindValue(selectedYear, selectedYear::set);
 
         HorizontalLayout header = createHeader("View events", "City/month");
         header.add(year);
 
-        // Chart
         Chart chart = new Chart(ChartType.AREASPLINE);
         Configuration conf = chart.getConfiguration();
         conf.getChart().setStyledMode(true);
@@ -100,7 +102,6 @@ public class DashboardView extends Main {
         XAxis xAxis = new XAxis();
         xAxis.setCategories("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
         conf.addxAxis(xAxis);
-
         conf.getyAxis().setTitle("Values");
 
         PlotOptionsAreaspline plotOptions = new PlotOptionsAreaspline();
@@ -108,18 +109,35 @@ public class DashboardView extends Main {
         plotOptions.setMarker(new Marker(false));
         conf.addPlotOptions(plotOptions);
 
-        conf.addSeries(new ListSeries("Berlin", 189, 191, 291, 396, 501, 403, 609, 712, 729, 942, 1044, 1247));
-        conf.addSeries(new ListSeries("London", 138, 246, 248, 348, 352, 353, 463, 573, 778, 779, 885, 887));
-        conf.addSeries(new ListSeries("New York", 65, 65, 166, 171, 293, 302, 308, 317, 427, 429, 535, 636));
-        conf.addSeries(new ListSeries("Tokyo", 0, 11, 17, 123, 130, 142, 248, 349, 452, 454, 458, 462));
+        Signal.effect(chart, () -> {
+            double factor = yearFactor(selectedYear.get());
+            conf.setSeries(
+                    scaledSeries("Berlin", factor, 189, 191, 291, 396, 501, 403, 609, 712, 729, 942, 1044, 1247),
+                    scaledSeries("London", factor, 138, 246, 248, 348, 352, 353, 463, 573, 778, 779, 885, 887),
+                    scaledSeries("New York", factor, 65, 65, 166, 171, 293, 302, 308, 317, 427, 429, 535, 636),
+                    scaledSeries("Tokyo", factor, 0, 11, 17, 123, 130, 142, 248, 349, 452, 454, 458, 462));
+            chart.drawChart();
+        });
 
-        // Add it all together
         VerticalLayout viewEvents = new VerticalLayout(header, chart);
         viewEvents.addClassName(Padding.LARGE);
         viewEvents.setPadding(false);
         viewEvents.setSpacing(false);
         viewEvents.getElement().getThemeList().add("spacing-l");
         return viewEvents;
+    }
+
+    private static ListSeries scaledSeries(String name, double factor, int... values) {
+        Number[] scaled = new Number[values.length];
+        for (int i = 0; i < values.length; i++) {
+            scaled[i] = Math.round(values[i] * factor);
+        }
+        return new ListSeries(name, scaled);
+    }
+
+    private static double yearFactor(String year) {
+        int y = Integer.parseInt(year);
+        return 1.0 - (2021 - y) * 0.07;
     }
 
     private Component createServiceHealth() {
