@@ -9,31 +9,34 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.AfterNavigationEvent;
-import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.signals.Signal;
+import com.vaadin.flow.signals.local.ListSignal;
 import jakarta.annotation.security.PermitAll;
-import java.util.Arrays;
-import java.util.List;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
 @PageTitle("Feed")
 @Route("feed")
 @PermitAll
 @Menu(order = 4, icon = LineAwesomeIconUrl.LIST_SOLID)
-public class FeedView extends Div implements AfterNavigationObserver {
+public class FeedView extends Div {
 
-    Grid<Person> grid = new Grid<>();
+    private final Grid<Person> grid = new Grid<>();
+    private final ListSignal<Person> people = new ListSignal<>();
 
     public FeedView() {
         addClassName("feed-view");
         setSizeFull();
         grid.setHeight("100%");
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_NO_ROW_BORDERS);
-        grid.addComponentColumn(person -> createCard(person));
+        grid.addComponentColumn(this::createCard);
         add(grid);
+
+        Signal.effect(grid, () -> grid.setItems(people.get().stream().map(Signal::peek).toList()));
+
+        seedPeople();
     }
 
     private HorizontalLayout createCard(Person person) {
@@ -88,60 +91,20 @@ public class FeedView extends Div implements AfterNavigationObserver {
         return card;
     }
 
-    @Override
-    public void afterNavigation(AfterNavigationEvent event) {
-
-        // Set some data when this view is displayed.
-        List<Person> persons = Arrays.asList( //
-                createPerson("https://randomuser.me/api/portraits/men/42.jpg", "John Smith", "May 8",
-                        "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document without relying on meaningful content (also called greeking).",
-                        "1K", "500", "20"),
-                createPerson("https://randomuser.me/api/portraits/women/42.jpg", "Abagail Libbie", "May 3",
-                        "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document without relying on meaningful content (also called greeking).",
-                        "1K", "500", "20"),
-                createPerson("https://randomuser.me/api/portraits/men/24.jpg", "Alberto Raya", "May 3",
-
-                        "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document without relying on meaningful content (also called greeking).",
-                        "1K", "500", "20"),
-                createPerson("https://randomuser.me/api/portraits/women/24.jpg", "Emmy Elsner", "Apr 22",
-
-                        "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document without relying on meaningful content (also called greeking).",
-                        "1K", "500", "20"),
-                createPerson("https://randomuser.me/api/portraits/men/76.jpg", "Alf Huncoot", "Apr 21",
-
-                        "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document without relying on meaningful content (also called greeking).",
-                        "1K", "500", "20"),
-                createPerson("https://randomuser.me/api/portraits/women/76.jpg", "Lidmila Vilensky", "Apr 17",
-
-                        "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document without relying on meaningful content (also called greeking).",
-                        "1K", "500", "20"),
-                createPerson("https://randomuser.me/api/portraits/men/94.jpg", "Jarrett Cawsey", "Apr 17",
-                        "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document without relying on meaningful content (also called greeking).",
-                        "1K", "500", "20"),
-                createPerson("https://randomuser.me/api/portraits/women/94.jpg", "Tania Perfilyeva", "Mar 8",
-
-                        "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document without relying on meaningful content (also called greeking).",
-                        "1K", "500", "20"),
-                createPerson("https://randomuser.me/api/portraits/men/16.jpg", "Ivan Polo", "Mar 5",
-
-                        "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document without relying on meaningful content (also called greeking).",
-                        "1K", "500", "20"),
-                createPerson("https://randomuser.me/api/portraits/women/16.jpg", "Emelda Scandroot", "Mar 5",
-
-                        "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document without relying on meaningful content (also called greeking).",
-                        "1K", "500", "20"),
-                createPerson("https://randomuser.me/api/portraits/men/67.jpg", "Marcos Sá", "Mar 4",
-
-                        "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document without relying on meaningful content (also called greeking).",
-                        "1K", "500", "20"),
-                createPerson("https://randomuser.me/api/portraits/women/67.jpg", "Jacqueline Asong", "Mar 2",
-
-                        "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document without relying on meaningful content (also called greeking).",
-                        "1K", "500", "20")
-
-        );
-
-        grid.setItems(persons);
+    private void seedPeople() {
+        String lorem = "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document without relying on meaningful content (also called greeking).";
+        people.insertLast(createPerson("https://randomuser.me/api/portraits/men/42.jpg", "John Smith", "May 8", lorem, "1K", "500", "20"));
+        people.insertLast(createPerson("https://randomuser.me/api/portraits/women/42.jpg", "Abagail Libbie", "May 3", lorem, "1K", "500", "20"));
+        people.insertLast(createPerson("https://randomuser.me/api/portraits/men/24.jpg", "Alberto Raya", "May 3", lorem, "1K", "500", "20"));
+        people.insertLast(createPerson("https://randomuser.me/api/portraits/women/24.jpg", "Emmy Elsner", "Apr 22", lorem, "1K", "500", "20"));
+        people.insertLast(createPerson("https://randomuser.me/api/portraits/men/76.jpg", "Alf Huncoot", "Apr 21", lorem, "1K", "500", "20"));
+        people.insertLast(createPerson("https://randomuser.me/api/portraits/women/76.jpg", "Lidmila Vilensky", "Apr 17", lorem, "1K", "500", "20"));
+        people.insertLast(createPerson("https://randomuser.me/api/portraits/men/94.jpg", "Jarrett Cawsey", "Apr 17", lorem, "1K", "500", "20"));
+        people.insertLast(createPerson("https://randomuser.me/api/portraits/women/94.jpg", "Tania Perfilyeva", "Mar 8", lorem, "1K", "500", "20"));
+        people.insertLast(createPerson("https://randomuser.me/api/portraits/men/16.jpg", "Ivan Polo", "Mar 5", lorem, "1K", "500", "20"));
+        people.insertLast(createPerson("https://randomuser.me/api/portraits/women/16.jpg", "Emelda Scandroot", "Mar 5", lorem, "1K", "500", "20"));
+        people.insertLast(createPerson("https://randomuser.me/api/portraits/men/67.jpg", "Marcos Sá", "Mar 4", lorem, "1K", "500", "20"));
+        people.insertLast(createPerson("https://randomuser.me/api/portraits/women/67.jpg", "Jacqueline Asong", "Mar 2", lorem, "1K", "500", "20"));
     }
 
     private static Person createPerson(String image, String name, String date, String post, String likes,
