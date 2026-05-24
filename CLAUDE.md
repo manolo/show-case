@@ -47,15 +47,16 @@ src/main/java/com/example/application/
 
 - **HelloWorldView** - Simple greeting demo with reactive Signal binding
 - **SignalsPlaygroundView** - `/signals` route with 16 demos covering every Signals API (ValueSignal, ListSignal, Signal.computed, Signal.effect, bindText/Visible/Enabled/Value/ReadOnly/ClassName/ThemeName/HelperText/Placeholder/Width/Style, bindChildren, windowSizeSignal, localeSignal, flashClass)
-- **DashboardView** - Charts and metrics
-- **FeedView** - Social feed cards
+- **DashboardView** - Charts and metrics; year selector wired to a `ValueSignal<String>` + `Signal.effect` that rebuilds the chart series reactively
+- **FeedView** - Social feed cards backed by a `ListSignal<Person>` and `Signal.effect(grid, () -> grid.setItems(...))` (canonical Vaadin docs pattern)
+- **DataGridView** - GridPro with 4 filters bound via `ValueSignal`s, `Signal.computed` filtered list, and a single `Signal.effect` on `grid.setItems(...)`
 - **MasterDetailView** / **MasterDetailResponsiveView** - Split layout CRUD (responsive view uses Signals for detail panel visibility)
 - **GridEditView** / **GridwithFiltersView** / **GridEditPaginatedView** - Data grid variants (filter views use Signals for mobile filter toggle)
 - **CheckoutFormView** - Checkout form with Signal driven conditional visibility (state select)
 - **CheckoutWizard** (4 steps) - Router-based multi-step form; the Wizard tracks the current step in a `ValueSignal<Integer>` and derives previous/next visibility and routes from it
 - **SampleTabbedLayout** (List, Form, Details) - Tabbed RouterLayout demo at `/tabbed`
 - **ChatView** - Vaadin Collaboration Engine messaging; unread badge per channel uses `ValueSignal<Integer>`, mobile detection uses `Page.windowSizeSignal()`
-- **AiChatView** - OpenAI chat with voice support; Ask button enabled state via `Signal.computed`
+- **AiChatView** - OpenAI chat with voice support; reactive input/response/streaming signals drive `bindEnabled` and `bindReadOnly` on the Ask button and reply area
 - **SpreadsheetView** - Excel editing; invoice header visibility via `ValueSignal<Boolean>`
 - **MapView** - Maps with markers; search filter implemented with `ValueSignal<String>` + computed list + two `Signal.effect`s rebuilding cards and markers
 - **ImageGalleryView** - Unsplash image grid
@@ -109,7 +110,7 @@ Server starts on port 8080 (configurable via `PORT` env var).
 
 - **All views** use `@Route`, `@Menu`, `@PageTitle`, `@PermitAll`
 - **Data binding** with `BeanValidationBinder`
-- **Signals** (`ValueSignal`, `ListSignal`, `Signal.computed`, `Signal.effect`) for reactive UI state across the showcase: `bindText`, `bindVisible`, `bindEnabled`, `bindValue` (two-way), `bindReadOnly`, `bindClassName(s)`, `bindThemeName(s)`, `bindHelperText`, `bindPlaceholder`, `bindAttribute`, `bindWidth/Height`, `bindChildren` (for ListSignal), `getStyle().bind`, `getElement().getThemeList().bind`. Built-in sources: `Page.windowSizeSignal()`, `UI.localeSignal()`. Used in: HelloWorldView, CheckoutFormView, MasterDetailResponsiveView, GridwithFilters* views, ChatView, MapView, SpreadsheetView, MainLayout (dark mode + reactive title), AiChatView, Stepper/Step/Wizard, and the dedicated SignalsPlaygroundView playground.
+- **Signals** (`ValueSignal`, `ListSignal`, `Signal.computed`, `Signal.effect`) for reactive UI state across the showcase: `bindText`, `bindVisible`, `bindEnabled`, `bindValue` (two-way), `bindReadOnly`, `bindClassName(s)`, `bindThemeName(s)`, `bindHelperText`, `bindPlaceholder`, `bindAttribute`, `bindWidth/Height`, `bindChildren` (for ListSignal), `getStyle().bind`, `getElement().getThemeList().bind`. Built-in sources: `Page.windowSizeSignal()`, `UI.localeSignal()`. Used in: HelloWorldView, CheckoutFormView, MasterDetailResponsiveView, GridwithFilters* views, FeedView, DataGridView, ChatView, MapView, SpreadsheetView, MainLayout (dark mode + Aura toggle + reactive title), AiChatView, DashboardView (year selector), Stepper/Step/Wizard, and the dedicated SignalsPlaygroundView playground.
 - **Filtering** via JPA Specifications (`SamplePersonFilter`)
 - **Layouts** use `LumoUtility` CSS classes for spacing/alignment
 - **Custom fields** extend `CustomField<T>`
