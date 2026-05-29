@@ -8,7 +8,7 @@ Feature-rich Vaadin 25.1 showcase application demonstrating modern Vaadin compon
 
 | Technology | Version | Notes |
 |---|---|---|
-| Vaadin | 25.1 | Flow (Java-based UI), NOT React/Hilla. Signals support. |
+| Vaadin | 25.2.0-beta1 | Flow (Java-based UI), NOT React/Hilla. Signals + Geolocation + Clipboard + stable Slider/Master-Detail. |
 | Spring Boot | 4.0.4 | Parent POM (4.0.4+ required by Vaadin 25.1) |
 | Java | 21 | Required minimum |
 | H2 Database | runtime | In-memory, initialized from `data.sql` |
@@ -59,6 +59,9 @@ src/main/java/com/example/application/
 - **AiChatView** - OpenAI chat with voice support; reactive input/response/streaming signals drive `bindEnabled` and `bindReadOnly` on the Ask button and reply area
 - **SpreadsheetView** - Excel editing; invoice header visibility via `ValueSignal<Boolean>`
 - **MapView** - Maps with markers; search filter implemented with `ValueSignal<String>` + computed list + two `Signal.effect`s rebuilding cards and markers
+- **GeolocationView** - `/geolocation` route exercising the new 25.2 Geolocation API (`Geolocation.getPosition`, `watchPosition`, `availabilityHintSignal`, `GeolocationWatcher.positionSignal`) with markers added to a Map at every fix
+- **ClipboardView** - `/clipboard` route demonstrating `Clipboard.onClick(button).writeText(...)` for literal strings, field values, and multi-format `ClipboardContent` (text + HTML). Copy buttons also reach into AiChatView and FeedView cards
+- **SliderPlaygroundView** - `/slider` route showing the stable `IntegerSlider`, `DecimalSlider`, `IntegerRangeSlider`, and `DecimalRangeSlider` with EAGER value-change mode and a getStyle().bind preview panel
 - **ImageGalleryView** - Unsplash image grid
 - **CrudView**, **AddonsView**, **CreditCardFormView**, **AddressFormView**
 
@@ -121,6 +124,6 @@ Server starts on port 8080 (configurable via `PORT` env var).
 ## Important Notes
 
 - This is a **Vaadin Flow (Java)** project - UI is built entirely in Java, NOT React/Hilla
-- When using Vaadin MCP tools, use `ui_language: "java"` and `vaadin_version: "25.1"`
+- When using Vaadin MCP tools, use `ui_language: "java"` and `vaadin_version: "25.2"`
 - The `src/main/frontend/generated/` directory is auto-generated - do not edit manually
 - The `src/main/bundles/` directory contains pre-built frontend bundles
