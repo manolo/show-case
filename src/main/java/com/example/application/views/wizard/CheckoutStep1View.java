@@ -1,6 +1,7 @@
 package com.example.application.views.wizard;
 
 import com.example.application.components.stepper.Step.HasBinder;
+import com.example.application.components.stepper.Step.HasValiditySignal;
 import com.example.application.data.checkout.PersonalDetails;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.checkbox.Checkbox;
@@ -15,6 +16,8 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.signals.Signal;
+import com.vaadin.flow.signals.local.ValueSignal;
 import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
@@ -22,13 +25,14 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 @Route(value = "1", layout = CheckoutWizard.class)
 @PermitAll
 @Menu(title = "Wizard")
-public class CheckoutStep1View extends Div implements HasBinder {
+public class CheckoutStep1View extends Div implements HasBinder, HasValiditySignal {
 
     TextField name = new TextField("Name");
     EmailField email = new EmailField("Email address");
     TextField phone = new TextField("Phone number");
     Checkbox remember = new Checkbox("Remember personal details for next time");
     BeanValidationBinder<PersonalDetails> binder = new BeanValidationBinder<>(PersonalDetails.class);
+    private final ValueSignal<Boolean> valid = new ValueSignal<>(false);
 
     public CheckoutStep1View() {
         addClassNames(Padding.Horizontal.LARGE, Padding.Vertical.MEDIUM);
@@ -36,6 +40,7 @@ public class CheckoutStep1View extends Div implements HasBinder {
 
         binder.bindInstanceFields(this);
         binder.setBean(new PersonalDetails());
+        binder.addValueChangeListener(e -> valid.set(binder.validate().isOk()));
     }
 
     private Component createForm() {
@@ -58,5 +63,10 @@ public class CheckoutStep1View extends Div implements HasBinder {
     @Override
     public Binder<?> getBinder() {
         return binder;
+    }
+
+    @Override
+    public Signal<Boolean> validitySignal() {
+        return valid.asReadonly();
     }
 }

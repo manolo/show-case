@@ -1,6 +1,7 @@
 package com.example.application.views.wizard;
 
 import com.example.application.components.stepper.Step.HasBinder;
+import com.example.application.components.stepper.Step.HasValiditySignal;
 import com.example.application.data.checkout.CreditCard;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -16,6 +17,8 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.signals.Signal;
+import com.vaadin.flow.signals.local.ValueSignal;
 import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
@@ -23,13 +26,14 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 @PageTitle("Step 3 - Wizard")
 @Route(value = "3", layout = CheckoutWizard.class)
 @PermitAll
-public class CheckoutStep3View extends Div implements HasBinder {
+public class CheckoutStep3View extends Div implements HasBinder, HasValiditySignal {
     BeanValidationBinder<CreditCard> binder = new BeanValidationBinder<>(CreditCard.class);
     TextField cardHolder = new TextField("Cardholder name");
     TextField cardNumber = new TextField("Card Number");
     TextField securityCode = new TextField("Security Code");
     Select<String> expirationMonth = new Select<>();
     Select<String> expirationYear = new Select<>();
+    private final ValueSignal<Boolean> valid = new ValueSignal<>(false);
 
     public CheckoutStep3View() {
         addClassNames(Padding.Horizontal.LARGE, Padding.Vertical.MEDIUM);
@@ -37,6 +41,7 @@ public class CheckoutStep3View extends Div implements HasBinder {
 
         binder.bindInstanceFields(this);
         binder.setBean(new CreditCard());
+        binder.addValueChangeListener(e -> valid.set(binder.validate().isOk()));
     }
 
     private Section createForm() {
@@ -78,5 +83,10 @@ public class CheckoutStep3View extends Div implements HasBinder {
     @Override
     public Binder<?> getBinder() {
         return binder;
+    }
+
+    @Override
+    public Signal<Boolean> validitySignal() {
+        return valid.asReadonly();
     }
 }

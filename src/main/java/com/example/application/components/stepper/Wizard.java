@@ -3,6 +3,7 @@ package com.example.application.components.stepper;
 import org.vaadin.lineawesome.LineAwesomeIcon;
 
 import com.example.application.components.stepper.Step.HasBinder;
+import com.example.application.components.stepper.Step.HasValiditySignal;
 import com.example.application.components.stepper.Step.State;
 import com.example.application.components.stepper.Stepper.Orientation;
 import com.vaadin.flow.component.Component;
@@ -52,6 +53,8 @@ public abstract class Wizard extends Main
     private final Step[] steps;
 
     private final ValueSignal<Integer> currentStep = new ValueSignal<>(-1);
+    private final Signal<Boolean>[] stepValidity;
+    private final ValueSignal<Integer> validityRevision = new ValueSignal<>(0);
 
     private ContinueNavigationAction action;
     private final ConfirmDialog confirmDialog = createConfirmDialog();
@@ -59,14 +62,22 @@ public abstract class Wizard extends Main
 
     private boolean modal = false;
 
+    @SuppressWarnings("unchecked")
     public Wizard(Step... steps) {
         this.steps = steps;
+        this.stepValidity = (Signal<Boolean>[]) new Signal<?>[steps.length];
         stepper = new Stepper(steps);
         addClassNames(Display.FLEX, FlexDirection.COLUMN, Height.FULL);
         add(createStepper(), createContent(), createFooter());
 
         previous.bindVisible(currentStep.map(i -> i > 0));
-        next.bindVisible(currentStep.map(i -> i >= 0 && i < steps.length - 1));
+        next.bindVisible(Signal.computed(() -> {
+            int i = currentStep.get();
+            if (i < 0 || i >= steps.length - 1) return false;
+            validityRevision.get();
+            if (i >= stepValidity.length || stepValidity[i] == null) return true;
+            return stepValidity[i].get();
+        }));
 
         Signal.effect(previous, () -> {
             int i = currentStep.get();
@@ -151,8 +162,22 @@ public abstract class Wizard extends Main
                 Binder binder = ((HasBinder) content).getBinder();
                 binder.setBean(restoreSessionObject(content.getClass(), binder.getBean()));
             }
+            if (content instanceof HasValiditySignal hasValidity) {
+                int idx = getStepIndexByClass(content.getClass());
+                if (idx >= 0) {
+                    stepValidity[idx] = hasValidity.validitySignal();
+                    validityRevision.update(v -> v + 1);
+                }
+            }
             this.content.getElement().appendChild(content.getElement());
         }
+    }
+
+    private int getStepIndexByClass(Class<?> viewClass) {
+        for (int i = 0; i < steps.length; i++) {
+            if (steps[i].getRouteClass() == viewClass) return i;
+        }
+        return -1;
     }
 
     @Override

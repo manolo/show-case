@@ -49,6 +49,10 @@ public class Step extends ListItem implements AfterNavigationObserver, HasTheme 
         Binder<?> getBinder();
     }
 
+    public interface HasValiditySignal {
+        Signal<Boolean> validitySignal();
+    }
+
     private final ValueSignal<State> state = new ValueSignal<>(State.INACTIVE);
     private final ValueSignal<Boolean> small = new ValueSignal<>(false);
     private final ValueSignal<Stepper.Orientation> orientation = new ValueSignal<>(Stepper.Orientation.VERTICAL);
