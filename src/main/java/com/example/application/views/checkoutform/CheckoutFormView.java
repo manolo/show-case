@@ -195,7 +195,9 @@ public class CheckoutFormView extends Div {
         stateSelect.setRequiredIndicatorVisible(true);
 
         stateSelect.setItems(states);
+        stateSelect.setFocusSelectedItem(true);
         countrySelect.setItems(countries);
+        countrySelect.setFocusSelectedItem(true);
         ValueSignal<String> countrySignal = new ValueSignal<>("");
         countrySelect.bindValue(countrySignal, countrySignal::set);
         stateSelect.bindVisible(countrySignal.map("United States"::equals));

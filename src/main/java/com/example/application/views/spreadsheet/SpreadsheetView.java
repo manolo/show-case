@@ -186,8 +186,10 @@ public class SpreadsheetView extends VerticalLayout implements Receiver {
 
         MenuItem fileMenu = menuBar.addItem("File");
         SubMenu fileSubMenu = fileMenu.getSubMenu();
-        createIconItem(fileSubMenu, LumoIcon.UPLOAD, "Import", "Import", e -> uploadFileDialog.open());
-        createIconItem(fileSubMenu, LumoIcon.DOWNLOAD, "Export", "Export", e -> downloadSpreadsheetFile());
+        createIconItem(fileSubMenu, LumoIcon.UPLOAD, "Import", "Import", e -> uploadFileDialog.open())
+                .setTooltipText("Open a .xlsx file from your computer");
+        createIconItem(fileSubMenu, LumoIcon.DOWNLOAD, "Export", "Export", e -> downloadSpreadsheetFile())
+                .setTooltipText("Download the current sheet as .xlsx");
 
         MenuItem viewMenu = menuBar.addItem("View");
         SubMenu viewSubMenu = viewMenu.getSubMenu();
@@ -206,9 +208,11 @@ public class SpreadsheetView extends VerticalLayout implements Receiver {
         SubMenu formatSubMenu = formatMenu.getSubMenu();
 
         createIconItem(formatSubMenu, VaadinIcon.BOLD, "Bold", "Bold",
-                e -> changeSelectedCellsFont(font -> font.setBold(!font.getBold())));
+                e -> changeSelectedCellsFont(font -> font.setBold(!font.getBold())))
+                .setTooltipText("Toggle bold on the selected cells");
         createIconItem(formatSubMenu, VaadinIcon.ITALIC, "Italic", "Italic",
-                e -> changeSelectedCellsFont(font -> font.setItalic(!font.getItalic())));
+                e -> changeSelectedCellsFont(font -> font.setItalic(!font.getItalic())))
+                .setTooltipText("Toggle italic on the selected cells");
 
         MenuItem colorMenu = formatSubMenu.addItem("Color");
         SubMenu colorSubMenu = colorMenu.getSubMenu();
@@ -242,12 +246,15 @@ public class SpreadsheetView extends VerticalLayout implements Receiver {
         MenuItem mergeMenu = menuBar.addItem("Merge");
         SubMenu mergeSubMenu = mergeMenu.getSubMenu();
 
-        mergeSubMenu.addItem("Merge selected", e -> mergeSelectedCells(selectedCells.get()));
-        mergeSubMenu.addItem("Unmerge selected", e -> unmergeSelectedRegion(selectedCellMergedRegion.get()));
+        mergeSubMenu.addItem("Merge selected", e -> mergeSelectedCells(selectedCells.get()))
+                .setTooltipText("Combine the selected cell range into a single cell");
+        mergeSubMenu.addItem("Unmerge selected", e -> unmergeSelectedRegion(selectedCellMergedRegion.get()))
+                .setTooltipText("Split a merged region back into individual cells");
 
         MenuItem miscMenu = menuBar.addItem("Miscellaneous");
         SubMenu miscSubMenu = miscMenu.getSubMenu();
-        miscSubMenu.addItem("Add comment", e -> addComment(selectedCellReference.get()));
+        miscSubMenu.addItem("Add comment", e -> addComment(selectedCellReference.get()))
+                .setTooltipText("Attach a sticky comment to the selected cell");
 
         MenuItem freezePanesMenu = miscSubMenu.addItem("Freeze panes");
         SubMenu freezePanesSubMenu = freezePanesMenu.getSubMenu();

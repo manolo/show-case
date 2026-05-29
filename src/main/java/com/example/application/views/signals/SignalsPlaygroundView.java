@@ -8,6 +8,7 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
@@ -73,6 +74,7 @@ public class SignalsPlaygroundView extends VerticalLayout {
         add(flashSection());
         add(routerStateSection());
         add(pageVisibilitySection());
+        add(collapseChipsSection());
     }
 
     // 1. Counter
@@ -372,6 +374,25 @@ public class SignalsPlaygroundView extends VerticalLayout {
                 "Switch to another browser tab and back — the value reflects the Page Visibility API and can gate heavy work.");
         hint.addClassNames(TextColor.SECONDARY);
         return demo("18. Page.pageVisibilitySignal — pause work when tab is hidden", state, hint);
+    }
+
+    // 19. MultiSelectComboBox.setCollapseChips — overflow as a single "N items" chip
+    private Details collapseChipsSection() {
+        MultiSelectComboBox<String> combo = new MultiSelectComboBox<>("Toppings");
+        combo.setItems("Cheese", "Tomato", "Basil", "Olives", "Onion", "Mushroom", "Pepper", "Anchovy");
+        combo.setCollapseChips(true);
+        combo.select("Cheese", "Tomato", "Basil", "Olives");
+        combo.setWidth("280px");
+
+        Checkbox collapseToggle = new Checkbox("Collapse chips", true);
+        collapseToggle.addValueChangeListener(e -> combo.setCollapseChips(e.getValue()));
+
+        Paragraph hint = new Paragraph(
+                "Toggle the checkbox: with collapse on the field shows a single \"4\" chip; with it off the chips overflow.");
+        hint.addClassNames(TextColor.SECONDARY, Margin.Top.NONE);
+
+        return demo("19. MultiSelectComboBox.setCollapseChips — overflow collapses to a count chip",
+                collapseToggle, combo, hint);
     }
 
     private Details demo(String title, com.vaadin.flow.component.Component... children) {
