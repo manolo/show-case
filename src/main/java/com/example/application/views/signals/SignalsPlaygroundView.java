@@ -49,7 +49,7 @@ public class SignalsPlaygroundView extends VerticalLayout {
         setPadding(true);
         setSpacing(true);
 
-        H2 title = new H2("Vaadin 25.1 Signals Playground");
+        H2 title = new H2("Vaadin 25.2 Signals Playground");
         title.addClassNames(Margin.Bottom.NONE);
         Paragraph subtitle = new Paragraph("Each section demonstrates one Signals API. Open, type, and watch the UI react.");
         subtitle.addClassNames(TextColor.SECONDARY, Margin.Top.NONE);
@@ -71,6 +71,8 @@ public class SignalsPlaygroundView extends VerticalLayout {
         add(todoListSection());
         add(localeSection());
         add(flashSection());
+        add(routerStateSection());
+        add(pageVisibilitySection());
     }
 
     // 1. Counter
@@ -345,6 +347,31 @@ public class SignalsPlaygroundView extends VerticalLayout {
 
         Button bump = new Button("Increment", e -> counter.update(c -> c + 1));
         return demo("16. flashClass on signal change", bump, value);
+    }
+
+    // 17. UI.routerStateSignal — derived navigation context
+    private Details routerStateSection() {
+        var routerState = UI.getCurrent().routerStateSignal();
+        Span path = new Span();
+        path.bindText(routerState.map(s -> "Path: " + s.location().getPath()));
+        Span target = new Span();
+        target.bindText(routerState.map(s -> "Target: " + (s.navigationTarget() != null
+                ? s.navigationTarget().getSimpleName() : "(none)")));
+        Span params = new Span();
+        params.bindText(routerState.map(s -> "Params: " + s.routeParameters().getParameterNames()));
+        return demo("17. UI.routerStateSignal — navigation state as a signal", path, target, params);
+    }
+
+    // 18. Page.pageVisibilitySignal — browser tab visibility
+    private Details pageVisibilitySection() {
+        var visibility = UI.getCurrent().getPage().pageVisibilitySignal();
+        Span state = new Span();
+        state.bindText(visibility.map(v -> "Tab state: " + (v != null ? v.name() : "(loading)")));
+        state.addClassNames(FontSize.LARGE);
+        Paragraph hint = new Paragraph(
+                "Switch to another browser tab and back — the value reflects the Page Visibility API and can gate heavy work.");
+        hint.addClassNames(TextColor.SECONDARY);
+        return demo("18. Page.pageVisibilitySignal — pause work when tab is hidden", state, hint);
     }
 
     private Details demo(String title, com.vaadin.flow.component.Component... children) {

@@ -2,6 +2,7 @@ package com.example.application.views;
 
 import java.util.List;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -20,8 +21,6 @@ import com.vaadin.flow.component.orderedlayout.Scroller;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
-import com.vaadin.flow.router.AfterNavigationEvent;
-import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.Layout;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.server.menu.MenuConfiguration;
@@ -39,12 +38,12 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 @Layout
 @AnonymousAllowed
 @Uses(Icon.class)
-public class MainLayout extends AppLayout implements AfterNavigationObserver {
+public class MainLayout extends AppLayout {
 
-    private final ValueSignal<String> title = new ValueSignal<>("");
     private final ValueSignal<Boolean> dark = new ValueSignal<>(false);
     private final ValueSignal<Boolean> aura = new ValueSignal<>(false);
     private Registration auraStylesheet;
+    private final H1 viewTitle = new H1();
     private final AuthenticationContext authenticationContext;
 
     public MainLayout(AuthenticationContext authenticationContext) {
@@ -58,9 +57,7 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
         DrawerToggle toggle = new DrawerToggle();
         toggle.setAriaLabel("Menu toggle");
 
-        H1 viewTitle = new H1();
         viewTitle.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.Margin.NONE, LumoUtility.Flex.GROW);
-        viewTitle.bindText(title);
 
         Button darkToggle = new Button(VaadinIcon.MOON.create());
         darkToggle.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
@@ -121,6 +118,10 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
         super.onAttach(attachEvent);
         UI ui = attachEvent.getUI();
         ui.getElement().getThemeList().bind("dark", dark);
+        viewTitle.bindText(ui.routerStateSignal().map(state -> state.currentView()
+                .filter(view -> view instanceof Component)
+                .flatMap(view -> MenuConfiguration.getPageHeader((Component) view))
+                .orElse("")));
         Signal.effect(this, () -> {
             if (aura.get()) {
                 if (auraStylesheet == null) {
@@ -131,10 +132,5 @@ public class MainLayout extends AppLayout implements AfterNavigationObserver {
                 auraStylesheet = null;
             }
         });
-    }
-
-    @Override
-    public void afterNavigation(AfterNavigationEvent event) {
-        title.set(MenuConfiguration.getPageHeader(getContent()).orElse(""));
     }
 }

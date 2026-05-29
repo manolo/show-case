@@ -3,9 +3,11 @@ package com.example.application.views.dashboard;
 
 import com.example.application.views.dashboard.ServiceHealth.Status;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.board.Board;
 import com.vaadin.flow.component.charts.Chart;
 import com.vaadin.flow.component.charts.model.*;
+import com.vaadin.flow.component.page.PageVisibility;
 import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
@@ -110,7 +112,12 @@ public class DashboardView extends Main {
         conf.addPlotOptions(plotOptions);
 
         Signal.effect(chart, () -> {
-            double factor = yearFactor(selectedYear.get());
+            String yearValue = selectedYear.get();
+            PageVisibility visibility = UI.getCurrent().getPage().pageVisibilitySignal().get();
+            if (visibility == PageVisibility.HIDDEN) {
+                return;
+            }
+            double factor = yearFactor(yearValue);
             conf.setSeries(
                     scaledSeries("Berlin", factor, 189, 191, 291, 396, 501, 403, 609, 712, 729, 942, 1044, 1247),
                     scaledSeries("London", factor, 138, 246, 248, 348, 352, 353, 463, 573, 778, 779, 885, 887),
