@@ -1,5 +1,8 @@
 package com.example.application.views.feed;
 
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.clipboard.Clipboard;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
@@ -7,6 +10,7 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Menu;
@@ -84,7 +88,14 @@ public class FeedView extends Div {
         Span shares = new Span(person.getShares());
         shares.addClassName("shares");
 
-        actions.add(likeIcon, likes, commentIcon, comments, shareIcon, shares);
+        Button copyButton = new Button(VaadinIcon.COPY.create());
+        copyButton.setAriaLabel("Copy post to clipboard");
+        copyButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_SMALL);
+        Clipboard.onClick(copyButton).writeText(person.getName() + " — " + person.getPost(),
+                value -> Notification.show("Post copied"),
+                error -> Notification.show("Copy failed: " + error.message()));
+
+        actions.add(likeIcon, likes, commentIcon, comments, shareIcon, shares, copyButton);
 
         description.add(header, post, actions);
         card.add(image, description);

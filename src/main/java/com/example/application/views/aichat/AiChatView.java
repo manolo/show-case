@@ -8,6 +8,11 @@ import org.vaadin.voiceengine.VoiceEngine;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.clipboard.Clipboard;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -74,6 +79,18 @@ public class AiChatView extends VerticalLayout {
             response.set("$OPENAI_API_KEY environment variable is not properly set.");
         }
 
-        add(questionRow, textArea);
+        Button copy = new Button(new Icon(VaadinIcon.COPY));
+        copy.setAriaLabel("Copy reply to clipboard");
+        copy.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_SMALL);
+        copy.bindEnabled(response.map(r -> !r.isEmpty()));
+        Clipboard.onClick(copy).writeText(textArea,
+                value -> Notification.show("Reply copied"),
+                error -> Notification.show("Could not copy: " + error.message()));
+
+        HorizontalLayout responseHeader = new HorizontalLayout(copy);
+        responseHeader.setWidthFull();
+        responseHeader.setJustifyContentMode(com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode.END);
+
+        add(questionRow, responseHeader, textArea);
     }
 }
