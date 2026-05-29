@@ -62,6 +62,7 @@ src/main/java/com/example/application/
 - **GeolocationView** - `/geolocation` route exercising the new 25.2 Geolocation API (`Geolocation.getPosition`, `watchPosition`, `availabilityHintSignal`, `GeolocationWatcher.positionSignal`) with markers added to a Map at every fix
 - **ClipboardView** - `/clipboard` route demonstrating `Clipboard.onClick(button).writeText(...)` for literal strings, field values, and multi-format `ClipboardContent` (text + HTML). Copy buttons also reach into AiChatView and FeedView cards
 - **SliderPlaygroundView** - `/slider` route showing the stable `IntegerSlider`, `DecimalSlider`, `IntegerRangeSlider`, and `DecimalRangeSlider` with EAGER value-change mode and a getStyle().bind preview panel
+- **AiDataView** - `/ai-data` route exercising the 25.2 Preview AI components: `AIOrchestrator.builder(...)` wiring a `SpringAILLMProvider` (OpenAI) plus a `ChartAIController` and a `GridAIController` over a `SamplePersonDatabaseProvider` that reads the H2 schema dynamically. Requires `OPENAI_API_KEY` and the `com.vaadin.experimental.aiComponents=true` feature flag
 - **ImageGalleryView** - Unsplash image grid
 - **CrudView**, **AddonsView**, **CreditCardFormView**, **AddressFormView**
 

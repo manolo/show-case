@@ -143,6 +143,10 @@
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-starter-model-openai</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-ai-components-flow</artifactId>
+        </dependency>
         <!-- <dependency>
            <groupId>es.amaseguros</groupId>
            <artifactId>ama-lumo-theme</artifactId>
