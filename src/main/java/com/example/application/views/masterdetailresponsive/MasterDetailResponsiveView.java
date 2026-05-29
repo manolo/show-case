@@ -11,7 +11,6 @@ import com.example.application.components.datepicker.LocalDatePicker;
 import com.example.application.data.SamplePerson;
 import com.example.application.services.SamplePersonService;
 
-import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.Shortcuts;
 import com.vaadin.flow.component.UI;
@@ -24,19 +23,19 @@ import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.masterdetaillayout.MasterDetailLayout;
+import com.vaadin.flow.component.masterdetaillayout.MasterDetailLayout.OverlayContainment;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.data.renderer.TextRenderer;
-import com.vaadin.flow.signals.Signal;
-import com.vaadin.flow.signals.local.ValueSignal;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.BeforeLeaveEvent;
@@ -77,6 +76,7 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
 
     private Div editorLayoutDiv;
     private ConfirmDialog dialog;
+    private final MasterDetailLayout layout = new MasterDetailLayout();
 
     private final Button cancel = new Button("Cancel");
     private final Button save = new Button("Save");
@@ -84,8 +84,6 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
     private final Button plus = new Button("+");
 
     private final BeanValidationBinder<SamplePerson> binder;
-
-    private final ValueSignal<Boolean> detailVisible = new ValueSignal<>(false);
 
     private SamplePerson samplePerson;
 
@@ -95,17 +93,20 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
 
     public MasterDetailResponsiveView(SamplePersonService samplePersonService) {
         this.item = samplePersonService;
+        setSizeFull();
         addClassNames(ROUTE + "-view", "master-detail");
 
-        // Create UI
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
-        horizontalLayout.setSpacing(false);
-        horizontalLayout.setSizeFull();
-        createGridLayout(horizontalLayout);
-        createEditorLayout(horizontalLayout);
-        editorLayoutDiv.bindVisible(detailVisible);
-        plus.bindVisible(Signal.not(detailVisible));
-        add(horizontalLayout);
+        Div masterArea = createMasterArea();
+        editorLayoutDiv = createEditorLayout();
+
+        layout.setSizeFull();
+        layout.setMaster(masterArea);
+        layout.setDetailSize("350px");
+        layout.setOverlayContainment(OverlayContainment.PAGE);
+        layout.setDetailPlaceholder(new Span("Select a person or use + to create a new one"));
+        layout.addDetailEscapePressListener(e -> cancel());
+
+        add(layout);
 
         // Configure Grid
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
@@ -179,7 +180,7 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
             }
         } else {
             this.samplePerson = null;
-            detailVisible.set(false);
+            layout.setDetail(null);
         }
     }
 
@@ -191,42 +192,36 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
         }
     }
 
-    private void createEditorLayout(HasComponents layout) {
-        editorLayoutDiv = new Div();
-        editorLayoutDiv.addClassNames("editor-layout bg-contrast-5 detail");
-        editorLayoutDiv.setMaxWidth("350px");
+    private Div createEditorLayout() {
+        Div editor = new Div();
+        editor.addClassNames("editor-layout bg-contrast-5 detail");
 
         Div editorDiv = new Div();
         editorDiv.setClassName("editor");
-        editorLayoutDiv.add(editorDiv);
+        editor.add(editorDiv);
 
         FormLayout formLayout = new FormLayout();
         formLayout.add(firstName, lastName, email, phone, dateOfBirth, occupation, role, important);
-
         editorDiv.add(formLayout);
-        createButtonLayout(editorLayoutDiv);
-        layout.add(editorLayoutDiv);
-    }
 
-    private void createButtonLayout(Div layout) {
         FlexLayout buttonLayout = new FlexLayout();
         buttonLayout.setClassName("button-layout");
         delete.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
         cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonLayout.add(delete, cancel, save);
-        layout.add(buttonLayout);
+        editor.add(buttonLayout);
+        return editor;
     }
 
-    private void createGridLayout(HasComponents splitLayout) {
+    private Div createMasterArea() {
         Div wrapper = new Div();
         wrapper.setId("grid-wrapper");
-        wrapper.setWidthFull();
-        splitLayout.add(wrapper);
+        wrapper.setSizeFull();
         plus.setClassName("fab-button");
         plus.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_LARGE);
-        wrapper.add(grid);
-        wrapper.add(plus);
+        wrapper.add(grid, plus);
+        return wrapper;
     }
 
     private void cancel() {
@@ -273,13 +268,13 @@ public class MasterDetailResponsiveView extends Div implements BeforeEnterObserv
 
     private void clearForm() {
         populateForm(null);
-        detailVisible.set(false);
+        layout.setDetail(null);
     }
 
     private void populateForm(SamplePerson value) {
         this.samplePerson = value;
         grid.select(this.samplePerson);
         binder.readBean(this.samplePerson);
-        detailVisible.set(true);
+        layout.setDetail(editorLayoutDiv);
     }
 }
