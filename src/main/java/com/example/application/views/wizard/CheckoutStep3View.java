@@ -73,6 +73,7 @@ public class CheckoutStep3View extends Div implements HasBinder, HasValiditySign
             UI.getCurrent().navigate(CheckoutStep4View.class);
         });
         save.setThemeName(ButtonVariant.LUMO_PRIMARY.getVariantName());
+        save.bindEnabled(valid);
 
         FormLayout form = new FormLayout(cardHolder, cardNumber, nestedForm);
         form.setColspan(cardHolder, 2);
