@@ -93,15 +93,17 @@ public class MainLayout extends AppLayout {
      */
     private static final Set<String> START_ROUTES = Set.of(
             "empty", "hello-world-classic", "dashboard-classic", "feed-classic",
-            "data-grid-classic", "master-detail", "collaborative-master-detail",
-            "person-form", "address-form", "credit-card-form", "map-classic",
-            "spreadsheet-classic", "chat-classic", "page-editor", "image-gallery",
-            "checkout-form-classic", "grid-with-filters-classic", "layout");
+            "data-grid-classic", "master-detail-classic", "collaborative-master-detail-classic",
+            "person-form-classic", "address-form-classic", "credit-card-form-classic", "map-classic",
+            "spreadsheet-classic", "chat-classic", "page-editor-classic", "image-gallery-classic",
+            "checkout-form-classic", "grid-with-filters-classic", "layout-classic");
 
     /** Same start views migrated to Vaadin Signals in this showcase. */
     private static final Set<String> START_SIGNALS_ROUTES = Set.of(
-            "hello-world", "dashboard", "feed", "data-grid", "map", "spreadsheet",
-            "chat", "checkout-form", "grid-with-filters");
+            "hello-world", "dashboard", "feed", "data-grid", "master-detail",
+            "collaborative-master-detail", "person-form", "address-form",
+            "credit-card-form", "map", "spreadsheet", "chat", "page-editor",
+            "image-gallery", "checkout-form", "grid-with-filters", "layout");
 
     private SideNav createNavigation() {
         SideNav nav = new SideNav();
