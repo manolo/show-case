@@ -1,6 +1,7 @@
 package com.example.application.views;
 
 import java.util.List;
+import java.util.Set;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
@@ -85,18 +86,45 @@ public class MainLayout extends AppLayout {
     }
 
 
+    /**
+     * First path segment of each route that mirrors a start.vaadin.com view.
+     * Originals are kept under the {@code -classic} suffix where a Signals
+     * counterpart exists, and under the plain start path otherwise.
+     */
+    private static final Set<String> START_ROUTES = Set.of(
+            "empty", "hello-world-classic", "dashboard-classic", "feed-classic",
+            "data-grid-classic", "master-detail", "collaborative-master-detail",
+            "person-form", "address-form", "credit-card-form", "map-classic",
+            "spreadsheet-classic", "chat-classic", "page-editor", "image-gallery",
+            "checkout-form-classic", "grid-with-filters-classic", "layout");
+
+    /** Same start views migrated to Vaadin Signals in this showcase. */
+    private static final Set<String> START_SIGNALS_ROUTES = Set.of(
+            "hello-world", "dashboard", "feed", "data-grid", "map", "spreadsheet",
+            "chat", "checkout-form", "grid-with-filters");
+
     private SideNav createNavigation() {
         SideNav nav = new SideNav();
 
         SideNavItem startViews = new SideNavItem("📁 Start views");
         startViews.setExpanded(false);
+        SideNavItem signalsViews = new SideNavItem("📁 Start views – Signals");
+        signalsViews.setExpanded(false);
         SideNavItem customViews = new SideNavItem("📁 Custom views");
         customViews.setExpanded(false);
-        nav.addItem(startViews, customViews);
+        nav.addItem(startViews, signalsViews, customViews);
 
         List<MenuEntry> menuEntries = MenuConfiguration.getMenuEntries();
         menuEntries.forEach(entry -> {
-            SideNavItem parent = entry.order() != null && entry.order() < 50 ? startViews : customViews;
+            String firstSegment = firstSegment(entry.path());
+            SideNavItem parent;
+            if (START_ROUTES.contains(firstSegment)) {
+                parent = startViews;
+            } else if (START_SIGNALS_ROUTES.contains(firstSegment)) {
+                parent = signalsViews;
+            } else {
+                parent = customViews;
+            }
             if (entry.icon() != null) {
                 parent.addItem(new SideNavItem(entry.title(), entry.path(), new SvgIcon(entry.icon())));
             } else {
@@ -105,6 +133,13 @@ public class MainLayout extends AppLayout {
         });
 
         return nav;
+    }
+
+    private static String firstSegment(String path) {
+        if (path == null || path.isEmpty()) return "";
+        String stripped = path.startsWith("/") ? path.substring(1) : path;
+        int slash = stripped.indexOf('/');
+        return slash < 0 ? stripped : stripped.substring(0, slash);
     }
 
     private Footer createFooter() {
