@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -135,9 +134,9 @@ public class SpreadsheetView extends VerticalLayout {
         MenuBar menuBar = new MenuBar();
         menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY);
 
-        AtomicReference<CellRangeAddress> selectedCells = new AtomicReference<>();
-        AtomicReference<CellRangeAddress> selectedCellMergedRegion = new AtomicReference<>();
-        AtomicReference<CellReference> selectedCellReference = new AtomicReference<>();
+        ValueSignal<CellRangeAddress> selectedCells = new ValueSignal<>(null);
+        ValueSignal<CellRangeAddress> selectedCellMergedRegion = new ValueSignal<>(null);
+        ValueSignal<CellReference> selectedCellReference = new ValueSignal<>(null);
 
         spreadsheet.addSheetChangeListener(event -> refreshHasInvoice());
 
@@ -160,7 +159,11 @@ public class SpreadsheetView extends VerticalLayout {
         });
         spreadsheet.addSelectionChangeListener(e -> {
             selectedCells.set(e.getCellRangeAddresses().stream().findFirst().orElse(null));
-            selectedCellMergedRegion.set(e.getSelectedCellMergedRegion());
+            CellRangeAddress merged = e.getSelectedCellMergedRegion();
+            // The component reports a 1x1 region as "merged" by default; treat it as null
+            // so the Unmerge item stays disabled until there is a real merged range.
+            selectedCellMergedRegion.set(merged != null && (merged.getFirstRow() != merged.getLastRow()
+                    || merged.getFirstColumn() != merged.getLastColumn()) ? merged : null);
             selectedCellReference.set(e.getSelectedCellReference());
         });
 
@@ -228,27 +231,45 @@ public class SpreadsheetView extends VerticalLayout {
         MenuItem mergeMenu = menuBar.addItem("Merge");
         SubMenu mergeSubMenu = mergeMenu.getSubMenu();
 
-        mergeSubMenu.addItem("Merge selected", e -> mergeSelectedCells(selectedCells.get()))
-                .setTooltipText("Combine the selected cell range into a single cell");
-        mergeSubMenu.addItem("Unmerge selected", e -> unmergeSelectedRegion(selectedCellMergedRegion.get()))
-                .setTooltipText("Split a merged region back into individual cells");
+        MenuItem mergeSelected = mergeSubMenu.addItem("Merge selected",
+                e -> mergeSelectedCells(selectedCells.peek()));
+        mergeSelected.setTooltipText("Combine the selected cell range into a single cell");
+        mergeSelected.bindEnabled(selectedCells.map(s -> s != null));
+
+        MenuItem unmergeSelected = mergeSubMenu.addItem("Unmerge selected",
+                e -> unmergeSelectedRegion(selectedCellMergedRegion.peek()));
+        unmergeSelected.setTooltipText("Split a merged region back into individual cells");
+        unmergeSelected.bindEnabled(selectedCellMergedRegion.map(s -> s != null));
 
         MenuItem miscMenu = menuBar.addItem("Miscellaneous");
         SubMenu miscSubMenu = miscMenu.getSubMenu();
-        miscSubMenu.addItem("Add comment", e -> addComment(selectedCellReference.get()))
-                .setTooltipText("Attach a sticky comment to the selected cell");
+        MenuItem addComment = miscSubMenu.addItem("Add comment",
+                e -> addComment(selectedCellReference.peek()));
+        addComment.setTooltipText("Attach a sticky comment to the selected cell");
+        addComment.bindEnabled(selectedCellReference.map(s -> s != null));
 
         MenuItem freezePanesMenu = miscSubMenu.addItem("Freeze panes");
         SubMenu freezePanesSubMenu = freezePanesMenu.getSubMenu();
-        freezePanesSubMenu.addItem("Freeze columns to selected", e -> spreadsheet
-                .createFreezePane(spreadsheet.getLastFrozenRow(), spreadsheet.getSelectedCellReference().getCol()));
-        freezePanesSubMenu.addItem("Freeze rows to selected", e -> spreadsheet
-                .createFreezePane(spreadsheet.getSelectedCellReference().getRow(), spreadsheet.getLastFrozenColumn()));
+        MenuItem freezeColumns = freezePanesSubMenu.addItem("Freeze columns to selected",
+                e -> spreadsheet.createFreezePane(spreadsheet.getLastFrozenRow(),
+                        spreadsheet.getSelectedCellReference().getCol()));
+        freezeColumns.setTooltipText("Freeze every column up to the selected one");
+        freezeColumns.bindEnabled(selectedCellReference.map(s -> s != null));
+
+        MenuItem freezeRows = freezePanesSubMenu.addItem("Freeze rows to selected",
+                e -> spreadsheet.createFreezePane(spreadsheet.getSelectedCellReference().getRow(),
+                        spreadsheet.getLastFrozenColumn()));
+        freezeRows.setTooltipText("Freeze every row up to the selected one");
+        freezeRows.bindEnabled(selectedCellReference.map(s -> s != null));
+
         freezePanesSubMenu.addItem("Unfreeze all", e -> spreadsheet.removeFreezePane());
 
         MenuItem tableMenu = miscSubMenu.addItem("Table");
         SubMenu tableSubMenu = tableMenu.getSubMenu();
-        tableSubMenu.addItem("Create table", e -> createTable(selectedCells.get()));
+        MenuItem createTable = tableSubMenu.addItem("Create table",
+                e -> createTable(selectedCells.peek()));
+        createTable.setTooltipText("Wrap the selected cell range in a structured table");
+        createTable.bindEnabled(selectedCells.map(s -> s != null));
 
         return menuBar;
     }
