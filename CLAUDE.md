@@ -43,6 +43,32 @@ src/main/java/com/example/application/
     (25+ views - see below)
 ```
 
+## Side nav layout
+
+The side nav has three top-level folders, classified by route first-segment in
+`MainLayout.createNavigation()` against two hardcoded sets of paths.
+
+- **📁 Start views** — the 18 views shipped by start.vaadin.com when every Flow
+  view is selected. Originals kept under their start path; where a Signals
+  counterpart exists in this showcase, the original lives at `<path>-classic`.
+  Source of truth: `~/Downloads/full-flow.zip`. The `*ClassicView.java` files
+  under `views/{dashboard,feed,datagrid,checkoutform,spreadsheet,gridwithfilters,helloworld,map,chat}`
+  are direct copies of the zip's versions adapted to the showcase package and
+  the showcase's `SamplePerson` / `SamplePersonService`. `LayoutView` is the
+  start view that's served at `/layout` (the zip uses `""`).
+- **📁 Start views – Signals** — the same start views migrated to Vaadin
+  Signals in this showcase, served at the canonical unsuffixed paths:
+  `/hello-world`, `/dashboard`, `/feed`, `/data-grid`, `/map`, `/spreadsheet`,
+  `/chat`, `/checkout-form`, `/grid-with-filters`. Nine of the eighteen start
+  views are migrated; the rest (master-detail, collaborative-master-detail,
+  person-form, address-form, credit-card-form, page-editor, image-gallery,
+  layout, empty) stay in Start Views only.
+- **📁 Custom views** — everything else added by this showcase: Wizard (4
+  steps), Signals Playground, Slider Playground, Geolocation, Clipboard,
+  Message attachments, AI Chat, AI Data, Master-Detail Responsive, Grid with
+  Filters JPA / REST, Grid Edit (+ variants), Crud, Addons, Custom Layout,
+  Tabbed Layout (3 views).
+
 ## Key Views
 
 - **HelloWorldView** - Simple greeting demo with reactive Signal binding
