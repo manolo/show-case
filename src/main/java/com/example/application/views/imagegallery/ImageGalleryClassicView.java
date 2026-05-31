@@ -25,15 +25,15 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
-@PageTitle("Image Gallery")
-@Route("image-gallery")
+@PageTitle("Image Gallery (Classic)")
+@Route("image-gallery-classic")
 @PermitAll
 @Menu(order = 15, icon = LineAwesomeIconUrl.TH_LIST_SOLID)
-public class ImageGalleryView extends Main implements HasComponents, HasStyle {
+public class ImageGalleryClassicView extends Main implements HasComponents, HasStyle {
 
     private OrderedList imageContainer;
 
-    public ImageGalleryView() {
+    public ImageGalleryClassicView() {
         constructUI();
 
         imageContainer.add(new ImageGalleryViewCard("Snow mountains under stars",

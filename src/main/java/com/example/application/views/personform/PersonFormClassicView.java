@@ -1,40 +1,40 @@
-package com.example.application.views.addressform;
+package com.example.application.views.personform;
 
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
-import java.util.ArrayList;
-import java.util.List;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
-@PageTitle("Address Form")
-@Route("address-form")
+@PageTitle("Person Form (Classic)")
+@Route("person-form-classic")
 @PermitAll
-@Menu(order = 9, icon = LineAwesomeIconUrl.MAP_MARKER_SOLID)
-public class AddressFormView extends Composite<VerticalLayout> {
+@Menu(order = 8, icon = LineAwesomeIconUrl.USER)
+public class PersonFormClassicView extends Composite<VerticalLayout> {
 
-    public AddressFormView() {
+    public PersonFormClassicView() {
         VerticalLayout layoutColumn2 = new VerticalLayout();
         H3 h3 = new H3();
-        TextField textField = new TextField();
         FormLayout formLayout2Col = new FormLayout();
+        TextField textField = new TextField();
         TextField textField2 = new TextField();
+        DatePicker datePicker = new DatePicker();
         TextField textField3 = new TextField();
-        Select select = new Select();
-        Select select2 = new Select();
+        EmailField emailField = new EmailField();
+        TextField textField4 = new TextField();
         HorizontalLayout layoutRow = new HorizontalLayout();
         Button buttonPrimary = new Button();
         Button buttonSecondary = new Button();
@@ -42,31 +42,21 @@ public class AddressFormView extends Composite<VerticalLayout> {
         getContent().getStyle().set("flex-grow", "1");
         getContent().setJustifyContentMode(JustifyContentMode.START);
         getContent().setAlignItems(Alignment.CENTER);
-        layoutColumn2.setWidthFull();
-        getContent().setFlexGrow(1.0, layoutColumn2);
         layoutColumn2.setWidth("100%");
         layoutColumn2.setMaxWidth("800px");
         layoutColumn2.setHeight("min-content");
-        h3.setText("Address");
-        h3.setWidth("min-content");
-        textField.setLabel("Street address");
-        textField.setWidth("100%");
+        h3.setText("Personal Information");
+        h3.setWidth("100%");
         formLayout2Col.setWidth("100%");
-        textField2.setLabel("Postal code");
-        textField2.setWidth("min-content");
-        textField3.setLabel("City");
-        textField3.setWidth("min-content");
-        select.setLabel("State");
-        select.setWidth("min-content");
-        setSelectSampleData(select);
-        select2.setLabel("Country");
-        select2.setWidth("min-content");
-        setSelectSampleData(select2);
-        layoutRow.setWidthFull();
-        layoutColumn2.setFlexGrow(1.0, layoutRow);
+        textField.setLabel("First Name");
+        textField2.setLabel("Last Name");
+        datePicker.setLabel("Birthday");
+        textField3.setLabel("Phone Number");
+        emailField.setLabel("Email");
+        textField4.setLabel("Occupation");
         layoutRow.addClassName(Gap.MEDIUM);
         layoutRow.setWidth("100%");
-        layoutRow.setHeight("min-content");
+        layoutRow.getStyle().set("flex-grow", "1");
         buttonPrimary.setText("Save");
         buttonPrimary.setWidth("min-content");
         buttonPrimary.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -74,27 +64,15 @@ public class AddressFormView extends Composite<VerticalLayout> {
         buttonSecondary.setWidth("min-content");
         getContent().add(layoutColumn2);
         layoutColumn2.add(h3);
-        layoutColumn2.add(textField);
         layoutColumn2.add(formLayout2Col);
+        formLayout2Col.add(textField);
         formLayout2Col.add(textField2);
+        formLayout2Col.add(datePicker);
         formLayout2Col.add(textField3);
-        formLayout2Col.add(select);
-        formLayout2Col.add(select2);
+        formLayout2Col.add(emailField);
+        formLayout2Col.add(textField4);
         layoutColumn2.add(layoutRow);
         layoutRow.add(buttonPrimary);
         layoutRow.add(buttonSecondary);
-    }
-
-    record SampleItem(String value, String label, Boolean disabled) {
-    }
-
-    private void setSelectSampleData(Select select) {
-        List<SampleItem> sampleItems = new ArrayList<>();
-        sampleItems.add(new SampleItem("state1", "State 1", null));
-        sampleItems.add(new SampleItem("state2", "State 2", null));
-        sampleItems.add(new SampleItem("state3", "State 3", null));
-        select.setItems(sampleItems);
-        select.setItemLabelGenerator(item -> ((SampleItem) item).label());
-        select.setItemEnabledProvider(item -> !Boolean.TRUE.equals(((SampleItem) item).disabled()));
     }
 }

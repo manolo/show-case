@@ -18,11 +18,11 @@ import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
-@PageTitle("Credit Card Form")
-@Route("credit-card-form")
+@PageTitle("Credit Card Form (Classic)")
+@Route("credit-card-form-classic")
 @PermitAll
 @Menu(order = 10, icon = LineAwesomeIconUrl.CREDIT_CARD)
-public class CreditCardFormView extends Div {
+public class CreditCardFormClassicView extends Div {
 
     private TextField cardNumber;
     private TextField cardholderName;
@@ -39,7 +39,7 @@ public class CreditCardFormView extends Div {
      */
     private String CARD_REGEX = "^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35d{3})d{11})$";
 
-    public CreditCardFormView() {
+    public CreditCardFormClassicView() {
         addClassName("credit-card-form-view");
 
         add(createTitle());

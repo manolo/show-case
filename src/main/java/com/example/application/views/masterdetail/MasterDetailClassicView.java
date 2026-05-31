@@ -33,12 +33,12 @@ import java.util.Optional;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
-@PageTitle("Master-Detail")
-@Route("master-detail/:samplePersonID?/:action?(edit)")
+@PageTitle("Master-Detail (Classic)")
+@Route("master-detail-classic/:samplePersonID?/:action?(edit)")
 @PermitAll
 @Menu(order = 6, icon = LineAwesomeIconUrl.COLUMNS_SOLID)
 @Uses(Icon.class)
-public class MasterDetailView extends Div implements BeforeEnterObserver {
+public class MasterDetailClassicView extends Div implements BeforeEnterObserver {
 
     private final String SAMPLEPERSON_ID = "samplePersonID";
     private final String SAMPLEPERSON_EDIT_ROUTE_TEMPLATE = "master-detail/%s/edit";
@@ -63,7 +63,7 @@ public class MasterDetailView extends Div implements BeforeEnterObserver {
 
     private final SamplePersonService samplePersonService;
 
-    public MasterDetailView(SamplePersonService samplePersonService) {
+    public MasterDetailClassicView(SamplePersonService samplePersonService) {
         this.samplePersonService = samplePersonService;
         addClassNames("master-detail-view", "master-detail");
 
@@ -101,7 +101,7 @@ public class MasterDetailView extends Div implements BeforeEnterObserver {
                 UI.getCurrent().navigate(String.format(SAMPLEPERSON_EDIT_ROUTE_TEMPLATE, event.getValue().getId()));
             } else {
                 clearForm();
-                UI.getCurrent().navigate(MasterDetailView.class);
+                UI.getCurrent().navigate(MasterDetailClassicView.class);
             }
         });
 
@@ -127,7 +127,7 @@ public class MasterDetailView extends Div implements BeforeEnterObserver {
                 clearForm();
                 refreshGrid();
                 Notification.show("Data updated");
-                UI.getCurrent().navigate(MasterDetailView.class);
+                UI.getCurrent().navigate(MasterDetailClassicView.class);
             } catch (ObjectOptimisticLockingFailureException exception) {
                 Notification n = Notification.show(
                         "Error updating the data. Somebody else has updated the record while you were making changes.");
@@ -153,7 +153,7 @@ public class MasterDetailView extends Div implements BeforeEnterObserver {
                 // when a row is selected but the data is no longer available,
                 // refresh grid
                 refreshGrid();
-                event.forwardTo(MasterDetailView.class);
+                event.forwardTo(MasterDetailClassicView.class);
             }
         }
     }

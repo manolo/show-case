@@ -23,16 +23,16 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 import jakarta.annotation.security.PermitAll;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
-@PageTitle("Layout")
-@Route("layout")
+@PageTitle("Layout (Classic)")
+@Route("layout-classic")
 @PermitAll
 @Menu(order = 0, icon = LineAwesomeIconUrl.PENCIL_RULER_SOLID)
 @Uses(Icon.class)
-public class LayoutView extends Composite<VerticalLayout> {
+public class LayoutClassicView extends Composite<VerticalLayout> {
 
     private final SamplePersonService samplePersonService;
 
-    public LayoutView(SamplePersonService samplePersonService) {
+    public LayoutClassicView(SamplePersonService samplePersonService) {
         this.samplePersonService = samplePersonService;
         HorizontalLayout layoutRow = new HorizontalLayout();
         VerticalLayout layoutColumn2 = new VerticalLayout();

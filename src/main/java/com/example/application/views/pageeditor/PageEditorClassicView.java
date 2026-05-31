@@ -28,13 +28,13 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
-@PageTitle("Page Editor")
-@Route("page-editor")
+@PageTitle("Page Editor (Classic)")
+@Route("page-editor-classic")
 @PermitAll
 @Menu(order = 14, icon = LineAwesomeIconUrl.EDIT)
-public class PageEditorView extends Main {
+public class PageEditorClassicView extends Main {
 
-    public PageEditorView() {
+    public PageEditorClassicView() {
         addClassNames(Display.FLEX, Flex.GROW, Height.FULL);
 
         // Editor

@@ -36,12 +36,12 @@ import java.util.UUID;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.vaadin.lineawesome.LineAwesomeIconUrl;
 
-@PageTitle("Collaborative Master-Detail")
-@Route("collaborative-master-detail/:samplePersonID?/:action?(edit)")
+@PageTitle("Collaborative Master-Detail (Classic)")
+@Route("collaborative-master-detail-classic/:samplePersonID?/:action?(edit)")
 @PermitAll
 @Menu(order = 7, icon = LineAwesomeIconUrl.COLUMNS_SOLID)
 @Uses(Icon.class)
-public class CollaborativeMasterDetailView extends Div implements BeforeEnterObserver {
+public class CollaborativeMasterDetailClassicView extends Div implements BeforeEnterObserver {
 
     private final String SAMPLEPERSON_ID = "samplePersonID";
     private final String SAMPLEPERSON_EDIT_ROUTE_TEMPLATE = "collaborative-master-detail/%s/edit";
@@ -68,7 +68,7 @@ public class CollaborativeMasterDetailView extends Div implements BeforeEnterObs
 
     private final SamplePersonService samplePersonService;
 
-    public CollaborativeMasterDetailView(SamplePersonService samplePersonService) {
+    public CollaborativeMasterDetailClassicView(SamplePersonService samplePersonService) {
         this.samplePersonService = samplePersonService;
         addClassNames("collaborative-master-detail-view", "master-detail");
 
@@ -117,7 +117,7 @@ public class CollaborativeMasterDetailView extends Div implements BeforeEnterObs
                 UI.getCurrent().navigate(String.format(SAMPLEPERSON_EDIT_ROUTE_TEMPLATE, event.getValue().getId()));
             } else {
                 clearForm();
-                UI.getCurrent().navigate(CollaborativeMasterDetailView.class);
+                UI.getCurrent().navigate(CollaborativeMasterDetailClassicView.class);
             }
         });
 
@@ -143,7 +143,7 @@ public class CollaborativeMasterDetailView extends Div implements BeforeEnterObs
                 clearForm();
                 refreshGrid();
                 Notification.show("Data updated");
-                UI.getCurrent().navigate(CollaborativeMasterDetailView.class);
+                UI.getCurrent().navigate(CollaborativeMasterDetailClassicView.class);
             } catch (ObjectOptimisticLockingFailureException exception) {
                 Notification n = Notification.show(
                         "Error updating the data. Somebody else has updated the record while you were making changes.");
@@ -169,7 +169,7 @@ public class CollaborativeMasterDetailView extends Div implements BeforeEnterObs
                 // when a row is selected but the data is no longer available,
                 // refresh grid
                 refreshGrid();
-                event.forwardTo(CollaborativeMasterDetailView.class);
+                event.forwardTo(CollaborativeMasterDetailClassicView.class);
             }
         }
     }
