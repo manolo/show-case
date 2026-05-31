@@ -36,13 +36,17 @@ public class CheckoutStep2View extends Div implements HasBinder, HasValiditySign
     BeanValidationBinder<ShippingAddress> binder = new BeanValidationBinder<>(ShippingAddress.class);
     private final ValueSignal<Boolean> valid = new ValueSignal<>(false);
 
-    public CheckoutStep2View() {
+    public CheckoutStep2View(CheckoutFormSignal form) {
         addClassNames(Padding.Horizontal.LARGE, Padding.Vertical.MEDIUM);
         add( createForm());
 
         binder.bindInstanceFields(this);
-        binder.setBean(new ShippingAddress());
-        binder.addValueChangeListener(e -> valid.set(binder.validate().isOk()));
+        binder.setBean(form.shippingAddress().peek());
+        binder.addValueChangeListener(e -> {
+            valid.set(binder.validate().isOk());
+            form.shippingAddress().modify(b -> {
+            });
+        });
     }
 
     private Section createForm() {

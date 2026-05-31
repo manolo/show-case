@@ -35,13 +35,17 @@ public class CheckoutStep3View extends Div implements HasBinder, HasValiditySign
     Select<String> expirationYear = new Select<>();
     private final ValueSignal<Boolean> valid = new ValueSignal<>(false);
 
-    public CheckoutStep3View() {
+    public CheckoutStep3View(CheckoutFormSignal form) {
         addClassNames(Padding.Horizontal.LARGE, Padding.Vertical.MEDIUM);
         add(createForm());
 
         binder.bindInstanceFields(this);
-        binder.setBean(new CreditCard());
-        binder.addValueChangeListener(e -> valid.set(binder.validate().isOk()));
+        binder.setBean(form.creditCard().peek());
+        binder.addValueChangeListener(e -> {
+            valid.set(binder.validate().isOk());
+            form.creditCard().modify(b -> {
+            });
+        });
     }
 
     private Section createForm() {

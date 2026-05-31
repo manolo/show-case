@@ -15,10 +15,9 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Main;
 import com.vaadin.flow.component.icon.SvgIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.progressbar.ProgressBar;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.router.AfterNavigationEvent;
-import com.vaadin.flow.router.AfterNavigationObserver;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.BeforeLeaveEvent;
@@ -43,7 +42,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Overflow;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
 public abstract class Wizard extends Main
-        implements BeforeEnterObserver, BeforeLeaveObserver, RouterLayout, AfterNavigationObserver {
+        implements BeforeEnterObserver, BeforeLeaveObserver, RouterLayout {
 
     private final Stepper stepper;
     private Div content;
@@ -104,11 +103,21 @@ public abstract class Wizard extends Main
         this.modal = modal;
     }
 
-    private Stepper createStepper() {
+    private Div createStepper() {
         this.stepper.addClassNames(BoxSizing.BORDER, MaxWidth.SCREEN_SMALL, Padding.MEDIUM);
         this.stepper.setOrientation(Stepper.Orientation.HORIZONTAL);
         this.stepper.setSmall(true);
-        return this.stepper;
+
+        ProgressBar progress = new ProgressBar(0, 1, 0);
+        progress.addClassNames(Padding.Horizontal.MEDIUM);
+        Signal.effect(progress, () -> {
+            int i = currentStep.get();
+            progress.setValue(i < 0 ? 0d : Math.min(1d, (i + 1) / (double) steps.length));
+        });
+
+        Div wrapper = new Div(this.stepper, progress);
+        wrapper.addClassNames(BoxSizing.BORDER, MaxWidth.SCREEN_SMALL, Display.FLEX, FlexDirection.COLUMN);
+        return wrapper;
     }
 
     private Div createContent() {
@@ -153,15 +162,10 @@ public abstract class Wizard extends Main
                 __ -> action.cancel());
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void showRouterLayoutContent(HasElement content) {
         if (content != null) {
             this.content.removeAll();
-            if (content instanceof HasBinder) {
-                Binder binder = ((HasBinder) content).getBinder();
-                binder.setBean(restoreSessionObject(content.getClass(), binder.getBean()));
-            }
             if (content instanceof HasValiditySignal hasValidity) {
                 int idx = getStepIndexByClass(content.getClass());
                 if (idx >= 0) {
@@ -195,7 +199,6 @@ public abstract class Wizard extends Main
         Component view = getCurrentComponentView();
         if (view != null && view instanceof HasBinder) {
             Binder<?> binder = ((HasBinder) view).getBinder();
-            saveSessionObject(view.getClass(), binder.getBean());
             if (!binder.validate().isOk()) {
                 steps[idxActive].setState(State.ERROR);
                 this.action = event.postpone();
@@ -226,12 +229,13 @@ public abstract class Wizard extends Main
     }
 
     @Override
-    public void afterNavigation(AfterNavigationEvent event) {
-        int idx = getStepIndex(event.getLocation().getPath());
-        if (idx >= 0) {
-            saveSessionObject(getClass(), idx);
-            currentStep.set(idx);
-        }
+    protected void onAttach(com.vaadin.flow.component.AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        Signal.effect(this, () -> {
+            String path = attachEvent.getUI().routerStateSignal().get().location().getPath();
+            int idx = getStepIndex(path);
+            if (idx >= 0) currentStep.set(idx);
+        });
     }
 
     private int getStepIndex(String path) {

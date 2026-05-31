@@ -34,13 +34,17 @@ public class CheckoutStep1View extends Div implements HasBinder, HasValiditySign
     BeanValidationBinder<PersonalDetails> binder = new BeanValidationBinder<>(PersonalDetails.class);
     private final ValueSignal<Boolean> valid = new ValueSignal<>(false);
 
-    public CheckoutStep1View() {
+    public CheckoutStep1View(CheckoutFormSignal form) {
         addClassNames(Padding.Horizontal.LARGE, Padding.Vertical.MEDIUM);
         add(createForm());
 
         binder.bindInstanceFields(this);
-        binder.setBean(new PersonalDetails());
-        binder.addValueChangeListener(e -> valid.set(binder.validate().isOk()));
+        binder.setBean(form.personalDetails().peek());
+        binder.addValueChangeListener(e -> {
+            valid.set(binder.validate().isOk());
+            form.personalDetails().modify(b -> {
+            });
+        });
     }
 
     private Component createForm() {
