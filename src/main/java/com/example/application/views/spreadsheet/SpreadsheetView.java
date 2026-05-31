@@ -4,11 +4,8 @@ import java.awt.Color;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
@@ -54,14 +51,12 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.spreadsheet.Spreadsheet;
 import com.vaadin.flow.component.spreadsheet.SpreadsheetFilterTable;
 import com.vaadin.flow.component.spreadsheet.SpreadsheetTable;
-import com.vaadin.flow.component.upload.Receiver;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.StreamRegistration;
-import com.vaadin.flow.server.StreamResource;
-import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.server.streams.DownloadHandler;
+import com.vaadin.flow.server.streams.UploadHandler;
 import com.vaadin.flow.signals.local.ValueSignal;
 import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.theme.lumo.LumoIcon;
@@ -71,7 +66,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 @Route("spreadsheet")
 @PermitAll
 @Menu(order = 12, icon = LineAwesomeIconUrl.FILE_EXCEL)
-public class SpreadsheetView extends VerticalLayout implements Receiver {
+public class SpreadsheetView extends VerticalLayout {
 
     private File uploadedFile;
     private File previousFile;
@@ -96,19 +91,6 @@ public class SpreadsheetView extends VerticalLayout implements Receiver {
 
     private Logger getLogger() {
         return LoggerFactory.getLogger(getClass());
-    }
-
-    @Override
-    public OutputStream receiveUpload(String fileName, String mimeType) {
-        try {
-            File file = new File(fileName);
-            file.deleteOnExit();
-            uploadedFile = file;
-            return new FileOutputStream(uploadedFile);
-        } catch (FileNotFoundException e) {
-            getLogger().warn("ERROR reading file " + fileName, e);
-        }
-        return null;
     }
 
     private VerticalLayout createViewHeader() {
@@ -272,7 +254,10 @@ public class SpreadsheetView extends VerticalLayout implements Receiver {
     }
 
     private Dialog createUploadDialog() {
-        Upload uploadSpreadsheet = new Upload(this);
+        UploadHandler uploadHandler = UploadHandler.toTempFile((metadata, file) -> {
+            uploadedFile = file;
+        });
+        Upload uploadSpreadsheet = new Upload(uploadHandler);
 
         Dialog uploadFileDialog = new Dialog();
         uploadFileDialog.setHeaderTitle("Upload a spreadsheet file");
@@ -312,11 +297,22 @@ public class SpreadsheetView extends VerticalLayout implements Receiver {
         try {
             final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             spreadsheet.write(outputStream);
-            final StreamResource resource = new StreamResource("file.xlsx",
-                    () -> new ByteArrayInputStream(outputStream.toByteArray()));
-            final StreamRegistration registration = VaadinSession.getCurrent().getResourceRegistry()
-                    .registerResource(resource);
-            UI.getCurrent().getPage().open(registration.getResourceUri().toString());
+            byte[] bytes = outputStream.toByteArray();
+            com.vaadin.flow.component.html.Anchor downloader = new com.vaadin.flow.component.html.Anchor(
+                    DownloadHandler.fromInputStream(
+                            event -> new com.vaadin.flow.server.streams.DownloadResponse(
+                                    new ByteArrayInputStream(bytes),
+                                    "file.xlsx",
+                                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                                    bytes.length),
+                            "file.xlsx"),
+                    "");
+            downloader.getElement().setAttribute("download", true);
+            downloader.setVisible(false);
+            getUI().ifPresent(ui -> ui.access(() -> {
+                add(downloader);
+                downloader.getElement().executeJs("this.click(); setTimeout(() => this.remove(), 1000);");
+            }));
         } catch (Exception e) {
             getLogger().warn("Error while processing the file to download", e);
         }
