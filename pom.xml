@@ -11,14 +11,14 @@
 
     <properties>
         <java.version>21</java.version>
-        <vaadin.version>25.2.0-beta1</vaadin.version>
-        <spring-ai.version>2.0.0-M1</spring-ai.version>
+        <vaadin.version>25.2.1</vaadin.version>
+        <spring-ai.version>2.0.0</spring-ai.version>
     </properties>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.4</version>
+        <version>4.0.7</version>
     </parent>
 
     <repositories>
@@ -130,19 +130,19 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>browserless-test-junit6</artifactId>
-            <version>1.1.0-alpha2</version>
+            <version>1.1.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>browserless-test-shared</artifactId>
-            <version>1.1.0-alpha2</version>
+            <version>1.1.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>browserless-test-spring</artifactId>
-            <version>1.1.0-alpha2</version>
+            <version>1.1.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -161,7 +161,7 @@
         <dependency>
             <groupId>org.vaadin.klaudeta</groupId>
             <artifactId>grid-pagination</artifactId>
-            <version>4.0.0</version>
+            <version>4.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.vaadin</groupId>
@@ -176,7 +176,7 @@
         <dependency>
             <groupId>org.vaadin.addons.componentfactory</groupId>
             <artifactId>vcf-input-mask</artifactId>
-            <version>2.2.0</version>
+            <version>3.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.vaadin.addons.manolo</groupId>

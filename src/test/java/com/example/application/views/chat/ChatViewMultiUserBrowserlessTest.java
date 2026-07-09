@@ -40,7 +40,7 @@ class ChatViewMultiUserBrowserlessTest extends SpringBrowserlessTest {
     @Test
     void aliceAndBobGetIndependentChatViewInstances() {
         SecuredBrowserlessApplicationContext<?> app = SpringBrowserlessApplicationContext
-                .createSecured(discoverRoutes(), applicationContext);
+                .createSecured(applicationContext, "com.example.application");
         try (BrowserlessApplicationContext autoClose = app) {
             BrowserlessUserContext alice = app.newUser("alice", "USER");
             BrowserlessUserContext bob = app.newUser("bob", "USER");

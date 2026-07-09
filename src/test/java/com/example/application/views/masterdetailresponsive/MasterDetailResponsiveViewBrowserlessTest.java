@@ -35,7 +35,7 @@ class MasterDetailResponsiveViewBrowserlessTest extends SpringBrowserlessTest {
     @Test
     void clickingPlusSwitchesPlaceholderToDetail() {
         SecuredBrowserlessApplicationContext<?> app = SpringBrowserlessApplicationContext
-                .createSecured(discoverRoutes(), applicationContext);
+                .createSecured(applicationContext, "com.example.application");
         try (BrowserlessApplicationContext autoClose = app) {
             BrowserlessUserContext user = app.newUser("admin", "USER");
             BrowserlessUIContext window = user.newWindow();
