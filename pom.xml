@@ -130,19 +130,16 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>browserless-test-junit6</artifactId>
-            <version>1.1.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>browserless-test-shared</artifactId>
-            <version>1.1.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>browserless-test-spring</artifactId>
-            <version>1.1.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
