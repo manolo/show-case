@@ -41,15 +41,19 @@ class ChatViewMultiUserBrowserlessTest extends SpringBrowserlessTest {
     void aliceAndBobGetIndependentChatViewInstances() {
         SecuredBrowserlessApplicationContext<?> app = SpringBrowserlessApplicationContext
                 .createSecured(applicationContext, "com.example.application");
-        try (BrowserlessApplicationContext autoClose = app) {
-            BrowserlessUserContext alice = app.newUser("alice", "USER");
-            BrowserlessUserContext bob = app.newUser("bob", "USER");
-
-            BrowserlessUIContext aliceWindow = alice.newWindow();
+        // Close windows, then users, then the application context. Letting the
+        // application context cascade the teardown tore the CollaborationEngine
+        // bindings down after the VaadinService was already unbound, which
+        // failed with "Cannot get the current CollaborationEngine instance
+        // when there is no current VaadinService instance" on CI.
+        try (BrowserlessApplicationContext autoClose = app;
+                BrowserlessUserContext alice = app.newUser("alice", "USER");
+                BrowserlessUserContext bob = app.newUser("bob", "USER");
+                BrowserlessUIContext aliceWindow = alice.newWindow();
+                BrowserlessUIContext bobWindow = bob.newWindow()) {
             aliceWindow.navigate(ChatView.class);
             Tabs aliceTabs = aliceWindow.find(Tabs.class).single();
 
-            BrowserlessUIContext bobWindow = bob.newWindow();
             bobWindow.navigate(ChatView.class);
             Tabs bobTabs = bobWindow.find(Tabs.class).single();
 
